@@ -1,7 +1,8 @@
 // import system
 const express = require('express');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
+const config = require('./config/bd')
+
 
 // import métier
 const userRoutes = require('./user/routes');
@@ -9,12 +10,8 @@ const userRoutes = require('./user/routes');
 
 
 //connexion base de donneés
-let url = 'mongodb+srv://jimbob:<PASSWORD>@cluster0-pme76.mongodb.net/test?retryWrites=true&w=majority';
-mongoose.connect(url,
-  { useNewUrlParser: true,
-    useUnifiedTopology: true })
-  .then(() => console.log('Connexion à MongoDB réussie !'))
-  .catch(() => console.log('Connexion à MongoDB échouée !'));
+config.connectMongodb;
+
 
 const app = express();
 // Cross Origin Resource Sharing(pour éviter CORS)
