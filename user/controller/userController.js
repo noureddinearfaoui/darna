@@ -1,6 +1,9 @@
 const User = require ('../model/user')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+
+const email = require('../../config/email')
+
 require('dotenv').config()
 
 exports.signup = (req, res, next) => {
@@ -58,4 +61,23 @@ exports.signup = (req, res, next) => {
     const token = req.headers.authorization
     const decodedToken = jwt.verify(token, process.env.DB_URL);
    res.json(decodedToken.userId )
+  }
+  exports.test2= (req, res, next) => {
+    let id=5;
+
+    const message = {
+      from: 'elonmusk@tesla.com', // Sender address
+      to: 'to@email.com',         // List of recipients
+      subject: 'Design Your Model S | Tesla', // Subject line
+      html: `<a href="http://localhost:3000/api/user/test2/${id}">sss</a>`
+      // Plain text body
+  };
+
+  email.send(message);
+
+  next();
+    
+
+    
+
   }

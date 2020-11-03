@@ -9,6 +9,6 @@ const auth = require('../config/middleware/auth');
 router.get('/signin', UserCtrl.login);
 router.get('/signup', UserCtrl.signup);
 router.get('/test',auth ,UserCtrl.test);
-
+router.get('/test2',UserCtrl.test2);
 
 module.exports = router;
