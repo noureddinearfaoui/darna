@@ -8,13 +8,14 @@ require('dotenv').config()
 
 exports.signup = (req, res, next) => {
 
-     let email= 'noureddine0arfaoui';
+     let email= 'noureddine0arfaouie';
      let password= '123456';
   bcrypt.hash(password, 10)
     .then(hash => {
       const user = new User({
         email: email,
-        password: hash
+        password: hash,
+        role:'user'
       });
       user.save()
         .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
@@ -24,7 +25,7 @@ exports.signup = (req, res, next) => {
 };
   
   exports.login = (req, res, next) => {
-    let email= 'noureddine0arfaoui';
+    let email= 'noureddine0arfaouie';
      let password= '123456';
     User.findOne({ email: email  })
       .then(user => {
@@ -58,9 +59,8 @@ exports.signup = (req, res, next) => {
   exports.test= (req, res, next) => {
 
 
-    const token = req.headers.authorization
-    const decodedToken = jwt.verify(token, process.env.DB_URL);
-   res.json(decodedToken.userId )
+    
+   res.json("aloo" )
   }
   exports.test2= (req, res, next) => {
     let id=5;
