@@ -7,6 +7,7 @@ const config = require('./config/bd')
 
 // import métier
 const userRoutes = require('./user/routes');
+const roleRoutes = require('./role/routes')
 
 
 
@@ -27,6 +28,7 @@ app.use(bodyParser.json());
 
 //middleware user
 app.use('/api/user', userRoutes);
+app.use('/api/role',roleRoutes)
 
 
 

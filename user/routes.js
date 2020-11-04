@@ -9,7 +9,7 @@ const permit = require('../config/middleware/authorization');
 
 router.get('/signin', UserCtrl.login);
 router.get('/signup', UserCtrl.signup);
-router.get('/test',permit('admin'),UserCtrl.test);
-router.get('/test2',UserCtrl.test2);
+router.get('/test',permit('admin'),UserCtrl.userRoles);
+router.get('/test2',UserCtrl.userRoles);
 
 module.exports = router;

@@ -1,6 +1,7 @@
 const User = require ('../model/user')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const Role = require('../../role/model/role')
 
 const email = require('../../config/email')
 
@@ -12,14 +13,22 @@ exports.signup = (req, res, next) => {
      let password= '123456';
   bcrypt.hash(password, 10)
     .then(hash => {
-      const user = new User({
-        email: email,
-        password: hash,
-        role:'user'
-      });
-      user.save()
-        .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
-        .catch(error => res.status(400).json({ error }));
+
+        Role.findOne({ roleName: "membre"  })
+        .then(role => {
+
+             const user = new User({
+              email: email,
+              password: hash,
+            });
+            user.roles.push(role);
+            user.save()
+              .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
+              .catch(error => res.status(400).json({ error }));
+
+            })
+            .catch(error => res.status(500).json({ error }));
+      
     })
     .catch(error => res.status(500).json({ error }));
 };
@@ -56,11 +65,14 @@ exports.signup = (req, res, next) => {
       .then(things => res.status(200).json(things))
       .catch(error => res.status(400).json({ error }));
   }
-  exports.test= (req, res, next) => {
+  exports.userRoles= (req, res, next) => {
 
-
+    let id = "5fa312ee997221157d37ddca";
+    User.findById(id).populate('roles')
+         .then(things => res.status(200).json(things.roles))
+         .catch(error => res.status(400).json({ error }));
     
-   res.json("aloo" )
+   //res.json("aloo" )
   }
   exports.test2= (req, res, next) => {
     let id=5;
