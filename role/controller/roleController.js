@@ -1,8 +1,8 @@
 const Role = require('../model/role')
 
 
-exports.test=((req,res,next)=>{
-     let roleName = 'membre'   
+exports.add=((req,res,next)=>{
+     let roleName = 'admin'   
     const role = new Role({
         roleName: roleName,
         });
