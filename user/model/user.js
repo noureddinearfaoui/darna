@@ -11,6 +11,9 @@ const userSchema = mongoose.Schema({
   tel: { type: String, required: true },
   dateOfBirth: { type:Date , required: true },
   confirm: { type:Boolean , required: true },
+  banni: { type:Boolean , required: true },
+  accepted: { type:Boolean , required: true },
+  renewal: { type:Boolean , required: true },
   
   roles : [
     {type: mongoose.Schema.Types.ObjectId,ref:'Role'}

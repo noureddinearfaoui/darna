@@ -7,9 +7,11 @@ module.exports= (...permittedRoles)=> {
   
   return (req, res, next) => {
     
-      
-       
-       User.findById('5fa312ee997221157d37ddca').populate('roles')
+    const token = req.headers.authorization.split(' ')[1];
+    const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
+    const userId = decodedToken.userId;
+       try{
+       User.findById(userId).populate('roles')
        .then(user=>{
           if (user){
                         let roles = []; 
@@ -32,6 +34,11 @@ module.exports= (...permittedRoles)=> {
         {
           res.status(403).json({message: error});
         })
-   
+      }
+      catch (error) {
+        res.status(401).json({
+          error: error
+        });
+      }
   }
 }
