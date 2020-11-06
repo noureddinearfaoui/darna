@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 
 const User = require('../../user/model/user');
 
@@ -10,6 +11,7 @@ module.exports= (...permittedRoles)=> {
     const token = req.headers.authorization.split(' ')[1];
     const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
     const userId = decodedToken.userId;
+    console.log(userId)
        try{
        User.findById(userId).populate('roles')
        .then(user=>{

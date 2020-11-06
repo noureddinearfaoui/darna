@@ -115,8 +115,8 @@ exports.signup = (req, res, next) => {
     
   }
   
-  exports.test= (req, res, next,aloo=null) => {
-    //console.log(aloo)
+  exports.test= (req, res, next) => {
+    res.status(200).json({ message: 'test permession!' })
   }
 
 
