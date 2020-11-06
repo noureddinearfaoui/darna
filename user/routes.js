@@ -9,7 +9,8 @@ const permit = require('../config/middleware/authorization');
 
 router.post('/signin', UserCtrl.login);
 router.post('/signup', UserCtrl.signup);
-router.get('/test', auth,UserCtrl.test);
+router.post('/add', auth,permit('admin'),UserCtrl.add);
 router.get('/confirm/:id',UserCtrl.confirmAccount);
+router.get('/confirme/:id',UserCtrl.confirmAccount);
 
 module.exports = router;
