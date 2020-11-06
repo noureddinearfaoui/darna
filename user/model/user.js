@@ -5,11 +5,12 @@ const userSchema = mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   firstName: { type: String, required: true },
-  LastName: { type: String, required: true },
-  urlImage: { type: String, required: true },
+  lastName: { type: String, required: true },
+  urlImage: { type: String},
   adress: { type: String, required: true },
   tel: { type: String, required: true },
-  DateOfBirth: { type:Date , required: true },
+  dateOfBirth: { type:Date , required: true },
+  confirm: { type:Boolean , required: true },
   
   roles : [
     {type: mongoose.Schema.Types.ObjectId,ref:'Role'}

@@ -9,18 +9,18 @@ require('dotenv').config()
 
 exports.signup = (req, res, next) => {
 
-     let email= 'noureddine0arfaouiee';
-     let password= '123456';
-  bcrypt.hash(password, 10)
+    
+  bcrypt.hash(req.body.password, 10)
     .then(hash => {
 
         Role.findOne({ roleName: "membre"  })
         .then(role => {
-
+             delete req.body._id;
              const user = new User({
-              email: email,
-              password: hash,
+              ...req.body
             });
+            user.password=hash;
+            user.confirm=false;
             user.roles.push(role);
             user.save()
               .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
@@ -34,62 +34,73 @@ exports.signup = (req, res, next) => {
 };
   
   exports.login = (req, res, next) => {
-    let email= 'noureddine0arfaouiee';
-     let password= '123456';
-    User.findOne({ email: email  })
+   
+    User.findOne({ email: req.body.email })
       .then(user => {
         if (!user) {
           return res.status(401).json({ error: 'Utilisateur non trouvé !' });
         }
-        bcrypt.compare(password, user.password)
+        bcrypt.compare(req.body.password,user.password)
           .then(valid => {
+            console.log(req.body.password)
+            console.log(user.password)
+            console.log(valid)
+            
             if (!valid) {
               return res.status(401).json({ error: 'Mot de passe incorrect !' });
             }
-            res.status(200).json({
-              userId: user._id,
-            token: jwt.sign(
-              { userId: user._id },
-              process.env.RANDOM_TOKEN_SECRET,
-              { expiresIn: '24h' }
-            )
-            });
+             
+            if(!user.confirm)
+         {  
+                
+                  const message = {
+                    from: 'elonmusk@tesla.com', // Sender address
+                    to: user.email,         // List of recipients
+                    subject: 'Confirmer votre compte', // Subject line
+                     html: `<p>Bonjour ${user.firstName} ${user.lastName}
+                           pour confirmer votre compte utilisez ce lien
+                        <a href="http://localhost:3000/api/user/confirm/${user._id}">sss</a></p>`
+                      // Plain text body
+                  };
+        
+                 email.send(message);
+        
+                 return res.status(401).json({ error: 'vous devez confirmer votre compte !' });
+        }       
+             else{
+
+                    res.status(200).json({
+                    userId: user._id,
+                    token: jwt.sign(
+                    { userId: user._id },
+                    process.env.RANDOM_TOKEN_SECRET,
+                   { expiresIn: '24h' }
+                   )
+                   });       
+          }
           })
           .catch(error => res.status(500).json({ error }));
       })
       .catch(error => res.status(500).json({ error }));
   };
 
-  exports.finduser= (req, res, next) => {
-    User.find()
-      .then(things => res.status(200).json(things))
-      .catch(error => res.status(400).json({ error }));
-  }
-  exports.userRoles= (req, res, next) => {
-
-    let id = "5fa312ee997221157d37ddca";
-    User.findById(id).populate('roles')
-         .then(things => res.status(200).json(things.roles))
+  exports.confirmAccount= (req, res, next) => {
+     
+    
+    User.findById(req.params.id)
+    .then(user=>{
+      if(user.confirm)
+      res.status(301).json({ message: 'Confirmed! deja' })
+      else
+      {
+         user.confirm=true;
+         user.save()
+         .then(() => res.status(200).json({ message: 'Confirmed!' }))
          .catch(error => res.status(400).json({ error }));
+      }
+    })
+    .catch(error => res.status(500).json({ error }));
     
-   //res.json("aloo" )
   }
-  exports.test2= (req, res, next) => {
-    let id=5;
-
-    const message = {
-      from: 'elonmusk@tesla.com', // Sender address
-      to: 'to@email.com',         // List of recipients
-      subject: 'Design Your Model S | Tesla', // Subject line
-      html: `<a href="http://localhost:3000/api/user/test2/${id}">sss</a>`
-      // Plain text body
-  };
-
-  email.send(message);
-
-  next();
-    
-
-    
-
-  }
+  
+  

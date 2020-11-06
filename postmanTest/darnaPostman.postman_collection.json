@@ -1,0 +1,88 @@
+{
+	"info": {
+		"_postman_id": "0afb9cdb-a96c-42b9-8b7b-d62357a48f58",
+		"name": "darnaPostman",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:3001/api/user/signup",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\":\"nouredd@gmail.com\",\n    \"password\":\"123456\" ,\n    \"firstName\":\"arfaoui\" ,\n    \"lastName\":\"noureddine\" ,\n    \"adress\":\"zahrouni\" ,\n    \"tel\":\"93985040\" ,\n    \"dateOfBirth\": \"01/01/2020\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/api/user/signup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"user",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3001/api/user/signin",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\":\"nouredde@gmail.com\",\n    \"password\":\"123456\" \n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/user/signin",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"signin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{url}}/api/user/confirm/5fa5295fe8125620c46c3cda",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/user/confirm/5fa5295fe8125620c46c3cda",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"confirm",
+						"5fa5295fe8125620c46c3cda"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
