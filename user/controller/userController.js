@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 const Role = require("../../role/model/role");
 
 const email = require("../../config/email");
-const user = require("../model/user");
 
 require("dotenv").config();
 
@@ -102,34 +101,9 @@ exports.confirmAccount = (req, res, next) => {
     })
     .catch((error) => res.status(500).json({ error }));
 };
-exports.add = (req, res, next) => {
-  bcrypt
-    .hash(req.body.password, 10)
-    .then((hash) => {
-      Role.findOne({ roleName: "membre" })
-        .then((role) => {
-          delete req.body._id;
-          const user = new User({
-            ...req.body,
-          });
-          user.password = hash;
-          user.confirm = false;
-          user.accepted = true;
-          user.banni = false;
-          user.renewal = false;
-          user.roles.push(role);
-          user
-            .save()
-            .then(() => res.status(201).json({ message: "Utilisateur créé !" }))
-            .catch((error) => res.status(400).json({ error }));
-        })
-        .catch((error) => res.status(500).json({ error }));
-    })
-    .catch((error) => res.status(500).json({ error }));
-};
 
-exports.test = (req, res, next, aloo = null) => {
-  //console.log(aloo)
+exports.test = (req, res, next) => {
+  res.status(200).json({ message: "test permession!" });
 };
 
 exports.getUserDetails = (req, res) => {

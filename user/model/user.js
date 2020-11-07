@@ -15,6 +15,7 @@ const userSchema = mongoose.Schema(
     banni: { type: Boolean, required: true },
     accepted: { type: Boolean, required: true },
     renewal: { type: Boolean, required: true },
+
     roles: [{ type: mongoose.Schema.Types.ObjectId, ref: "Role" }],
   },
   { timestamps: true }
