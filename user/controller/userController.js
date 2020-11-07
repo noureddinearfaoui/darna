@@ -132,21 +132,33 @@ exports.test = (req, res, next, aloo = null) => {
   //console.log(aloo)
 };
 
-exports.getUserDetails = (req, res, next) => {
-  const userid = req.params.id;
-  User.findById(userid)
-    .then((singleDetails) => {
-      res.status(200).json({
-        success: true,
-        message: `More on ${singleDetails.firstName}`,
-        User: singleDetails,
-      });
-    })
-    .catch((err) => {
-      res.status(500).json({
-        success: false,
-        message: " user Details does not exist",
-        error: err.message,
-      });
-    });
+exports.getUserDetails = (req, res) => {
+  User.findOne({ _id: req.params.id }, (err, user) => {
+    if (err) {
+      return res.status(400).json({ success: false, error: err });
+    }
+
+    return res.status(200).json({ success: true, data: user });
+  }).catch((err) => console.log(err));
+};
+
+exports.updateUserDetails = async (req, res) => {
+  let userId = req.params.id;
+
+  await User.findByIdAndUpdate(
+    { _id: userId },
+    { $set: req.body },
+    (err, data) => {
+      if (err) {
+        res.status(500).json({
+          message: "Something went wrong, please try again later.",
+        });
+      } else {
+        res.status(200).json({
+          message: "User Updated",
+          data,
+        });
+      }
+    }
+  );
 };

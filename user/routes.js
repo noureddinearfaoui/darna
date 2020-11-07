@@ -11,4 +11,5 @@ router.post("/add", auth, permit("admin"), UserCtrl.add);
 router.get("/confirm/:id", UserCtrl.confirmAccount);
 router.get("/confirme/:id", UserCtrl.confirmAccount);
 router.get("/details/:id", UserCtrl.getUserDetails);
+router.put("/details/:id", UserCtrl.updateUserDetails);
 module.exports = router;
