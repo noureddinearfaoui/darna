@@ -116,29 +116,25 @@ exports.getUserDetails = (req, res) => {
   }).catch((err) => console.log(err));
 };
 
-exports.updateUserDetails = async (req, res) => {
+exports.updateUserDetails = (req, res) => {
   let userId = req.params.id;
 
-  await User.findByIdAndUpdate(
-    { _id: userId },
-    { $set: req.body },
-    (err, data) => {
-      if (err) {
-        res.status(500).json({
-          message: "Something went wrong, please try again later.",
-        });
-      } else {
-        res.status(200).json({
-          message: "User Updated",
-          data,
-        });
-      }
+  User.findByIdAndUpdate({ _id: userId }, { $set: req.body }, (err, data) => {
+    if (err) {
+      res.status(500).json({
+        message: "Something went wrong, please try again later.",
+      });
+    } else {
+      res.status(200).json({
+        message: "User Updated",
+        data,
+      });
     }
-  );
+  });
 };
 
-exports.getAllUsers = async (req, res) => {
-  await User.find({}, (err, users) => {
+exports.getAllUsers = (req, res) => {
+  User.find({}, (err, users) => {
     if (err) {
       return res.status(400).json({ success: false, error: err });
     }
