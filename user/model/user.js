@@ -11,9 +11,9 @@ const userSchema = mongoose.Schema(
     adress: { type: String, required: true },
     tel: { type: String, required: true },
     dateOfBirth: { type: Date, required: true },
-    confirm: { type: Boolean, required: true },
+    confirm: { type: Boolean, required: true }, // Confirmation de l'email
     banni: { type: Boolean, required: true },
-    accepted: { type: Boolean, required: true },
+    accepted: { type: Boolean, required: true }, // accepté par l'admin ou non
     renewal: { type: Boolean, required: true },
 
     roles: [{ type: mongoose.Schema.Types.ObjectId, ref: "Role" }],
