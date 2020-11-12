@@ -15,9 +15,8 @@ const userSchema = mongoose.Schema({
   accepted: { type:Boolean , required: true },
   renewal: { type:Boolean , required: true },
   
-  roles : [
-    {type: mongoose.Schema.Types.ObjectId,ref:'Role'}
-]
+  role : {type:String,required:true,default:"membre" }
+
    },
    { timestamps: true });
 
