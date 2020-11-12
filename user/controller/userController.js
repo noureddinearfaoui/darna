@@ -2,8 +2,9 @@ const User = require("../model/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Role = require("../../role/model/role");
-
+const password = require("secure-random-password");
 const email = require("../../config/email");
+const user = require("../model/user");
 
 require("dotenv").config();
 
@@ -132,7 +133,32 @@ exports.updateUserDetails = (req, res) => {
     }
   });
 };
+//Ajouter un membre
 
+exports.addMember = (req, res) => {
+  bcrypt.hash(password.randomPassword(), 10).then((hash) => {
+    const user = new User({
+      ...req.body,
+    });
+    user.password = hash;
+    user.confirm = false;
+    user.accepted = true;
+    user.banni = false;
+    user.renewal = false;
+    //user.roles.push(role);
+    user
+      .save()
+      .then(() => {
+        res.status(201).json({
+          message: "member added successfully",
+        });
+      })
+      .catch((error) => {
+        res.status(500).json({ error: error });
+      });
+  });
+  console.log("pppp", password.randomPassword());
+};
 exports.getAllUsers = (req, res) => {
   User.find({}, (err, users) => {
     if (err) {
@@ -143,4 +169,35 @@ exports.getAllUsers = (req, res) => {
     }
     return res.status(200).json({ success: true, data: users });
   }).catch((err) => console.log(err));
+};
+
+// accepted true
+exports.getAcceptedMembers = (req, res) => {
+  User.find({ accepted: "true", role: "membre" }, (err, users) => {
+    if (err) {
+      return res.status(400).json({ success: false, error: err });
+    }
+    if (!users.length) {
+      return res.status(404).json({ success: false, error: `User not found` });
+    }
+    return res.status(200).json({ success: true, data: users });
+  }).catch((err) => console.log(err));
+};
+
+//accepted false & confirm true
+exports.getDemandes = (req, res) => {
+  User.find(
+    { accepted: "true", confirm: "false", role: "membre" },
+    (err, users) => {
+      if (err) {
+        return res.status(400).json({ success: false, error: err });
+      }
+      if (!users.length) {
+        return res
+          .status(404)
+          .json({ success: false, error: `User not found` });
+      }
+      return res.status(200).json({ success: true, data: users });
+    }
+  ).catch((err) => console.log(err));
 };
