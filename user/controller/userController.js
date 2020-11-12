@@ -71,11 +71,11 @@ exports.login = (req, res, next) => {
             if (!user.renewal)
               return res
                 .status(401)
-                .json({ error: "vous devez renouveler votre adhision !" });
+                .json({ error: "vous devez renouveler votre adhésion !" });
             res.status(200).json({
               userId: user._id,
               token: jwt.sign(
-                { userId: user._id },
+                { userId: user._id, role: user.roles[0] },
                 process.env.RANDOM_TOKEN_SECRET,
                 { expiresIn: "24h" }
               ),
