@@ -1,10 +1,10 @@
-const User = require ('../model/user')
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const password = require('secure-random-password');
-const Role = require('../../role/model/role')
+const User = require("../model/user");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const password = require("secure-random-password");
+const Role = require("../../role/model/role");
 const user = require("../model/user");
-const email = require('../../config/email')
+const email = require("../../config/email");
 require("dotenv").config();
 exports.signup = (req, res, next) => {
   bcrypt
@@ -218,10 +218,5 @@ exports.update = (req, res) => {
         message: "User est banni",
       });
     }
-  });     
-      
-      
-      
-      
-      
- 
+  });
+};
