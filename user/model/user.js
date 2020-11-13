@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
-
 const userSchema = mongoose.Schema(
   {
     email: { type: String, required: true, unique: true },
@@ -11,16 +10,13 @@ const userSchema = mongoose.Schema(
     adress: { type: String, required: true },
     tel: { type: String, required: true },
     dateOfBirth: { type: Date, required: true },
-    confirm: { type: Boolean, required: true },
+    confirm: { type: Boolean, required: true }, // Confirmation de l'email
     banni: { type: Boolean, required: true },
-    accepted: { type: Boolean, required: true },
+    accepted: { type: Boolean, required: true }, // accepté par l'admin ou non
     renewal: { type: Boolean, required: true },
-
-    roles: [{ type: mongoose.Schema.Types.ObjectId, ref: "Role" }],
+    role: { type: String, required: true, default: "membre" },
   },
   { timestamps: true }
 );
-
 userSchema.plugin(uniqueValidator);
-
 module.exports = mongoose.model("User", userSchema);

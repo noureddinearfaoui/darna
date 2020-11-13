@@ -29,13 +29,7 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 
 //middleware user
-app.use("/", userRoutes);
+app.use("/api/user", userRoutes);
 app.use("/api/role", roleRoutes);
-const students = ["Elie", "Matt", "Joel", "Michael"];
-
-app.get("/sedki/", (req, res) => {
-  return res.json(students);
-});
 app.put("/update/:id", UserCtrl.update);
-
 module.exports = app;
