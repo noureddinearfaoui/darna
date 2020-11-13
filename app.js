@@ -6,6 +6,7 @@ const config = require("./config/bd");
 // import métier
 const userRoutes = require("./user/routes");
 const roleRoutes = require("./role/routes");
+const UserCtrl = require("./user/controller/userController");
 
 //connexion base de donneés
 config.connectMongodb;
@@ -30,5 +31,11 @@ app.use(bodyParser.json());
 //middleware user
 app.use("/", userRoutes);
 app.use("/api/role", roleRoutes);
+const students = ["Elie", "Matt", "Joel", "Michael"];
+
+app.get("/sedki/", (req, res) => {
+  return res.json(students);
+});
+app.put("/update/:id", UserCtrl.update);
 
 module.exports = app;

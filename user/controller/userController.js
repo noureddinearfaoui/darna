@@ -106,13 +106,18 @@ exports.test = (req, res, next) => {
   res.status(200).json({ message: "test permession!" });
 };
 
-exports.update1 = (req, res) => {
-  User.findByIdAndUpdate(req.params.id, { banni: true }, function (err, data) {
+exports.update = (req, res) => {
+  let userId = req.body.idMembre;
+  let banniNewVal = req.body.bani;
+  User.findByIdAndUpdate(userId, { banni: banniNewVal }, (err, data) => {
     if (err) {
-      console.log(err);
+      res.status(500).json({
+        message: "Something went wrong, please try again later." + err,
+      });
     } else {
-      res.send(data);
-      console.log("Data updated!");
+      res.status(200).json({
+        message: "User est banni",
+      });
     }
   });
 };

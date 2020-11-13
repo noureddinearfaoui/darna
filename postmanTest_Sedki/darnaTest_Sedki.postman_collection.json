@@ -1,0 +1,37 @@
+{
+	"info": {
+		"_postman_id": "2a00827d-3dbf-4ea2-85ff-d05c5e15c1c5",
+		"name": "darnaTest_Sedki",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "bannir user",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/update/5fa548164e3d2337c30e071f",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"update",
+						"5fa548164e3d2337c30e071f"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"id": "b6c71f13-14d4-4695-aed9-47f7c0b86f67",
+			"key": "url",
+			"value": "http://localhost:3000"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
