@@ -1,17 +1,39 @@
 {
 	"info": {
-		"_postman_id": "f58916fb-245d-4a97-abc3-a942ff72bf0f",
+		"_postman_id": "6615bd0b-fc62-4d53-b2c1-7cdcfb7687fa",
 		"name": "addMember",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "http://localhost:3000/api/user/addMember",
+			"name": "{{ajoutMembre}}",
 			"request": {
-				"method": "GET",
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmFjODgwMTZiZTg2ZDBlYTA4MDAwOTkiLCJyb2xlIjoiNWZhMzBmMGRiMmY4MzUxMzZmYjEyYTIyIiwiaWF0IjoxNjA1MTgxNjkwLCJleHAiOjE2MDUyNjgwOTB9.7k4_jARgbJQMGvqQZZd1J-XoTxARUH8uy5Fqxm3C7AM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"tarek.bejaoui@edu.isetcom.tn\",\r\n    \r\n    \"firstName\":\"tarek\",\r\n    \"lastName\" :\"bejaoui\",\r\n    \"adress\":\"jedeida\",\r\n    \"tel\":\"551116112\",\r\n    \"dateOfBirth\":\"1995-06-21\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": ""
+					"raw": "{{ajoutMembre}}",
+					"host": [
+						"{{ajoutMembre}}"
+					]
 				}
 			},
 			"response": []
