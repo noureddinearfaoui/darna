@@ -1,13 +1,11 @@
-const User = require("../model/user");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const Role = require("../../role/model/role");
-const password = require("secure-random-password");
-const email = require("../../config/email");
+const User = require ('../model/user')
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const password = require('secure-random-password');
+const Role = require('../../role/model/role')
 const user = require("../model/user");
-
+const email = require('../../config/email')
 require("dotenv").config();
-
 exports.signup = (req, res, next) => {
   bcrypt
     .hash(req.body.password, 10)
