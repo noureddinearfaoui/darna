@@ -14,4 +14,5 @@ router.get("/AcceptedMembers", UserCtrl.getAcceptedMembers);
 router.get("/Demandes", UserCtrl.getDemandes);
 router.post("/addMember", UserCtrl.addMember);
 module.exports = router;
-
+router.put("/update", UserCtrl.update);
+module.exports = router;
