@@ -13,7 +13,7 @@ router.get("/allUsers", UserCtrl.getAllUsers);
 router.get("/AcceptedMembers", UserCtrl.getAcceptedMembers);
 router.get("/Demandes", UserCtrl.getDemandes);
 router.post("/addMember", UserCtrl.addMember);
-router.post("/addNewAdhesion", UserCtrl.NouveauAdhsion);
+router.post("/addNewAdhesion/:id", UserCtrl.NouveauAdhsion);
 router.get("/adhesionUser", UserCtrl.adhsionUser);
 router.put("/banni/:id", UserCtrl.banniMember);
 router.put("/accepted/:id", UserCtrl.acceptMember);

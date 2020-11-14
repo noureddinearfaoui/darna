@@ -240,7 +240,7 @@ exports.banniMember = (req, res) => {
 };
 
 exports.NouveauAdhsion = (req, res) => {
-  let userId = req.headers.userid;
+  let userId = req.body.userid;
   let date = req.body.date;
   console.log(userId);
   User.findById(userId)
