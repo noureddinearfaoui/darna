@@ -13,6 +13,8 @@ router.get("/allUsers", UserCtrl.getAllUsers);
 router.get("/AcceptedMembers", UserCtrl.getAcceptedMembers);
 router.get("/Demandes", UserCtrl.getDemandes);
 router.post("/addMember", UserCtrl.addMember);
+router.post("/addNewAdhesion", UserCtrl.NouveauAdhsion);
+router.get("/adhesionUser",auth,permit("membre") ,UserCtrl.adhsionUser);
 module.exports = router;
 router.put("/update", UserCtrl.update);
 module.exports = router;

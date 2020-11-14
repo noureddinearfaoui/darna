@@ -13,7 +13,7 @@ const userSchema = mongoose.Schema(
     confirm: { type: Boolean, required: true }, // Confirmation de l'email
     banni: { type: Boolean, required: true },
     accepted: { type: Boolean, required: true }, // accepté par l'admin ou non
-    renewal: { type: Boolean, required: true },
+    renewal: { type : Array },
     role: { type: String, required: true, default: "membre" },
   },
   { timestamps: true }

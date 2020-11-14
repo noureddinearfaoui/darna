@@ -17,7 +17,7 @@ module.exports = (req, res, next) => {
     }
   } catch (error) {
     res.status(401).json({
-      error: error,
+      error: "vous devez etres authentifié",
     });
   }
 };

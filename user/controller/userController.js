@@ -10,8 +10,7 @@ exports.signup = (req, res, next) => {
   bcrypt
     .hash(req.body.password, 10)
     .then((hash) => {
-      Role.findOne({ roleName: "membre" })
-        .then((role) => {
+      
           delete req.body._id;
           const user = new User({
             ...req.body,
@@ -20,14 +19,11 @@ exports.signup = (req, res, next) => {
           user.confirm = false;
           user.accepted = false;
           user.banni = false;
-          user.renewal = false;
-          user.roles.push(role);
           user
             .save()
             .then(() => res.status(201).json({ message: "Utilisateur créé !" }))
             .catch((error) => res.status(400).json({ error }));
-        })
-        .catch((error) => res.status(500).json({ error }));
+       
     })
     .catch((error) => res.status(500).json({ error }));
 };
@@ -67,14 +63,11 @@ exports.login = (req, res, next) => {
               return res
                 .status(401)
                 .json({ error: "vous n êtes pas encore accepter !" });
-            if (!user.renewal)
-              return res
-                .status(401)
-                .json({ error: "vous devez renouveler votre adhésion !" });
+            
             res.status(200).json({
               userId: user._id,
               token: jwt.sign(
-                { userId: user._id, role: user.roles[0] },
+                { userId: user._id, role: user.role },
                 process.env.RANDOM_TOKEN_SECRET,
                 { expiresIn: "24h" }
               ),
@@ -218,5 +211,43 @@ exports.update = (req, res) => {
         message: "User est banni",
       });
     }
+  });
+};
+exports.NouveauAdhsion = (req, res) => {
+  let userId = req.headers.userid;
+  let date= req.body.date;
+  console.log(userId);
+  User.findById(userId)
+  .then((user) => {
+    console.log(user)
+      user.renewal.push(date);
+       user.save();
+       res.status(200).json({
+        message: "Success",
+      });
+        
+  })
+  .catch(err=>{
+
+    res.status(500).json({
+      message: "Something went wrong, please try again later." + err,
+    });
+  });
+};
+
+exports.adhsionUser = (req, res) => {
+  let userId = req.headers.userid;
+  
+  User.findById(userId)
+  .then((user) => {
+       
+       res.status(200).json(user.renewal);
+        
+  })
+  .catch(err=>{
+
+    res.status(500).json({
+      message: "Something went wrong, please try again later." + err,
+    });
   });
 };
