@@ -43,8 +43,9 @@ exports.login = (req, res, next) => {
             return res.status(401).json({ error: "vous êtes banni !" });
 
           if (!user.confirm) {
+            console.log("aaaaaaaaaaa");
             const message = {
-              from: "elonmusk@tesla.com", // Sender address
+              from: "hanzouliarfaoui@gmail.com", // Sender address
               to: user.email, // List of recipients
               subject: "Confirmer votre compte", // Subject line
               html: `<p>Bonjour ${user.firstName} ${user.lastName}
@@ -161,6 +162,16 @@ exports.addMember = (req, res) => {
     user
       .save()
       .then(() => {
+        const message = {
+          from: "hanzouliarfaoui@gmail.com", // Sender address
+          to: user.email, // List of recipients
+          subject: "Confirmer votre compte", // Subject line
+          html: `<p>Bonjour ${user.firstName} ${user.lastName}
+                       pour confirmer votre compte utilisez ce lien
+                    <a href="http://localhost:3000/api/user/confirm/${user._id}">sss</a></p>`,
+          // Plain text body
+        };
+        email.send(message);
         res.status(201).json({
           message: "member added successfully",
         });
