@@ -241,12 +241,12 @@ exports.banniMember = (req, res) => {
 
 exports.NouveauAdhsion = (req, res) => {
   let userId = req.headers.userid;
-  //let date = req.body.date;
+  let date = req.body.date;
   console.log(userId);
   User.findById(userId)
     .then((user) => {
       console.log(user);
-      user.renewal.push(new Date());
+      user.renewal.push(date);
       user.save();
       res.status(200).json({
         message: "Success",
