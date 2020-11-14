@@ -179,7 +179,7 @@ exports.getAllUsers = (req, res) => {
     if (!users.length) {
       return res.status(404).json({ error: `User not found` });
     }
-    return res.status(200).json({ users });
+    return res.status(200).json(users);
   }).catch((err) => console.log(err));
 };
 
@@ -194,7 +194,7 @@ exports.getAcceptedMembers = (req, res) => {
       if (!users.length) {
         return res.status(404).json({ error: `User not found` });
       }
-      return res.status(200).json({ users });
+      return res.status(200).json(users);
     }
   ).catch((err) => console.log(err));
 };
@@ -212,7 +212,7 @@ exports.getDemandes = (req, res) => {
           .status(404)
           .json({ success: false, error: `User not found` });
       }
-      return res.status(200).json({ users });
+      return res.status(200).json(users);
     }
   ).catch((err) => console.log(err));
 };
