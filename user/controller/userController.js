@@ -201,20 +201,15 @@ exports.getAcceptedMembers = (req, res) => {
 
 //accepted false & confirm true
 exports.getDemandes = (req, res) => {
-  User.find(
-    { accepted: "true", confirm: "false", role: "membre" },
-    (err, users) => {
-      if (err) {
-        return res.status(400).json({ error: err });
-      }
-      if (!users.length) {
-        return res
-          .status(404)
-          .json({ success: false, error: `User not found` });
-      }
-      return res.status(200).json(users);
+  User.find({ accepted: "false", role: "membre" }, (err, users) => {
+    if (err) {
+      return res.status(400).json({ error: err });
     }
-  ).catch((err) => console.log(err));
+    if (!users.length) {
+      return res.status(404).json({ success: false, error: `User not found` });
+    }
+    return res.status(200).json(users);
+  }).catch((err) => console.log(err));
 };
 //bannir member
 exports.banniMember = (req, res) => {
