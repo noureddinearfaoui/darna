@@ -10,20 +10,18 @@ exports.signup = (req, res, next) => {
   bcrypt
     .hash(req.body.password, 10)
     .then((hash) => {
-      
-          delete req.body._id;
-          const user = new User({
-            ...req.body,
-          });
-          user.password = hash;
-          user.confirm = false;
-          user.accepted = false;
-          user.banni = false;
-          user
-            .save()
-            .then(() => res.status(201).json({ message: "Utilisateur créé !" }))
-            .catch((error) => res.status(400).json({ error }));
-       
+      delete req.body._id;
+      const user = new User({
+        ...req.body,
+      });
+      user.password = hash;
+      user.confirm = false;
+      user.accepted = false;
+      user.banni = false;
+      user
+        .save()
+        .then(() => res.status(201).json({ message: "Utilisateur créé !" }))
+        .catch((error) => res.status(400).json({ error }));
     })
     .catch((error) => res.status(500).json({ error }));
 };
@@ -63,7 +61,7 @@ exports.login = (req, res, next) => {
               return res
                 .status(401)
                 .json({ error: "vous n êtes pas encore accepter !" });
-            
+
             res.status(200).json({
               userId: user._id,
               token: jwt.sign(
@@ -98,31 +96,55 @@ exports.test = (req, res, next) => {
   res.status(200).json({ message: "test permession!" });
 };
 
+// Find a single member
 exports.getUserDetails = (req, res) => {
-  User.findOne({ _id: req.params.id }, (err, user) => {
-    if (err) {
-      return res.status(400).json({ success: false, error: err });
-    }
-
-    return res.status(200).json({ success: true, data: user });
-  }).catch((err) => console.log(err));
+  User.findById(req.params.id)
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send({
+          message: "Member not found ",
+        });
+      }
+      res.send(user);
+    })
+    .catch((err) => {
+      if (err.kind === "ObjectId") {
+        return res.status(404).send({
+          message: "Member not found ",
+        });
+      }
+      return res.status(500).send({
+        message: "Error retrieving member details",
+      });
+    });
 };
-
+// Update member details
 exports.updateUserDetails = (req, res) => {
-  let userId = req.params.id;
-
-  User.findByIdAndUpdate({ _id: userId }, { $set: req.body }, (err, data) => {
-    if (err) {
-      res.status(500).json({
-        message: "Something went wrong, please try again later.",
+  User.findByIdAndUpdate(
+    req.params.id,
+    {
+      ...req.body,
+    },
+    { new: true }
+  )
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send({
+          message: "Member not found",
+        });
+      }
+      res.send(user);
+    })
+    .catch((err) => {
+      if (err.kind === "ObjectId") {
+        return res.status(404).send({
+          message: "Member not found",
+        });
+      }
+      return res.status(500).send({
+        message: "Error updating details",
       });
-    } else {
-      res.status(200).json({
-        message: "User Updated",
-        data,
-      });
-    }
-  });
+    });
 };
 //Ajouter un membre
 
@@ -135,8 +157,7 @@ exports.addMember = (req, res) => {
     user.confirm = false;
     user.accepted = true;
     user.banni = false;
-    user.renewal = false;
-    //user.roles.push(role);
+    user.renewal = [new Date()];
     user
       .save()
       .then(() => {
@@ -156,9 +177,9 @@ exports.getAllUsers = (req, res) => {
       return res.status(400).json({ success: false, error: err });
     }
     if (!users.length) {
-      return res.status(404).json({ success: false, error: `User not found` });
+      return res.status(404).json({ error: `User not found` });
     }
-    return res.status(200).json({ success: true, data: users });
+    return res.status(200).json({ users });
   }).catch((err) => console.log(err));
 };
 
@@ -168,14 +189,12 @@ exports.getAcceptedMembers = (req, res) => {
     { accepted: "true", confirm: "true", role: "membre" },
     (err, users) => {
       if (err) {
-        return res.status(400).json({ success: false, error: err });
+        return res.status(400).json({ error: err });
       }
       if (!users.length) {
-        return res
-          .status(404)
-          .json({ success: false, error: `User not found` });
+        return res.status(404).json({ error: `User not found` });
       }
-      return res.status(200).json({ success: true, data: users });
+      return res.status(200).json({ users });
     }
   ).catch((err) => console.log(err));
 };
@@ -186,68 +205,129 @@ exports.getDemandes = (req, res) => {
     { accepted: "true", confirm: "false", role: "membre" },
     (err, users) => {
       if (err) {
-        return res.status(400).json({ success: false, error: err });
+        return res.status(400).json({ error: err });
       }
       if (!users.length) {
         return res
           .status(404)
           .json({ success: false, error: `User not found` });
       }
-      return res.status(200).json({ success: true, data: users });
+      return res.status(200).json({ users });
     }
   ).catch((err) => console.log(err));
 };
+//bannir member
+exports.banniMember = (req, res) => {
+  User.findByIdAndUpdate(
+    req.params.id,
+    {
+      banni: "true",
+    },
+    { new: true }
+  )
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send({
+          message: "Member not found",
+        });
+      }
+      res.send({
+        message: "Member banni",
+      });
+    })
+    .catch((err) => {
+      if (err.kind === "ObjectId") {
+        return res.status(404).send({
+          message: "Member not found",
+        });
+      }
+      return res.status(500).send({
+        message: "Error bannir",
+      });
+    });
+};
 
-exports.update = (req, res) => {
-  let userId = req.body.idMembre;
-  let banniNewVal = req.body.bani;
-  User.findByIdAndUpdate(userId, { banni: banniNewVal }, (err, data) => {
-    if (err) {
+exports.NouveauAdhsion = (req, res) => {
+  let userId = req.headers.userid;
+  //let date = req.body.date;
+  console.log(userId);
+  User.findById(userId)
+    .then((user) => {
+      console.log(user);
+      user.renewal.push(new Date());
+      user.save();
+      res.status(200).json({
+        message: "Success",
+      });
+    })
+    .catch((err) => {
       res.status(500).json({
         message: "Something went wrong, please try again later." + err,
       });
-    } else {
-      res.status(200).json({
-        message: "User est banni",
-      });
-    }
-  });
-};
-exports.NouveauAdhsion = (req, res) => {
-  let userId = req.headers.userid;
-  let date= req.body.date;
-  console.log(userId);
-  User.findById(userId)
-  .then((user) => {
-    console.log(user)
-      user.renewal.push(date);
-       user.save();
-       res.status(200).json({
-        message: "Success",
-      });
-        
-  })
-  .catch(err=>{
-
-    res.status(500).json({
-      message: "Something went wrong, please try again later." + err,
     });
-  });
 };
 
 exports.adhsionUser = (req, res) => {
   let userId = req.headers.userid;
-  
-  User.findById(userId)
-  .then((user) => {
-       
-       res.status(200).json(user.renewal);
-        
-  })
-  .catch(err=>{
 
-    res.status(500).json({
-      message: "Something went wrong, please try again later." + err,
+  User.findById(userId)
+    .then((user) => {
+      res.status(200).json(user.renewal);
+    })
+    .catch((err) => {
+      res.status(500).json({
+        message: "Something went wrong, please try again later." + err,
+      });
     });
-  });
+};
+// delete member by id
+exports.deleteOneMember = (req, res) => {
+  User.findByIdAndRemove(req.params.id)
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send({
+          message: "Member not found",
+        });
+      }
+      res.send({ message: "member deleted successfully!" });
+    })
+    .catch((err) => {
+      if (err.kind === "ObjectId" || err.name === "NotFound") {
+        return res.status(404).send({
+          message: "member not found",
+        });
+      }
+      return res.status(500).send({
+        message: "Could not delete member",
+      });
+    });
+};
+
+// accepted=true
+exports.acceptMember = (req, res) => {
+  User.findByIdAndUpdate(
+    req.params.id,
+    {
+      accepted: "true",
+    },
+    { new: true }
+  )
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send({
+          message: "member not found",
+        });
+      }
+      res.send(user);
+    })
+    .catch((err) => {
+      if (err.kind === "ObjectId") {
+        return res.status(404).send({
+          message: "member not found",
+        });
+      }
+      return res.status(500).send({
+        message: "Error updating accepted ",
+      });
+    });
 };

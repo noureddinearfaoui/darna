@@ -1,0 +1,108 @@
+{
+	"info": {
+		"_postman_id": "6615bd0b-fc62-4d53-b2c1-7cdcfb7687fa",
+		"name": "addMember",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:3000/api/user/addMember",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmFjODgwMTZiZTg2ZDBlYTA4MDAwOTkiLCJyb2xlIjoiNWZhMzBmMGRiMmY4MzUxMzZmYjEyYTIyIiwiaWF0IjoxNjA1MTgxNjkwLCJleHAiOjE2MDUyNjgwOTB9.7k4_jARgbJQMGvqQZZd1J-XoTxARUH8uy5Fqxm3C7AM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"tarek.bejaoui@edu.isetcom.tn\",\r\n    \r\n    \"firstName\":\"tarek\",\r\n    \"lastName\" :\"bejaoui\",\r\n    \"adress\":\"jedeida\",\r\n    \"tel\":\"551116112\",\r\n    \"dateOfBirth\":\"1995-06-21\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{ajoutMembre}}",
+					"host": [
+						"{{ajoutMembre}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3000/api/user/accepted/5fafa9c469032a13b29cbd07",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "accepted",
+							"value": "",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{acceptedTrue}}",
+					"host": [
+						"{{acceptedTrue}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3000/api/user/deleteMember/5faf1b489935e12dbc140d56",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{deleteMember}}",
+					"host": [
+						"{{deleteMember}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3000/api/user/banni/5fb009e3bc56080d38c1dedd",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/user/banni/5fb009e3bc56080d38c1dedd",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user",
+						"banni",
+						"5fb009e3bc56080d38c1dedd"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
