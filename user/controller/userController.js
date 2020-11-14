@@ -191,9 +191,6 @@ exports.getAcceptedMembers = (req, res) => {
       if (err) {
         return res.status(400).json({ error: err });
       }
-      if (!users.length) {
-        return res.status(404).json({ error: `User not found` });
-      }
       return res.status(200).json(users);
     }
   ).catch((err) => console.log(err));
