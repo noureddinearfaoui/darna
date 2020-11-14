@@ -221,7 +221,7 @@ exports.banniMember = (req, res) => {
   User.findByIdAndUpdate(
     req.params.id,
     {
-      banni: "true",
+      banni: req.body.banni,
     },
     { new: true }
   )
