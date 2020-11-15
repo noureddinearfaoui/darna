@@ -3,7 +3,7 @@ const app = require("../app");
 const mongoose = require("mongoose");
 const User = require("../user/model/user");
 
-beforeEach((done) => {
+/*beforeEach((done) => {
   mongoose.connect(
     "mongodb+srv://darna:darna123456@cluster0.vrjcg.mongodb.net/projet-darna?retryWrites=true&w=majority",
     { useNewUrlParser: true, useUnifiedTopology: true },
@@ -15,7 +15,7 @@ afterEach((done) => {
   mongoose.connection.db.dropDatabase(() => {
     mongoose.connection.close(() => done());
   });
-});
+});*/
 
 /*test("addMember", async () => {
   const data = {
@@ -157,6 +157,67 @@ test("Echec accept member ", async () => {
       // Check the response type and length
 
       expect(response.body.message).toBe("member not found");
+    });
+});
+*/
+//////////// Test renouvellemnt adhesion
+/*
+test("addNewAdhesion", async () => {
+  const data = {
+    nouveauAdhesionDate: new Date(),
+  };
+
+  await supertest(app)
+    .post("/api/user/addNewAdhesion/5fb1b06af1e1e83a482ceaba")
+    .send(data)
+    .expect(200)
+    .then((response) => {
+      expect(response.body.message).toBe("Success");
+    });
+});
+*/
+//////Echec delete member
+/*
+test("Member to delete is not found ", async () => {
+  await supertest(app)
+    .delete(
+      `/api/user/deleteMember/123456
+    `
+    )
+    .expect(404)
+    .then((response) => {
+      expect(response.body.message).toBe("member not found");
+    });
+});
+*/
+//////test update member details
+/*
+test('update details of member ', async() => {
+  const data={
+    tel:"25252525",
+    firstName:"firstNameUpdated"
+  }
+  await supertest(app)
+  .put("/api/user/details/5fb1b06af1e1e83a482ceaba")
+  .send(data)
+  .expect(200)
+
+  
+})*/
+
+//////test echec update member details
+/*
+test("Echec update details of member ", async () => {
+  const data = {
+    tel: "25252525",
+    firstName: "firstNameUpdated",
+  };
+  await supertest(app)
+    .put("/api/user/details/123456")
+    .send(data)
+    .expect(404)
+    .then((response) => {
+      expect(response.body.message).toBe("Member not found");
     });
 });
 */
