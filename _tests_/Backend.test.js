@@ -3,11 +3,6 @@ const app = require("../app");
 const mongoose = require("mongoose");
 const User = require("../user/model/user");
 
-/*describe("Test if jest working or not", () => {
-  it("should test that true === true", () => {
-    expect(true).toBe(true);
-  });
-});*/
 beforeEach((done) => {
   mongoose.connect(
     "mongodb+srv://darna:darna123456@cluster0.vrjcg.mongodb.net/projet-darna?retryWrites=true&w=majority",
@@ -22,7 +17,7 @@ afterEach((done) => {
   });
 });
 
-test("Ajout d'un nouveau membre", async () => {
+/*test("addMember", async () => {
   const data = {
     email: "bejaouitarek4@gmail.com",
     firstName: "tarek",
@@ -37,24 +32,131 @@ test("Ajout d'un nouveau membre", async () => {
     .send(data)
     .expect(201)
     .then(async (response) => {
-      //Check the response
       expect(response.body.message).toBe("member added successfully");
-      //expect(response.body.user._id).toBeTruthy();
-      expect(response.body.user.email).toBe(data.email);
-      expect(response.body.user.firstName).toBe(data.firstName);
-      expect(response.body.user.lastName).toBe(data.lastName);
-      expect(response.body.user.adress).toBe(data.adress);
-      expect(response.body.user.tel).toBe(data.tel);
-      //expect(response.body.user.dateOfBirth).toBe(data.dateOfBirth);
-
-      // Check the data in the database
-      /* const user = await User.findOne({ _id: response.body.user._id });
-      expect(user).toBeTruthy();
-      expect(user.email).toBe(data.email);
-      expect(user.firstName).toBe(data.firstName);
-      expect(user.lastName).toBe(data.lastName);
-      expect(user.adress).toBe(data.adress);
-      expect(user.tel).toBe(data.tel);*/
-      //expect(user.dateOfBirth).toBe(data.dateOfBirth);
     });
 });
+*/
+
+/////echec d'ajout membre
+test("The body of adding member should not be empty", async () => {
+  const data = {};
+  await supertest(app).post("/api/user/addMember").send(data).expect(500);
+});
+/////ajout avec données incomplètes
+test(" the body should contains all required fields", async () => {
+  const data = {
+    email: "ttttt@gmail.com",
+  };
+  await supertest(app).post("/api/user/addMember").send(data).expect(500);
+});
+
+/*test("acceptedMembers ", async () => {
+  await supertest(app)
+    .get("/api/user/AcceptedMembers")
+    .expect(200)
+    .then((response) => {
+      // Check the response type and length
+      expect(Array.isArray(response.body)).toBeTruthy();
+    });
+});
+
+test("getDemandes ", async () => {
+  await supertest(app)
+    .get("/api/user/Demandes")
+    .expect(200)
+    .then((response) => {
+      // Check the response type and length
+      expect(Array.isArray(response.body)).toBeTruthy();
+    });
+});*/
+
+/*test("Delete One Member ", async () => {
+  await supertest(app)
+    .delete(
+      `/api/user/deleteMember/5fafa9c469032a13b29cbd07
+    `
+    )
+    .expect(200)
+    .then((response) => {
+      expect(response.body.message).toBe("member deleted successfully!");
+    });
+}); */
+
+/*test("banniMember", async () => {
+  const data = {
+    banni: "true",
+  };
+  await supertest(app)
+    .put(
+      `/api/user/banni/5fb009e3bc56080d38c1dedd
+      `
+    )
+    .expect(201)
+    .send(data)
+    .then((response) => {
+      expect(response.body.message).toBe("Member banni");
+    });
+});*/
+
+///////////// Echec bannir membre
+/*test('Echec bannirMember', async() => {
+  const data={
+    banni:"false"
+  }
+    await supertest(app)
+      .put(/api/user/banni/123456)
+      .expect(404)
+      .send(data)
+      .then((response) => {
+        expect(response.body.message).toBe("Member not found");
+    
+  })
+  })
+*/
+
+/*
+test("getUserDetails ", async () => {
+  await supertest(app)
+    .get("/api/user/details/5fb161860ea16745e8930db8")
+    .expect(200);
+});
+
+test("Echec getUserDetails ", async () => {
+  await supertest(app)
+    .get("/api/user/details/12345")
+    .expect(404)
+    .then((response) => {
+      expect(response.body.message).toBe("Member not found ");
+    });
+});
+*/
+
+/*
+
+//////////////Test accept member
+test("Accept member ", async () => {
+  const data = {
+    accepted: "true",
+  };
+  await supertest(app)
+    .put("/api/user/accepted/5fb0569ed7f5bb175ff092d0")
+    .expect(200)
+    .send(data);
+});
+///////////// Echec accept member
+test("Echec accept member ", async () => {
+  const data = {
+    accepted: "true",
+  };
+
+  await supertest(app)
+    .put("/api/user/accepted/123456")
+    .expect(404)
+    .send(data)
+    .then((response) => {
+      // Check the response type and length
+
+      expect(response.body.message).toBe("member not found");
+    });
+});
+*/

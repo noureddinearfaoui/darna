@@ -231,7 +231,7 @@ exports.banniMember = (req, res) => {
           message: "Member not found",
         });
       }
-      res.send({
+      res.status(201).send({
         message: "Member banni",
       });
     })
@@ -289,7 +289,7 @@ exports.deleteOneMember = (req, res) => {
           message: "Member not found",
         });
       }
-      res.send({ message: "member deleted successfully!" });
+      res.status(200).send({ message: "member deleted successfully!" });
     })
     .catch((err) => {
       if (err.kind === "ObjectId" || err.name === "NotFound") {
