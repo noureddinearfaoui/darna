@@ -176,12 +176,12 @@ exports.addMember = (req, res) => {
       .save()
       .then(() => {
         const message = {
-          from: "hanzouliarfaoui@gmail.com", // Sender address
+          from: process.env.EMAIL_USER, // Sender address
           to: user.email, // List of recipients
           subject: "Confirmer votre compte", // Subject line
           html: `<p>Bonjour ${user.firstName} ${user.lastName}
                        pour confirmer votre compte utilisez ce lien
-                    <a href="http://localhost:3000/api/user/confirm/${user._id}">sss</a></p>`,
+                    <a href="http://localhost:3000/api/user/confirm/${user._id}">Confirmer</a></p>`,
           // Plain text body
         };
         email.send(message);
