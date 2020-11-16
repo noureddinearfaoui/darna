@@ -205,3 +205,35 @@ test("Echec update details of member ", async () => {
       expect(response.body.message).toBe("Member not found");
     });
 });
+/*
+test("successful signup ", async () => {
+  const data = {
+    email: "tarek.bejaoui@edu.isetcom.tn",
+    firstName: "tarek",
+    lastName: "bejaoui",
+    adress: "08 rue de france cité elhideya jedeida",
+    tel: "55111612",
+    dateOfBirth: "1995-06-21",
+    password: "tarek1995",
+  };
+  await supertest(app)
+    .post("/api/user/signup")
+    .send(data)
+    .expect(201)
+    .then(async (response) => {
+      expect(response.body.message).toBe("Utilisateur créé !");
+    });
+});
+*/
+///// Test d'echec de signup
+test("The body of signup should not be empty", async () => {
+  const data = {};
+  await supertest(app).post("/api/user/signup").send(data).expect(500);
+});
+///// test de signup avec données incomplètes
+test(" the body should contains all required fields", async () => {
+  const data = {
+    email: "aaaaa@gmail.com",
+  };
+  await supertest(app).post("/api/user/signup").send(data).expect(500);
+});
