@@ -6,6 +6,7 @@ const config = require("./config/bd");
 // import métier
 const userRoutes = require("./user/routes");
 const roleRoutes = require("./role/routes");
+const ActionRouts = require("./action/routes");
 var cors = require("cors");
 //connexion base de donneés
 config.connectMongodb;
@@ -29,5 +30,6 @@ app.use(bodyParser.json());
 
 //middleware user
 app.use("/api/user", userRoutes);
-app.use("/api/role", roleRoutes);
+
+app.use("/api/action", ActionRouts);
 module.exports = app;
