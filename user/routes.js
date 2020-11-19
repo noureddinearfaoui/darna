@@ -18,5 +18,6 @@ router.get("/adhesionUser", UserCtrl.adhsionUser);
 router.put("/banni/:id", UserCtrl.banniMember);
 router.put("/accepted/:id", UserCtrl.acceptMember);
 router.delete("/deleteMember/:id", UserCtrl.deleteOneMember);
+router.get("/UserByEmail/:email", UserCtrl.getUserByEmail);
 
 module.exports = router;
