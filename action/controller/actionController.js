@@ -3,31 +3,25 @@ const User = require("../../user/model/user")
 
 exports.addAction = (req, res, next) => {
 
-    let idUser= "5fb3fa9db13c700fba0416d2"; 
-
+    let idUser= req.headers.iduser ;
+    
 
     User.findById(idUser)
     .then(user=>{
-        let  a = { NomAction:"neewaction" ,
-        description: "joli action",
-        lieu: "manouba",
-        dateDebut:"06/09/2020",
-        dateFin:"06/09/2020" ,
-        dateDebutIndcription: "06/09/2020",
-        dateFinIndcription: "06/09/2020",
-        nbrMembres: 12,
-        estPublie: false,
-        user: user
-        }   
-        console.log(user)      
+    if(user)
+    { 
     const action = new Action({
-        ...a
+        ...req.body
     })
+    action. estPublie= false;
+    action.user=user;
 
      action.save()
      .then(()=>res.status(200).json({ action }))
      .catch((error) => res.status(500).json({ message : "error server"+error }));;
-     
+   }
+   else 
+   res.status(500).json({ message:"user Non trouvé" })
     })
     .catch((error) => res.status(500).json({ message:"user Non trouvé" }));
 

@@ -7,8 +7,8 @@ const ActionSchema = mongoose.Schema(
     lieu: { type: String, required: true },
     dateDebut: { type: Date, required: true },
     dateFin: { type: Date },
-    dateDebutIndcription: { type: Date, required: true },
-    dateFinIndcription: { type: Date, required: true },
+    dateDebutInscription: { type: Date, required: true },
+    dateFinInscription: { type: Date, required: true },
     nbrMembres: { type: Number, required: true },
     estPublie: { type: Boolean, required: true },
     user: {
