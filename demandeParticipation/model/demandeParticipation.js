@@ -3,7 +3,7 @@ const DemandeParticipationSchema = mongoose.Schema(
   {
     status: { type: String, required: true},
     participated: { type: Boolean, required: true},
-    membre: {
+    member: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
       },

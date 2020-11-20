@@ -22,7 +22,7 @@ exports.addDemande = (req, res, next) => {
             const demande = new DemandeParticipation({
                 status:"attente",
                 participated:false,
-               membre:user,
+                member:user,
                action:action
             })
            
