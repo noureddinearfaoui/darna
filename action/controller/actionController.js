@@ -13,8 +13,8 @@ exports.addAction = (req, res, next) => {
     const action = new Action({
         ...req.body
     })
-    action. estPublie= false;
-    action.user=user;
+    action.isPublished= false;
+    action.admin=user;
 
      action.save()
      .then(()=>res.status(200).json({ action }))
@@ -29,4 +29,19 @@ exports.addAction = (req, res, next) => {
 
 
 
+}
+
+exports.getAllActions = (req, res, next) => {
+
+    Action.find()
+    .then((actions)=>{
+        if(actions)
+        {
+            res.status(200).json({actions });
+        }
+        else
+        res.status(500).json({ message:"pas de action" });
+
+    })
+    .catch((error) => res.status(500).json({ message:"pas de action" }));
 }

@@ -2,16 +2,17 @@ const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
 const ActionSchema = mongoose.Schema(
   {
-    NomAction: { type: String, required: true, unique: true },
+    actionName: { type: String, required: true, unique: true },
     description: { type: String, required: true },
-    lieu: { type: String, required: true },
-    dateDebut: { type: Date, required: true },
-    dateFin: { type: Date },
-    dateDebutInscription: { type: Date, required: true },
-    dateFinInscription: { type: Date, required: true },
-    nbrMembres: { type: Number, required: true },
-    estPublie: { type: Boolean, required: true },
-    user: {
+    location: { type: String, required: true },
+    beginDate: { type: Date, required: true },
+    endDate: { type: Date },
+    beginDateInscription: { type: Date, required: true },
+    endDateInscription: { type: Date, required: true },
+    numberOfMembers: { type: Number, required: true },
+    isPublished: { type: Boolean, required: true },
+    urlPhoto: { type: String },
+    admin: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
       }

@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 const DemandeParticipationSchema = mongoose.Schema(
   {
-    etat: { type: String, required: true},
-    participate: { type: Boolean, required: true},
-    user: {
+    status: { type: String, required: true},
+    participated: { type: Boolean, required: true},
+    membre: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
       },

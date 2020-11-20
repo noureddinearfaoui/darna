@@ -20,9 +20,9 @@ exports.addDemande = (req, res, next) => {
            
             
             const demande = new DemandeParticipation({
-               etat:"attente",
-               participate:false,
-               user:user,
+                status:"attente",
+                participated:false,
+               membre:user,
                action:action
             })
            
