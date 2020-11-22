@@ -22,7 +22,7 @@ const User = require("../user/model/user");
     });
 });
 */
-
+/*
 ///// Test d'echec d'ajout membre
 test("The body of adding member should not be empty", async () => {
   const data = {};
@@ -34,8 +34,8 @@ test(" the body should contains all required fields", async () => {
     email: "ttttt@gmail.com",
   };
   await supertest(app).post("/api/user/addMember").send(data).expect(500);
-});
-
+}); */
+/*
 // test de la fonction getAcceptedMembers
 test("acceptedMembers ", async () => {
   await supertest(app)
@@ -45,7 +45,8 @@ test("acceptedMembers ", async () => {
       // Check the response type and length
       expect(Array.isArray(response.body)).toBeTruthy();
     });
-});
+});*/
+/*
 // test de la méthode getDemandes
 test("getDemandes ", async () => {
   await supertest(app)
@@ -55,7 +56,7 @@ test("getDemandes ", async () => {
       // Check the response type and length
       expect(Array.isArray(response.body)).toBeTruthy();
     });
-});
+});*/
 
 // test de la fonction deleteOneMember
 /*test("Delete One Member ", async () => {
@@ -69,7 +70,7 @@ test("getDemandes ", async () => {
       expect(response.body.message).toBe("member deleted successfully!");
     });
 }); */
-
+/*
 // test d'echec delete member
 
 test("Member to delete is not found ", async () => {
@@ -83,6 +84,7 @@ test("Member to delete is not found ", async () => {
       expect(response.body.message).toBe("member not found");
     });
 });
+*/
 
 //test de la fonction banniMember
 /*test("banniMember", async () => {
@@ -101,6 +103,7 @@ test("Member to delete is not found ", async () => {
     });
 });*/
 
+/*
 // test du cas d'echec de la fonction bannir membre
 test("Echec bannirMember", async () => {
   const data = {
@@ -113,8 +116,8 @@ test("Echec bannirMember", async () => {
     .then((response) => {
       expect(response.body.message).toBe("Member not found");
     });
-});
-
+});*/
+/*
 test("getUserDetails ", async () => {
   await supertest(app)
     .get("/api/user/details/5fb1b06af1e1e83a482ceaba")
@@ -128,7 +131,7 @@ test("Echec getUserDetails ", async () => {
     .then((response) => {
       expect(response.body.message).toBe("Member not found ");
     });
-});
+});*/
 
 /*
 
@@ -143,7 +146,7 @@ test("Accept member ", async () => {
     .send(data);
 });
 */
-
+/*
 // test d'echec de la fonction AccepMember
 test("Echec accept member ", async () => {
   const data = {
@@ -159,7 +162,7 @@ test("Echec accept member ", async () => {
       expect(response.body.message).toBe("member not found");
     });
 });
-
+*/
 // Test de la fonction de renouvellemnt d'adhesion
 /*
 test("addNewAdhesion", async () => {
@@ -225,6 +228,7 @@ test("successful signup ", async () => {
     });
 });
 */
+/*
 ///// Test d'echec de signup
 test("The body of signup should not be empty", async () => {
   const data = {};
@@ -237,3 +241,4 @@ test(" the body should contains all required fields", async () => {
   };
   await supertest(app).post("/api/user/signup").send(data).expect(500);
 });
+*/

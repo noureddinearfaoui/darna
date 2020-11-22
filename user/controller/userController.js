@@ -20,19 +20,19 @@ exports.signup = (req, res, next) => {
       user.banni = false;
       user
         .save()
-        .then(() => 
-       { res.status(201).json({ message: "Utilisateur créé !" })
-          
-       const message = {
-        from: process.env.EMAIL_USER, // Sender address
-        to: user.email, // List of recipients
-        subject: "Confirmer votre compte", // Subject line
-        html: `<p>Bonjour ${user.firstName} ${user.lastName}
+        .then(() => {
+          res.status(201).json({ message: "Utilisateur créé !" });
+
+          const message = {
+            from: process.env.EMAIL_USER, // Sender address
+            to: user.email, // List of recipients
+            subject: "Confirmer votre compte", // Subject line
+            html: `<p>Bonjour ${user.firstName} ${user.lastName}
                      pour confirmer votre compte utilisez ce lien
                   <a href="http://localhost:3000/api/user/confirm/${user._id}">Confirmer</a></p>`,
-        // Plain text body
-      };
-      email.send(message);
+            // Plain text body
+          };
+          email.send(message);
         })
         .catch((error) => res.status(400).json({ error }));
     })
@@ -56,7 +56,6 @@ exports.login = (req, res, next) => {
             return res.status(401).json({ error: "vous êtes banni !" });
 
           if (!user.confirm) {
-            
             const message = {
               from: process.env.EMAIL_USER, // Sender address
               to: user.email, // List of recipients
@@ -266,13 +265,13 @@ exports.NouveauAdhsion = (req, res) => {
   console.log(userId);
   User.findById(userId)
     .then((user) => {
-      
       user.renewal.push(date);
-      user.save().then(()=>{;
-      res.status(200).json({
-        message: "Success",
+      user.save().then(() => {
+        res.status(200).json({
+          message: "Success",
+        });
       });
-    })})
+    })
     .catch((err) => {
       res.status(500).json({
         message: "Something went wrong, please try again later." + err,
@@ -296,16 +295,13 @@ exports.adhsionUser = (req, res) => {
 exports.getUserByEmail = (req, res) => {
   let userEmail = req.params.email;
 
-  User.findOne({email:userEmail})
+  User.findOne({ email: userEmail })
     .then((user) => {
-      
-      if(user )
-      res.status(200).json({user: user});
-      else
-      res.status(200).json("pas de user");
+      if (user) res.status(200).json({ user: user });
+      else res.status(200).json("pas de user");
     })
     .catch((err) => {
-      console.log("error")
+      console.log("error");
       res.status(500).json({
         message: "user not found",
       });
