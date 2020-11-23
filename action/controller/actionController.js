@@ -103,7 +103,7 @@ exports.publishAction = (req, res) => {
   Action.findByIdAndUpdate(
     req.params.id,
     {
-      isPublished: true,
+      isPublished: req.body.publish,
     },
     { new: true }
   )
@@ -114,7 +114,7 @@ exports.publishAction = (req, res) => {
         });
       }
       res.status(201).send({
-        message: "Action published",
+        message: "Sucess",
       });
     })
     .catch((err) => {
