@@ -95,10 +95,9 @@ exports.updateParticipation = (req, res) => {
 exports.getParticipationDemandesByMember = (req, res) => {
   let userId = req.params.userId;
 
-  DemandeParticipation.findOne({ member: userId })
+  DemandeParticipation.find({ member: userId })
     .then((demande) => {
-      if (demande) res.status(200).json(demande);
-      else res.status(400).json("There is no requests for this member");
+      res.status(200).json(demande);
     })
     .catch((err) => {
       if (err.kind === "ObjectId") {
