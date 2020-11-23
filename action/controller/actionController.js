@@ -13,6 +13,19 @@ exports.addAction = (req, res, next) => {
         action.isPublished = false;
         action.admin = user;
 
+        if (req.body.beginDate > req.body.endDate) {
+          res
+            .status(400)
+            .json({ message: "beginDate must be less than endDate" });
+        }
+
+        if (req.body.beginDateInscription > req.body.endDateInscription) {
+          res.status(400).json({
+            message:
+              "beginDate of the inscription must be less than endDate of the Inscription",
+          });
+        }
+
         action
           .save()
           .then(() => res.status(200).json(action))
@@ -21,17 +34,30 @@ exports.addAction = (req, res, next) => {
           );
       } else res.status(404).json({ message: "user Non trouvé" });
     })
+
     .catch((error) => res.status(404).json({ message: "user Non trouvé" }));
 };
 // Update Action Details
 exports.updateActionDetails = (req, res) => {
+  if (req.body.beginDate > req.body.endDate) {
+    res.status(400).json({ message: "beginDate must be less than endDate" });
+  }
+
+  if (req.body.beginDateInscription > req.body.endDateInscription) {
+    res.status(400).json({
+      message:
+        "beginDate of the inscription must be less than endDate of the Inscription",
+    });
+  }
   Action.findByIdAndUpdate(
     req.headers.id,
     {
       ...req.body,
     },
+
     { new: true }
   )
+
     .then((action) => {
       if (!action) {
         return res.status(404).send({
