@@ -7,13 +7,13 @@ test("get all actions ", async () => {
 
 test("get action details ", async () => {
   await supertest(app)
-    .get("/api/action/action/5fb8e9b92257660dd038d2ec")
+    .get("/api/action/action/5fbbd1d928f8ca344cafc6c8")
     .expect(200);
 });
 
 test("publish action ", async () => {
   await supertest(app)
-    .put("/api/action/publishAction/5fb8e9b92257660dd038d2ec")
+    .put("/api/action/publishAction/5fbbd1d928f8ca344cafc6c8")
     .expect(201)
     .then((response) => {
       expect(response.body.message).toBe("Action published");
