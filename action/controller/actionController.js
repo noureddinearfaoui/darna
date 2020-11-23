@@ -1,6 +1,6 @@
 const Action = require("../model/action");
 const User = require("../../user/model/user");
-
+const DemandeParticipation = require("../../demandeParticipation/model/demandeParticipation");
 exports.addAction = (req, res, next) => {
   let idUser = req.headers.iduser;
 
@@ -80,25 +80,27 @@ exports.updateActionDetails = (req, res) => {
 
 // delete action by id
 exports.deleteOneAction = (req, res) => {
-  Action.findByIdAndRemove(req.params.id)
-    .then((action) => {
-      if (!action) {
-        return res.status(404).send({
-          message: "Action not found",
+  DemandeParticipation.remove({ action: req.params.id }).then(() => {
+    Action.findByIdAndRemove(req.params.id)
+      .then((action) => {
+        if (!action) {
+          return res.status(404).send({
+            message: "Action not found",
+          });
+        }
+        res.status(200).send({ message: "Action deleted successfully!" });
+      })
+      .catch((err) => {
+        if (err.kind === "ObjectId" || err.name === "NotFound") {
+          return res.status(404).send({
+            message: "Action not found",
+          });
+        }
+        return res.status(500).send({
+          message: "Could not delete action",
         });
-      }
-      res.status(200).send({ message: "Action deleted successfully!" });
-    })
-    .catch((err) => {
-      if (err.kind === "ObjectId" || err.name === "NotFound") {
-        return res.status(404).send({
-          message: "Action not found",
-        });
-      }
-      return res.status(500).send({
-        message: "Could not delete action",
       });
-    });
+  });
 };
 
 // Find a single action
@@ -140,7 +142,7 @@ exports.publishAction = (req, res) => {
         });
       }
       res.status(201).send({
-        message: "Sucess",
+        message: "Action published",
       });
     })
     .catch((err) => {

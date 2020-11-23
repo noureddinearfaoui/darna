@@ -7,13 +7,17 @@ test("get all actions ", async () => {
 
 test("get action details ", async () => {
   await supertest(app)
-    .get("/api/action/action/5fbbd1d928f8ca344cafc6c8")
+    .get("/api/action/action/5fbbb8ec5b90c426e336e42e")
     .expect(200);
 });
 
 /*test("publish action ", async () => {
+  const data = {
+    isPublished: true,
+  };
   await supertest(app)
-    .put("/api/action/publishAction/5fbbd1d928f8ca344cafc6c8")
+    .put("/api/action/publishAction/5fbbb8ec5b90c426e336e42e")
+    .send(data)
     .expect(201)
     .then((response) => {
       expect(response.body.message).toBe("Action published");
@@ -28,22 +32,21 @@ test("Echec publish action", async () => {
     });
 });
 
-/*test('delete action ', async() => {
-      await supertest(app)
-      .delete("/api/action/deleteAction/5fbaaec0a9be101378355fff")
-      .expect(200)
-      .then((response)=>{
-          expect(response.body.message).toBe("Action deleted successfully!")
-      })
-      
-  })*/
+/*test("delete action ", async () => {
+  await supertest(app)
+    .delete("/api/action/deleteAction/5fbc0663650be841d8e14c98")
+    .expect(200)
+    .then((response) => {
+      expect(response.body.message).toBe("Action deleted successfully!");
+    });
+}); */
 
 // test d'echec delete action
-test("echec delete action", async () => {
+/*test("echec delete action", async () => {
   await supertest(app)
     .delete("/api/action/deleteAction/123456")
     .expect(404)
     .then((response) => {
       expect(response.body.message).toBe("Action not found");
     });
-});
+});*/

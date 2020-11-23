@@ -26,18 +26,18 @@ test("Echec add new request with wrong idAction", async () => {
     });
 });
 
-test("update status of request ", async () => {
+/*test("update status of request ", async () => {
   const data = {
     status: "acceptée",
   };
   await supertest(app)
-    .put("/api/demandeParticipation/updateStatus/5fba9cdd50fb003420bf95f8")
+    .put("/api/demandeParticipation/updateStatus/5fbbf714bd598c72bf30e5dd")
     .send(data)
     .expect(201)
     .then((response) => {
       expect(response.body.message).toBe("Status updated");
     });
-});
+});*/
 
 test("Echec update status with wrong objectId form ", async () => {
   const data = {
@@ -63,20 +63,20 @@ test("Echec update status of request that not exist and empty data", async () =>
     });
 });
 
-test("update participated  ", async () => {
+/*test("update participated  ", async () => {
   const data = {
     participated: true,
   };
   await supertest(app)
     .put(
-      "/api/demandeParticipation/updateParticipation/5fba9cdd50fb003420bf95f8"
+      "/api/demandeParticipation/updateParticipation/5fbbf714bd598c72bf30e5dd"
     )
     .send(data)
     .expect(201)
     .then((response) => {
       expect(response.body.message).toBe("Participation updated");
     });
-});
+});*/
 
 test("Echec update participation with wrong objectId form ", async () => {
   const data = {
@@ -107,7 +107,7 @@ test("Echec update participation of request that not exist and empty data", asyn
 test("get participation requests by member ", async () => {
   await supertest(app)
     .get(
-      "/api/demandeParticipation/participationRequestByMember/5fb04fe5d7f5bb175ff092cd"
+      "/api/demandeParticipation/participationRequestByMember/5fb6bc9204d7070017766560"
     )
     .expect(200);
 });
@@ -123,7 +123,7 @@ test("echec participation requests by member ", async () => {
 
 test("get requests by action  ", async () => {
   await supertest(app)
-    .get("/api/demandeParticipation/requestsByAction/5fb8e9b92257660dd038d2ec")
+    .get("/api/demandeParticipation/requestsByAction/5fbbd1d928f8ca344cafc6c8")
     .expect(200);
 });
 
@@ -139,7 +139,7 @@ test("echec get requests by action ", async () => {
 test("get request by member and action ", async () => {
   await supertest(app)
     .get(
-      "/api/demandeParticipation/requestForActionByMember/5fb68442ee9d9f26b34e0960/5fb95c7071edfe24b453bf7a"
+      "/api/demandeParticipation/requestForActionByMember/5fb6bc9204d7070017766560/5fbbd1d928f8ca344cafc6c8"
     )
     .expect(200);
 });
