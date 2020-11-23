@@ -1,4 +1,5 @@
 const User = require("../model/user");
+const DemandeParticipation = require("../../demandeParticipation/model/demandeParticipation");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const password = require("secure-random-password");
@@ -309,25 +310,27 @@ exports.getUserByEmail = (req, res) => {
 };
 // delete member by id
 exports.deleteOneMember = (req, res) => {
-  User.findByIdAndRemove(req.params.id)
-    .then((user) => {
-      if (!user) {
-        return res.status(404).send({
-          message: "Member not found",
+  DemandeParticipation.remove({ member: req.params.id }).then(() => {
+    User.findByIdAndRemove(req.params.id)
+      .then((user) => {
+        if (!user) {
+          return res.status(404).send({
+            message: "Member not found",
+          });
+        }
+        res.status(200).send({ message: "member deleted successfully!" });
+      })
+      .catch((err) => {
+        if (err.kind === "ObjectId" || err.name === "NotFound") {
+          return res.status(404).send({
+            message: "member not found",
+          });
+        }
+        return res.status(500).send({
+          message: "Could not delete member",
         });
-      }
-      res.status(200).send({ message: "member deleted successfully!" });
-    })
-    .catch((err) => {
-      if (err.kind === "ObjectId" || err.name === "NotFound") {
-        return res.status(404).send({
-          message: "member not found",
-        });
-      }
-      return res.status(500).send({
-        message: "Could not delete member",
       });
-    });
+  });
 };
 
 // accepted=true
