@@ -26,7 +26,7 @@ test("Echec add new request with wrong idAction", async () => {
     });
 });
 
-/*test("update status of request ", async () => {
+test("update status of request ", async () => {
   const data = {
     status: "acceptée",
   };
@@ -38,7 +38,6 @@ test("Echec add new request with wrong idAction", async () => {
       expect(response.body.message).toBe("Status updated");
     });
 });
-*/
 
 test("Echec update status with wrong objectId form ", async () => {
   const data = {
@@ -64,7 +63,7 @@ test("Echec update status of request that not exist and empty data", async () =>
     });
 });
 
-/*test("update participated  ", async () => {
+test("update participated  ", async () => {
   const data = {
     participated: true,
   };
@@ -77,7 +76,7 @@ test("Echec update status of request that not exist and empty data", async () =>
     .then((response) => {
       expect(response.body.message).toBe("Participation updated");
     });
-});*/
+});
 
 test("Echec update participation with wrong objectId form ", async () => {
   const data = {
@@ -151,52 +150,5 @@ test("echec get request by member and action ", async () => {
     .expect(404)
     .then((response) => {
       expect(response.body.message).toBe("wrong ObjectId Form");
-    });
-});
-
-test("get all actions ", async () => {
-  await supertest(app).get("/api/action/allActions").expect(200);
-});
-
-test("get action details ", async () => {
-  await supertest(app)
-    .get("/api/action/action/5fb8e9b92257660dd038d2ec")
-    .expect(200);
-});
-
-/*test("publish action ", async () => {
-    await supertest(app)
-    .put("/api/action/publishAction/5fb8e9b92257660dd038d2ec")
-    .expect(201)
-    .then((response) => {
-      expect(response.body.message).toBe("Action published");
-    });
-});*/
-test("Echec publish action", async () => {
-  await supertest(app)
-    .put("/api/action/publishAction/1475")
-    .expect(404)
-    .then((response) => {
-      expect(response.body.message).toBe("Action not found");
-    });
-});
-
-/*test('delete action ', async() => {
-    await supertest(app)
-    .delete("/api/action/deleteAction/5fbaaec0a9be101378355fff")
-    .expect(200)
-    .then((response)=>{
-        expect(response.body.message).toBe("Action deleted successfully!")
-    })
-    
-})*/
-
-// test d'echec delete action
-test("echec delete action", async () => {
-  await supertest(app)
-    .delete("/api/action/deleteAction/123456")
-    .expect(404)
-    .then((response) => {
-      expect(response.body.message).toBe("Action not found");
     });
 });
