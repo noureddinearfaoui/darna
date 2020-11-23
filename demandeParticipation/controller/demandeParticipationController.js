@@ -114,10 +114,9 @@ exports.getParticipationDemandesByMember = (req, res) => {
 exports.getDemandesByAction = (req, res) => {
   let id = req.params.idAction;
 
-  DemandeParticipation.findOne({ action: id })
+  DemandeParticipation.find({ action: id })
     .then((demande) => {
-      if (demande) res.status(200).json(demande);
-      else res.status(400).json("There is no requests for this action");
+      res.status(200).json(demande);
     })
     .catch((err) => {
       if (err.kind === "ObjectId") {
