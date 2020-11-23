@@ -130,7 +130,7 @@ exports.getDemandesByAction = (req, res) => {
     });
 };
 
-////////Demandes pour une action donnée et un membre donné
+////////Demande pour une action donnée et un membre donné
 exports.getDemandesByMemberAndAction = (req, res) => {
   let idA = req.params.idAction;
   let idM = req.params.idUser;
