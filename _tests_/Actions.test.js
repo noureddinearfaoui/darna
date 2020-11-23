@@ -11,14 +11,14 @@ test("get action details ", async () => {
     .expect(200);
 });
 
-test("publish action ", async () => {
+/*test("publish action ", async () => {
   await supertest(app)
     .put("/api/action/publishAction/5fbbd1d928f8ca344cafc6c8")
     .expect(201)
     .then((response) => {
       expect(response.body.message).toBe("Action published");
     });
-});
+});*/
 test("Echec publish action", async () => {
   await supertest(app)
     .put("/api/action/publishAction/1475")
