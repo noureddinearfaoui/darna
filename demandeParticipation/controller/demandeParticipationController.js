@@ -95,10 +95,9 @@ exports.updateParticipation = (req, res) => {
 exports.getParticipationDemandesByMember = (req, res) => {
   let userId = req.params.userId;
 
-  DemandeParticipation.findOne({ member: userId })
+  DemandeParticipation.find({ member: userId })
     .then((demande) => {
-      if (demande) res.status(200).json(demande);
-      else res.status(400).json("There is no requests for this member");
+      res.status(200).json(demande);
     })
     .catch((err) => {
       if (err.kind === "ObjectId") {
@@ -115,10 +114,9 @@ exports.getParticipationDemandesByMember = (req, res) => {
 exports.getDemandesByAction = (req, res) => {
   let id = req.params.idAction;
 
-  DemandeParticipation.findOne({ action: id })
+  DemandeParticipation.find({ action: id })
     .then((demande) => {
-      if (demande) res.status(200).json(demande);
-      else res.status(400).json("There is no requests for this action");
+      res.status(200).json(demande);
     })
     .catch((err) => {
       if (err.kind === "ObjectId") {
@@ -132,15 +130,14 @@ exports.getDemandesByAction = (req, res) => {
     });
 };
 
-////////Demandes pour une action donnée et un membre donné
+////////Demande pour une action donnée et un membre donné
 exports.getDemandesByMemberAndAction = (req, res) => {
   let idA = req.params.idAction;
   let idM = req.params.idUser;
 
   DemandeParticipation.findOne({ action: idA, member: idM })
     .then((demande) => {
-      if (demande) res.status(200).json(demande);
-      else res.status(200).json({});
+      res.status(200).json(demande);
     })
     .catch((err) => {
       if (err.kind === "ObjectId") {
