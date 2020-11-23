@@ -139,8 +139,7 @@ exports.getDemandesByMemberAndAction = (req, res) => {
 
   DemandeParticipation.findOne({ action: idA, member: idM })
     .then((demande) => {
-      if (demande) res.status(200).json(demande);
-      else res.status(200).json({});
+      res.status(200).json(demande);
     })
     .catch((err) => {
       if (err.kind === "ObjectId") {
