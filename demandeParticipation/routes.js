@@ -13,4 +13,8 @@ router.get(
   "/requestForActionByMember/:idUser/:idAction",
   demandeCtrl.getDemandesByMemberAndAction
 );
+router.get(
+  "/numberOfAcceptedDemandes/:idAction",
+  demandeCtrl.getAcceptedDemandesByAction
+);
 module.exports = router;

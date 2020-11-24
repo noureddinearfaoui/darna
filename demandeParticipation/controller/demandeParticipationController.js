@@ -150,3 +150,22 @@ exports.getDemandesByMemberAndAction = (req, res) => {
       });
     });
 };
+
+//
+exports.getAcceptedDemandesByAction = (req, res) => {
+  let idA = req.params.idAction;
+  DemandeParticipation.count({ status: "acceptée", action: idA })
+    .then((demandes) => {
+      res.status(200).json(demandes);
+    })
+    .catch((err) => {
+      if (err.kind === "ObjectId") {
+        return res.status(404).send({
+          message: "wrong ObjectId Form",
+        });
+      }
+      return res.status(500).send({
+        message: "Server error",
+      });
+    });
+};
