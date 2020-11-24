@@ -4,11 +4,16 @@ const app = require("../app");
 /*test("add new request ", async () => {
   await supertest(app)
     .get(
-      "/api/demandeParticipation/addDemande/5fb04fe5d7f5bb175ff092cd/5fb8e9b92257660dd038d2ec"
+      "/api/demandeParticipation/addDemande/5fb6bc9204d7070017766560/5fbbeedb1762261da0e11990"
     )
-    .expect(200);
-});*/
-
+    .expect(200)
+    .then((response) => {
+      expect(response.body._id).toBeTruthy();
+      expect(response.body.status).toBe("attente");
+      expect(response.body.participated).toBe(false);
+    });
+});
+*/
 test("Echec add new request with wrong idUser", async () => {
   await supertest(app)
     .get("/api/demandeParticipation/addDemande/123/5fb8e9b92257660dd038d2ec")
@@ -109,7 +114,10 @@ test("get participation requests by member ", async () => {
     .get(
       "/api/demandeParticipation/participationRequestByMember/5fb6bc9204d7070017766560"
     )
-    .expect(200);
+    .expect(200)
+    .then((response) => {
+      expect(Array.isArray(response.body)).toBeTruthy();
+    });
 });
 
 test("echec participation requests by member ", async () => {
@@ -141,7 +149,12 @@ test("get request by member and action ", async () => {
     .get(
       "/api/demandeParticipation/requestForActionByMember/5fb6bc9204d7070017766560/5fbbd1d928f8ca344cafc6c8"
     )
-    .expect(200);
+    .expect(200)
+    .then((response) => {
+      expect(response.body._id).toBeTruthy();
+      expect(response.body.status).toBe("acceptée");
+      expect(response.body.participated).toBe(true);
+    });
 });
 
 test("echec get request by member and action ", async () => {

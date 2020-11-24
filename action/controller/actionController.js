@@ -42,7 +42,6 @@ exports.updateActionDetails = (req, res) => {
   if (req.body.beginDate > req.body.endDate) {
     res.status(400).json({ message: "beginDate must be less than endDate" });
   }
-
   if (req.body.beginDateInscription > req.body.endDateInscription) {
     res.status(400).json({
       message:

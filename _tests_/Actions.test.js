@@ -2,13 +2,32 @@ const supertest = require("supertest");
 const app = require("../app");
 
 test("get all actions ", async () => {
-  await supertest(app).get("/api/action/allActions").expect(200);
+  await supertest(app)
+    .get("/api/action/allActions")
+    .expect(200)
+    .then((response) => {
+      expect(Array.isArray(response.body)).toBeTruthy();
+    });
 });
 
 test("get action details ", async () => {
   await supertest(app)
-    .get("/api/action/action/5fbbb8ec5b90c426e336e42e")
-    .expect(200);
+    .get("/api/action/action/5fbbeedb1762261da0e11990")
+    .expect(200)
+    .then((response) => {
+      expect(response.body._id).toBeTruthy();
+      expect(response.body.actionName).toBe("Amal action");
+      expect(response.body.description).toBe("description action");
+      expect(response.body.location).toBe("bardo");
+    });
+});
+test("Echec get action details", async () => {
+  await supertest(app)
+    .get("/api/action/action/12345")
+    .expect(404)
+    .then((response) => {
+      expect(response.body.message).toBe("Action not found ");
+    });
 });
 
 /*test("publish action ", async () => {
@@ -50,3 +69,5 @@ test("Echec publish action", async () => {
       expect(response.body.message).toBe("Action not found");
     });
 });*/
+
+// addAction and updateAction
