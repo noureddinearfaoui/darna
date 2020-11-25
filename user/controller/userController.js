@@ -16,9 +16,6 @@ exports.signup = (req, res, next) => {
         ...req.body,
       });
       user.password = hash;
-      user.confirm = false;
-      user.accepted = false;
-      user.banni = false;
       user
         .save()
         .then(() => {
@@ -163,15 +160,13 @@ exports.updateUserDetails = (req, res) => {
 //Ajouter un membre
 
 exports.addMember = (req, res) => {
-  bcrypt.hash(password.randomPassword(), 10).then((hash) => {
+  const pass = password.randomPassword();
+  bcrypt.hash(pass, 10).then((hash) => {
     const user = new User({
       ...req.body,
     });
     user.password = hash;
-    user.confirm = false;
     user.accepted = true;
-    user.banni = false;
-    user.renewal = [new Date()];
     user
       .save()
       .then(() => {
@@ -179,8 +174,9 @@ exports.addMember = (req, res) => {
           from: process.env.EMAIL_USER, // Sender address
           to: user.email, // List of recipients
           subject: "Confirmer votre compte", // Subject line
-          html: `<p>Bonjour ${user.firstName} ${user.lastName}
-                       pour confirmer votre compte utilisez ce lien
+          html: `<p>Bonjour ${user.firstName} ${user.lastName}!\n
+                   Votre mot de passe est: ${pass}\n
+                      Pour confirmer votre compte utilisez ce lien:
                     <a href="http://localhost:3000/api/user/confirm/${user._id}">Confirmer</a></p>`,
           // Plain text body
         };
@@ -193,7 +189,7 @@ exports.addMember = (req, res) => {
         res.status(500).json({ error: error });
       });
   });
-  console.log("pppp", password.randomPassword());
+  console.log("pppp", pass);
 };
 exports.getAllUsers = (req, res) => {
   User.find({}, (err, users) => {

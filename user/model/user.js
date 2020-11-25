@@ -10,10 +10,10 @@ const userSchema = mongoose.Schema(
     adress: { type: String, required: true },
     tel: { type: String, required: true },
     dateOfBirth: { type: Date, required: true },
-    confirm: { type: Boolean, required: true }, // Confirmation de l'email
-    banni: { type: Boolean, required: true },
-    accepted: { type: Boolean, required: true }, // accepté par l'admin ou non
-    renewal: { type : Array },
+    confirm: { type: Boolean, required: true, default: false }, // Confirmation de l'email
+    banni: { type: Boolean, required: true, default: false },
+    accepted: { type: Boolean, required: true, default: false }, // accepté par l'admin ou non
+    renewal: { type: Array, default: [new Date()] },
     role: { type: String, required: true, default: "membre" },
   },
   { timestamps: true }
