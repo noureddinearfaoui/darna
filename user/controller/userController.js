@@ -25,9 +25,14 @@ exports.signup = (req, res, next) => {
             from: process.env.EMAIL_USER, // Sender address
             to: user.email, // List of recipients
             subject: "Confirmer votre compte", // Subject line
-            html: `<p>Bonjour ${user.firstName} ${user.lastName}
-                     pour confirmer votre compte utilisez ce lien
-                  <a href="http://localhost:3000/api/user/confirm/${user._id}">Confirmer</a></p>`,
+            html: `<p>Bonjour<strong> ${user.firstName} ${
+              user.lastName
+            }</strong>!<br>
+                   Votre mot de passe est: <strong> ${pass}</strong><br>
+                      Pour confirmer votre compte utilisez ce lien:
+                      <a href= "${
+                        process.env.SERVER_ADDRESS || "http://localhost:3000"
+                      }/api/user/confirm/${user._id}">Confirmer</a></p>`,
             // Plain text body
           };
           email.send(message);
@@ -58,10 +63,14 @@ exports.login = (req, res, next) => {
               from: process.env.EMAIL_USER, // Sender address
               to: user.email, // List of recipients
               subject: "Confirmer votre compte", // Subject line
-              html: `<p>Bonjour ${user.firstName} ${user.lastName}
-                           pour confirmer votre compte utilisez ce lien
-                        <a href="http://localhost:3000/api/user/confirm/${user._id}">Confirmer</a></p>`,
-              // Plain text body
+              html: `<p>Bonjour<strong> ${user.firstName} ${
+                user.lastName
+              }</strong>!<br>
+                          Pour confirmer votre compte utilisez ce lien:
+                          <a href= "${
+                            process.env.SERVER_ADDRESS ||
+                            "http://localhost:3000"
+                          }/api/user/confirm/${user._id}">Confirmer</a></p>`,
             };
             email.send(message);
             return res
@@ -174,10 +183,14 @@ exports.addMember = (req, res) => {
           from: process.env.EMAIL_USER, // Sender address
           to: user.email, // List of recipients
           subject: "Confirmer votre compte", // Subject line
-          html: `<p>Bonjour ${user.firstName} ${user.lastName}!\n
-                   Votre mot de passe est: ${pass}\n
+          html: `<p>Bonjour<strong> ${user.firstName} ${
+            user.lastName
+          }</strong>!<br>
+                   Votre mot de passe est: <strong> ${pass}</strong><br>
                       Pour confirmer votre compte utilisez ce lien:
-                    <a href="http://localhost:3000/api/user/confirm/${user._id}">Confirmer</a></p>`,
+                      <a href= "${
+                        process.env.SERVER_ADDRESS || "http://localhost:3000"
+                      }/api/user/confirm/${user._id}">Confirmer</a></p>`,
           // Plain text body
         };
         email.send(message);
