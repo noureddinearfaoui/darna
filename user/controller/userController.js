@@ -216,7 +216,7 @@ exports.getAllUsers = (req, res) => {
 };
 
 // accepted true
-exports.getAcceptedMembers = (req, res) => {
+/*exports.getAcceptedMembers = (req, res) => {
   User.find(
     { accepted: "true", confirm: "true", role: "membre" },
     (err, users) => {
@@ -226,6 +226,26 @@ exports.getAcceptedMembers = (req, res) => {
       return res.status(200).json(users);
     }
   ).catch((err) => console.log(err));
+};*/
+
+exports.getAcceptedMembers = (req, res, next) => {
+  User.find({ accepted: "true", confirm: "true", role: "membre" })
+    .select({
+      email: 1,
+      firstName: 1,
+      lastName: 1,
+      adress: 1,
+      tel: 1,
+      dateOfBirth: 1,
+      banni: 1,
+      renewal: 1,
+    })
+    .then((users) => {
+      if (users) {
+        res.status(200).json(users);
+      } else res.status(404).json({ message: "Users not found" });
+    })
+    .catch((error) => res.status(400).json({ message: "Users not found" }));
 };
 
 //accepted false & confirm true

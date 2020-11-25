@@ -10,7 +10,7 @@ test("get all actions ", async () => {
     });
 });
 
-test("get action details ", async () => {
+/*test("get action details ", async () => {
   await supertest(app)
     .get("/api/action/action/5fbbeedb1762261da0e11990")
     .expect(200)
@@ -20,7 +20,7 @@ test("get action details ", async () => {
       expect(response.body.description).toBe("description action");
       expect(response.body.location).toBe("bardo");
     });
-});
+});*/
 test("Echec get action details", async () => {
   await supertest(app)
     .get("/api/action/action/12345")
