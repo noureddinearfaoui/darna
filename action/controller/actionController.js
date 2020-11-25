@@ -157,9 +157,13 @@ exports.publishAction = (req, res) => {
 };
 
 exports.getAllActions = (req, res, next) => {
-  Action.find()
+  Action.find().
+  select({ actionName: 1, description: 1, location:1,beginDate:1, endDate:1,beginDateInscription:1,endDateInscription:1,
+    numberOfMembers:1,isPublished:1 })
     .then((actions) => {
       if (actions) {
+
+        //actions.forEach(action=> action.urlPhoto='')
         res.status(200).json(actions);
       } else res.status(404).json({ message: "Actions not found" });
     })
