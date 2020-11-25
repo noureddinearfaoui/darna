@@ -20,7 +20,6 @@ exports.signup = (req, res, next) => {
         .save()
         .then(() => {
           res.status(201).json({ message: "Utilisateur créé !" });
-
           const message = {
             from: process.env.EMAIL_USER, // Sender address
             to: user.email, // List of recipients
