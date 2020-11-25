@@ -238,6 +238,8 @@ exports.getAcceptedMembers = (req, res, next) => {
       tel: 1,
       dateOfBirth: 1,
       banni: 1,
+      accepted: 1,
+      confirm: 1,
       renewal: 1,
     })
     .then((users) => {
