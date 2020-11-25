@@ -144,7 +144,7 @@ test("echec get requests by action ", async () => {
     });
 });
 
-test("get request by member and action ", async () => {
+/*test("get request by member and action ", async () => {
   await supertest(app)
     .get(
       "/api/demandeParticipation/requestForActionByMember/5fb6bc9204d7070017766560/5fbbd1d928f8ca344cafc6c8"
@@ -160,6 +160,26 @@ test("get request by member and action ", async () => {
 test("echec get request by member and action ", async () => {
   await supertest(app)
     .get("/api/demandeParticipation/requestForActionByMember/123/456")
+    .expect(404)
+    .then((response) => {
+      expect(response.body.message).toBe("wrong ObjectId Form");
+    });
+});*/
+
+test("getAcceptedDemandesByAction ", async () => {
+  await supertest(app)
+    .get(
+      "/api/demandeParticipation/numberOfAcceptedDemandes/5fbbeedb1762261da0e11990"
+    )
+    .expect(200)
+    .then((response) => {
+      expect(Number.isInteger(response.body)).toBeTruthy();
+    });
+});
+
+test("echec get request by member and action ", async () => {
+  await supertest(app)
+    .get("/api/demandeParticipation/numberOfAcceptedDemandes/12345")
     .expect(404)
     .then((response) => {
       expect(response.body.message).toBe("wrong ObjectId Form");
