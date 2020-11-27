@@ -19,22 +19,21 @@ exports.signup = (req, res, next) => {
       user
         .save()
         .then(() => {
-          res.status(201).json({ message: "Utilisateur créé !" });
+          
           const message = {
             from: process.env.EMAIL_USER, // Sender address
             to: user.email, // List of recipients
             subject: "Confirmer votre compte", // Subject line
-            html: `<p>Bonjour<strong> ${user.firstName} ${
-              user.lastName
-            }</strong>!<br>
-                   Votre mot de passe est: <strong> ${pass}</strong><br>
-                      Pour confirmer votre compte utilisez ce lien:
-                      <a href= "${
-                        process.env.SERVER_ADDRESS || "http://localhost:3000"
-                      }/api/user/confirm/${user._id}">Confirmer</a></p>`,
+            html: `<p>Bonjour<strong> ${user.firstName} ${user.lastName}</strong>!<br>
+                        Pour confirmer votre compte utilisez ce lien:
+                        <a href= "${
+                          process.env.SERVER_ADDRESS || "http://localhost:3000"
+                        }/api/user/confirm/${user._id}">Confirmer</a></p>`,
             // Plain text body
           };
+          res.status(201).json({ message: "Utilisateur créé !" });
           email.send(message);
+          
         })
         .catch((error) => res.status(400).json({ error }));
     })
@@ -201,7 +200,7 @@ exports.addMember = (req, res) => {
         res.status(500).json({ error: error });
       });
   });
-  console.log("pppp", pass);
+  
 };
 exports.getAllUsers = (req, res) => {
   User.find({}, (err, users) => {
