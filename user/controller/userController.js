@@ -251,14 +251,37 @@ exports.getAcceptedMembers = (req, res, next) => {
 };
 
 //accepted false & confirm true
-exports.getDemandes = (req, res) => {
+/*exports.getDemandes = (req, res) => {
   User.find({ accepted: "false", role: "membre" }, (err, users) => {
     if (err) {
       return res.status(400).json({ error: err });
     }
     return res.status(200).json(users);
   }).catch((err) => console.log(err));
+};*/
+
+exports.getDemandes = (req, res, next) => {
+  User.find({ accepted: "false", confirm: "true", role: "membre" })
+    .select({
+      email: 1,
+      firstName: 1,
+      lastName: 1,
+      adress: 1,
+      tel: 1,
+      dateOfBirth: 1,
+      banni: 1,
+      accepted: 1,
+      confirm: 1,
+      renewal: 1,
+    })
+    .then((users) => {
+      if (users) {
+        res.status(200).json(users);
+      } else res.status(404).json({ message: "Demandes not found" });
+    })
+    .catch((error) => res.status(400).json({ message: "Demandes not found" }));
 };
+
 //bannir member
 exports.banniMember = (req, res) => {
   User.findByIdAndUpdate(
