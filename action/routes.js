@@ -4,7 +4,7 @@ const ActionCtrl = require("./controller/actionController");
 const auth = require("../config/middleware/auth");
 const permit = require("../config/middleware/authorization");
 router.post("/addAction", auth, permit("admin"), ActionCtrl.addAction);
-router.get("/allActions", auth, permit("admin"), ActionCtrl.getAllActions);
+router.get("/allActions", ActionCtrl.getAllActions);
 router.get(
   "/action/:id",
   auth,
