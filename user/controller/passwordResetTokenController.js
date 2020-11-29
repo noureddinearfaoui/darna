@@ -58,7 +58,7 @@ exports.forgotPassword = async (req, res) => {
 
 exports.resetPassword = async (req, res) => {
   const token = await passwordResetToken.findOne({
-    resettoken: req.params.token,
+    resetToken: req.params.token,
     resetPasswordExpires: { $gt: Date.now() },
   });
   if (!token) {
@@ -85,7 +85,7 @@ exports.resetPassword = async (req, res) => {
           .status(400)
           .json({ message: "Mot de passe non réinitialisé" });
       } else {
-        userToken.remove();
+	token.remove();
         return res.status(201).json({ message: "Mot de passe réinitialisé" });
       }
     });
