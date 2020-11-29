@@ -6,6 +6,7 @@ const password = require("secure-random-password");
 const Role = require("../../role/model/role");
 const user = require("../model/user");
 const email = require("../../config/email");
+
 require("dotenv").config();
 exports.signup = (req, res, next) => {
   bcrypt
@@ -19,12 +20,13 @@ exports.signup = (req, res, next) => {
       user
         .save()
         .then(() => {
-          
           const message = {
             from: process.env.EMAIL_USER, // Sender address
             to: user.email, // List of recipients
             subject: "Confirmer votre compte", // Subject line
-            html: `<p>Bonjour<strong> ${user.firstName} ${user.lastName}</strong>!<br>
+            html: `<p>Bonjour<strong> ${user.firstName} ${
+              user.lastName
+            }</strong>!<br>
                         Pour confirmer votre compte utilisez ce lien:
                         <a href= "${
                           process.env.SERVER_ADDRESS || "http://localhost:3000"
@@ -33,7 +35,6 @@ exports.signup = (req, res, next) => {
           };
           res.status(201).json({ message: "Utilisateur créé !" });
           email.send(message);
-          
         })
         .catch((error) => res.status(400).json({ error }));
     })
@@ -200,7 +201,6 @@ exports.addMember = (req, res) => {
         res.status(500).json({ error: error });
       });
   });
-  
 };
 exports.getAllUsers = (req, res) => {
   User.find({}, (err, users) => {
