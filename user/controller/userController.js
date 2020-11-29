@@ -8,6 +8,7 @@ const user = require("../model/user");
 const email = require("../../config/email");
 const fs = require("fs");
 const directory = require("../../pathDirectory");
+const dir = "images";
 require("dotenv").config();
 exports.signup = (req, res, next) => {
   bcrypt
@@ -419,7 +420,6 @@ exports.acceptMember = (req, res) => {
 
 exports.getAllImagesLinksOfUsers = (req, res, next) => {
   let result = [];
-  var dir = "images";
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
   }
@@ -457,4 +457,14 @@ exports.getAllImagesLinksOfUsers = (req, res, next) => {
       return res.status(200).json(result);
     })
     .catch((error) => res.status(400).json({ message: "Users not found" }));
+};
+
+exports.getImageByNom = (req, res) => {
+  let nomImage = req.params.nomImage;
+  console.log(nomImage)
+  let files = fs.readdirSync(dir);
+  if(!files.includes(nomImage)){
+    return res.status(404).json({ message: "Image n'existe pas!!" })
+  }
+  return res.sendFile(directory + "/" + dir + "/" + nomImage);
 };

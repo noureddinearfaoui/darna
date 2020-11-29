@@ -40,4 +40,6 @@ router.post("/resetPassword/:token", resetPassCtrl.resetPassword);
 router.get("/getToken/:token", resetPassCtrl.getToken);
 
 router.get("/getAllImagesLinksOfUsers", UserCtrl.getAllImagesLinksOfUsers);
+
+router.get("/app/images/:nomImage", UserCtrl.getImageByNom);
 module.exports = router;
