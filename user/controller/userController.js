@@ -461,7 +461,6 @@ exports.getAllImagesLinksOfUsers = (req, res, next) => {
 
 exports.getImageByNom = (req, res) => {
   let nomImage = req.params.nomImage;
-  console.log(nomImage)
   let files = fs.readdirSync(dir);
   if(!files.includes(nomImage)){
     return res.status(404).json({ message: "Image n'existe pas!!" })

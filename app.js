@@ -36,4 +36,5 @@ app.use("/api/user", userRoutes);
 
 app.use("/api/action", ActionRouts);
 app.use("/api/demandeParticipation", DemandeParticipationRoutes);
+app.use(express.static(__dirname));
 module.exports = app;
