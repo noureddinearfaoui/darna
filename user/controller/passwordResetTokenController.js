@@ -31,7 +31,7 @@ exports.forgotPassword = async (req, res) => {
   var resettoken = new passwordResetToken({
     _userId: user._id,
     resetToken: crypto.randomBytes(16).toString("hex"),
-    resetPasswordExpires: Date.now() + 10000,
+    resetPasswordExpires: Date.now() + 60000*15,
   });
 
   resettoken.save(function (err) {
@@ -52,6 +52,7 @@ exports.forgotPassword = async (req, res) => {
       }">Réinitialiser</a></p>`,
     };
     email.send(message);
+    return res.status(200).json({ message: "Email envoyé" });
   });
 };
 
