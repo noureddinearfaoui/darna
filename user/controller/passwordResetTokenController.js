@@ -31,7 +31,7 @@ exports.forgotPassword = async (req, res) => {
   var resettoken = new passwordResetToken({
     _userId: user._id,
     resetToken: crypto.randomBytes(16).toString("hex"),
-    resetPasswordExpires: Date.now() + 60000*15,
+    resetPasswordExpires: Date.now() + 60000 * 15,
   });
 
   resettoken.save(function (err) {
@@ -46,7 +46,7 @@ exports.forgotPassword = async (req, res) => {
       html: `<p>Bonjour,vous recevez ce message car vous avez demandé la réinitialisation du mot de passe de votre compte.<strong> <br>
                 Pour réinitialiser votre mot de passe utilisez ce lien:
                 <a href= "${
-                  process.env.SERVER_ADDRESS || "http://localhost:4200"
+                  process.env.SERVER_FRONTEND_ADDRESS || "http://localhost:4200"
                 }/pages/resetpassword/${
         resettoken.resetToken
       }">Réinitialiser</a></p>`,
@@ -85,7 +85,7 @@ exports.resetPassword = async (req, res) => {
           .status(400)
           .json({ message: "Mot de passe non réinitialisé" });
       } else {
-	token.remove();
+        token.remove();
         return res.status(201).json({ message: "Mot de passe réinitialisé" });
       }
     });

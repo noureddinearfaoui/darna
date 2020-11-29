@@ -29,7 +29,8 @@ exports.signup = (req, res, next) => {
             }</strong>!<br>
                         Pour confirmer votre compte utilisez ce lien:
                         <a href= "${
-                          process.env.SERVER_ADDRESS || "http://localhost:3000"
+                          process.env.SERVER_BACKEND_ADDRESS ||
+                          "http://localhost:3000"
                         }/api/user/confirm/${user._id}">Confirmer</a></p>`,
             // Plain text body
           };
@@ -67,7 +68,7 @@ exports.login = (req, res, next) => {
               }</strong>!<br>
                           Pour confirmer votre compte utilisez ce lien:
                           <a href= "${
-                            process.env.SERVER_ADDRESS ||
+                            process.env.SERVER_BACKEND_ADDRESS ||
                             "http://localhost:3000"
                           }/api/user/confirm/${user._id}">Confirmer</a></p>`,
             };
@@ -188,7 +189,8 @@ exports.addMember = (req, res) => {
                    Votre mot de passe est: <strong> ${pass}</strong><br>
                       Pour confirmer votre compte utilisez ce lien:
                       <a href= "${
-                        process.env.SERVER_ADDRESS || "http://localhost:3000"
+                        process.env.SERVER_BACKEND_ADDRESS ||
+                        "http://localhost:3000"
                       }/api/user/confirm/${user._id}">Confirmer</a></p>`,
           // Plain text body
         };
