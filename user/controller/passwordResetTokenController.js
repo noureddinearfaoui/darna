@@ -2,6 +2,7 @@ const User = require("../model/user");
 const bcrypt = require("bcrypt");
 const user = require("../model/user");
 const email = require("../../config/email");
+const crypto = require("crypto");
 const passwordResetToken = require("../model/passwordResetToken");
 require("dotenv").config();
 
