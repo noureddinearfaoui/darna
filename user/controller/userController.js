@@ -430,8 +430,9 @@ exports.getAllImagesLinksOfUsers = (req, res, next) => {
     result.push({
       _id: element.split(".")[0],
       urlImage:
-        process.env.SERVER_BACKEND_ADDRESS ||
-        "http://localhost:3000" + "/api/user/app/images/" + element,
+        `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}` +
+        "/api/user/app/images/" +
+        element,
     });
   });
   User.find({ accepted: true, confirm: true, _id: { $nin: tableOfId } })
@@ -448,8 +449,11 @@ exports.getAllImagesLinksOfUsers = (req, res, next) => {
           result.push({
             _id: element._id,
             urlImage:
-              process.env.SERVER_BACKEND_ADDRESS ||
-              "http://localhost:3000" + "/api/user/app/images/" + file,
+              `${
+                process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"
+              }` +
+              "/api/user/app/images/" +
+              file,
           });
         } else {
           result.push({
