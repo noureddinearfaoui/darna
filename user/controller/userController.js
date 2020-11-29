@@ -441,7 +441,7 @@ exports.getAllImagesLinksOfUsers = (req, res, next) => {
       users.forEach((element) => {
         if (element.urlImage) {
           let data = element.urlImage;
-          let buff = new Buffer(data.split(";base64,")[1], "base64");
+          let buff = Buffer.from(data.split(";base64,")[1], "base64");
           let extension = data.split(";base64,")[0].split("/")[1];
           let fileName = dir + "/" + element._id + "." + extension;
           fs.writeFileSync(fileName, buff);
@@ -474,4 +474,36 @@ exports.getImageByNom = (req, res) => {
     return res.status(404).json({ message: "Image n'existe pas!!" });
   }
   return res.sendFile(directory + "/" + dir + "/" + nomImage);
+};
+
+exports.createImagesOfUsers = () => {
+  let result = [];
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+  }
+  let files = fs.readdirSync(dir);
+  let tableOfId = [];
+  files.forEach((element) => {
+    tableOfId.push(element.split(".")[0]);
+    result.push({
+      _id: element.split(".")[0],
+      urlImage:
+        `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}` +
+        "/api/user/app/images/" +
+        element,
+    });
+  });
+  User.find({ accepted: true, confirm: true, _id: { $nin: tableOfId } })
+    .select({ _id: 1, urlImage: 1 })
+    .then((users) => {
+      users.forEach((element) => {
+        if (element.urlImage) {
+          let data = element.urlImage;
+          let buff = Buffer.from(data.split(";base64,")[1], "base64");
+          let extension = data.split(";base64,")[0].split("/")[1];
+          let fileName = dir + "/" + element._id + "." + extension;
+          fs.writeFileSync(fileName, buff);
+        }
+      });
+    });
 };
