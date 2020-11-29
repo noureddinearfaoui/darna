@@ -415,3 +415,47 @@ exports.acceptMember = (req, res) => {
       });
     });
 };
+
+const fs=require("fs");
+const directory=require("../../pathDirectory");
+exports.getAllImagesLinksOfUsers = (req, res, next) => {
+  let result=[];
+  var dir = 'images';
+  if (!fs.existsSync(dir)){
+      fs.mkdirSync(dir);
+  }
+  let files = fs.readdirSync(dir);
+  let tableOfId=[];
+  files.forEach(element=>{
+    tableOfId.push(element.split(".")[0]);
+    result.push({
+      _id:element.split(".")[0],
+      urlImage:directory+'/'+dir+'/'+element
+    });
+  });
+  User.find({accepted:true,confirm:true,_id:{$nin:tableOfId}}).
+  select({ _id: 1,urlImage:1 })
+    .then((users) => {
+      users.forEach((element)=>{
+        if(element.urlImage){
+          let data=element.urlImage;
+          let buff = new Buffer(data.split(";base64,")[1], 'base64');
+          let extension=data.split(";base64,")[0].split("/")[1];
+          let fileName=dir+'/'+element._id+'.'+extension;
+          fs.writeFileSync(fileName, buff);
+          const file = directory+'/'+fileName;
+          result.push({
+            _id:element._id,
+            urlImage:file
+          });
+        }else{
+          result.push({
+            _id:element._id,
+            urlImage:""
+          });
+        }
+      });
+      return res.status(200).json(result);
+    })
+    .catch((error) => res.status(400).json({ message: "Users not found" }));
+};

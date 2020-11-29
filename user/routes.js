@@ -38,4 +38,6 @@ router.get("/UserByEmail/:email", UserCtrl.getUserByEmail);
 router.post("/forgotPassword", resetPassCtrl.forgotPassword);
 router.post("/resetPassword/:token", resetPassCtrl.resetPassword);
 router.get("/getToken/:token", resetPassCtrl.getToken);
+
+router.get("/getAllImagesLinksOfUsers", UserCtrl.getAllImagesLinksOfUsers);
 module.exports = router;
