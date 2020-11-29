@@ -429,7 +429,7 @@ exports.getAllImagesLinksOfUsers = (req, res, next) => {
     tableOfId.push(element.split(".")[0]);
     result.push({
       _id: element.split(".")[0],
-      urlImage: directory + "/" + dir + "/" + element,
+      urlImage: process.env.SERVER_BACKEND_ADDRESS+"/api/user/app/images/"+element,
     });
   });
   User.find({ accepted: true, confirm: true, _id: { $nin: tableOfId } })
@@ -442,10 +442,10 @@ exports.getAllImagesLinksOfUsers = (req, res, next) => {
           let extension = data.split(";base64,")[0].split("/")[1];
           let fileName = dir + "/" + element._id + "." + extension;
           fs.writeFileSync(fileName, buff);
-          const file = directory + "/" + fileName;
+          const file = element._id + "." + extension;
           result.push({
             _id: element._id,
-            urlImage: file,
+            urlImage: process.env.SERVER_BACKEND_ADDRESS+"/api/user/app/images/"+file,
           });
         } else {
           result.push({
