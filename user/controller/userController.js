@@ -83,7 +83,7 @@ exports.login = (req, res, next) => {
               return res
                 .status(401)
                 .json({ error: "vous n êtes pas encore accepter !" });
-
+            let urlImage = getImageFromDossierImages(user._id, user.urlImage);
             res.status(200).json({
               userId: user._id,
               token: jwt.sign(
@@ -92,6 +92,7 @@ exports.login = (req, res, next) => {
                   role: user.role,
                   firstName: user.firstName,
                   lastName: user.lastName,
+                  urlImage: urlImage,
                 },
                 process.env.RANDOM_TOKEN_SECRET,
                 { expiresIn: "24h" }
@@ -513,3 +514,26 @@ exports.createImagesOfUsers = () => {
       });
     });
 };
+
+function getImageFromDossierImages(id, base64) {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+  }
+  let files = fs.readdirSync(dir);
+  let file;
+  let urlImage;
+  if (files.includes(id)) {
+    file = files.find((el) => el.indexOf(id) !== -1);
+  } else {
+    let buff = Buffer.from(base64.split(";base64,")[1], "base64");
+    let extension = base64.split(";base64,")[0].split("/")[1];
+    let fileName = dir + "/" + id + "." + extension;
+    fs.writeFileSync(fileName, buff);
+    file = id + "." + extension;
+  }
+  urlImage =
+    `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}` +
+    "/api/user/app/images/" +
+    file;
+  return urlImage;
+}
