@@ -524,16 +524,25 @@ function getImageFromDossierImages(id, base64) {
   let urlImage;
   if (files.includes(id)) {
     file = files.find((el) => el.indexOf(id) !== -1);
+    urlImage =
+      `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}` +
+      "/api/user/app/images/" +
+      file;
   } else {
-    let buff = Buffer.from(base64.split(";base64,")[1], "base64");
-    let extension = base64.split(";base64,")[0].split("/")[1];
-    let fileName = dir + "/" + id + "." + extension;
-    fs.writeFileSync(fileName, buff);
-    file = id + "." + extension;
+    if (base64) {
+      let buff = Buffer.from(base64.split(";base64,")[1], "base64");
+      let extension = base64.split(";base64,")[0].split("/")[1];
+      let fileName = dir + "/" + id + "." + extension;
+      fs.writeFileSync(fileName, buff);
+      file = id + "." + extension;
+      urlImage =
+        `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}` +
+        "/api/user/app/images/" +
+        file;
+    } else {
+      urlImage = "";
+    }
   }
-  urlImage =
-    `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}` +
-    "/api/user/app/images/" +
-    file;
+
   return urlImage;
 }
