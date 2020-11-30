@@ -200,6 +200,7 @@ exports.addMember = (req, res) => {
         res.status(201).json({
           message: "member added successfully",
         });
+        console.log("ppppp", pass);
       })
       .catch((error) => {
         res.status(500).json({ error: error });
