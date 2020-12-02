@@ -83,7 +83,7 @@ exports.login = (req, res, next) => {
               return res
                 .status(401)
                 .json({ error: "vous n êtes pas encore accepter !" });
-            let urlImage = getImageFromDossierImages(user._id, user.urlImage);
+            let urlImage = getImageFromDossierImagesAndCreateItIfNotExist(user._id, user.urlImage);
             res.status(200).json({
               userId: user._id,
               token: jwt.sign(
@@ -161,6 +161,7 @@ exports.updateUserDetails = (req, res) => {
           message: "Member not found",
         });
       }
+      getImageFromDossierImagesAndCreateItIfNotExist(user._id,user.urlImage);
       res.send(user);
     })
     .catch((err) => {
@@ -225,19 +226,6 @@ exports.getAllUsers = (req, res) => {
   }).catch((err) => console.log(err));
 };
 
-// accepted true
-/*exports.getAcceptedMembers = (req, res) => {
-  User.find(
-    { accepted: "true", confirm: "true", role: "membre" },
-    (err, users) => {
-      if (err) {
-        return res.status(400).json({ error: err });
-      }
-      return res.status(200).json(users);
-    }
-  ).catch((err) => console.log(err));
-};*/
-
 exports.getAcceptedMembers = (req, res, next) => {
   User.find({ accepted: "true", confirm: "true", role: "membre" })
     .select({
@@ -259,16 +247,6 @@ exports.getAcceptedMembers = (req, res, next) => {
     })
     .catch((error) => res.status(400).json({ message: "Users not found" }));
 };
-
-//accepted false & confirm true
-/*exports.getDemandes = (req, res) => {
-  User.find({ accepted: "false", role: "membre" }, (err, users) => {
-    if (err) {
-      return res.status(400).json({ error: err });
-    }
-    return res.status(200).json(users);
-  }).catch((err) => console.log(err));
-};*/
 
 exports.getDemandes = (req, res, next) => {
   User.find({ accepted: "false", confirm: "true", role: "membre" })
@@ -484,7 +462,6 @@ exports.getImageByNom = (req, res) => {
 };
 
 exports.createImagesOfUsers = () => {
-  let result = [];
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
   }
@@ -492,13 +469,6 @@ exports.createImagesOfUsers = () => {
   let tableOfId = [];
   files.forEach((element) => {
     tableOfId.push(element.split(".")[0]);
-    result.push({
-      _id: element.split(".")[0],
-      urlImage:
-        `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}` +
-        "/api/user/app/images/" +
-        element,
-    });
   });
   User.find({ accepted: true, confirm: true, _id: { $nin: tableOfId } })
     .select({ _id: 1, urlImage: 1 })
@@ -515,7 +485,7 @@ exports.createImagesOfUsers = () => {
     });
 };
 
-function getImageFromDossierImages(id, base64) {
+function getImageFromDossierImagesAndCreateItIfNotExist(id, base64) {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
   }
