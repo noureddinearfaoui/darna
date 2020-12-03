@@ -10,7 +10,6 @@ const fs = require("fs");
 const directory = require("../../pathDirectory");
 const dir = "images";
 require("dotenv").config();
-const socket= require("../../server");
 
 exports.signup = (req, res, next) => {
   bcrypt
@@ -342,10 +341,13 @@ exports.getUserByEmail = (req, res) => {
 
   User.findOne({ email: userEmail })
     .then((user) => {
-      if (user) res.status(200).json({ user: user });
+      if (user) {
+        res.status(200).json({ user: user });
+      }
       else res.status(200).json("pas de user");
     })
     .catch((err) => {
+      console.log(err)
       console.log("error");
       res.status(500).json({
         message: "user not found",

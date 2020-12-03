@@ -44,15 +44,27 @@ server.on("listening", () => {
   const bind = typeof address === "string" ? "pipe " + address : "port " + port;
   console.log("Listening on " + bind);
 });
+
 // Socket Layer over Http Server
-const socket = require('socket.io')(server, {
+const io = require('socket.io')(server, {
   cors: {
     origin: '*',
   }
 });
 // On every Client Connection
-socket.on('connection', socket => {
-    console.log('Socket: client connected');
+io.on('connection', socket => {
+    console.log('Socket: client connected',socket.id);
+    io.emit('notification', {
+      _id:"11",
+      typeMessage:"text",
+      message:"test message ba3ed 10 secondes",
+      date:new Date(),
+      action:"5fc136fab57e714cecea5eb6",
+      member:"5fc12ab9b57e714cecea5ead",
+      nameOfSender:"Tarek Bjaoui",
+      urlImageOfSender:"http://localhost:3000/api/user/app/images/5fc437a1ca5b6b002497da84.jpeg"
+    });
+    socket.broadcast.emit('test:1',{test:'project updated'});
 });
+
 server.listen(port);
-module.exports=socket;
