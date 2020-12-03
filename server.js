@@ -44,5 +44,15 @@ server.on("listening", () => {
   const bind = typeof address === "string" ? "pipe " + address : "port " + port;
   console.log("Listening on " + bind);
 });
-
+// Socket Layer over Http Server
+const socket = require('socket.io')(server, {
+  cors: {
+    origin: '*',
+  }
+});
+// On every Client Connection
+socket.on('connection', socket => {
+    console.log('Socket: client connected');
+});
 server.listen(port);
+module.exports=socket;

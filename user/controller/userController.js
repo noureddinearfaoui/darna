@@ -10,6 +10,8 @@ const fs = require("fs");
 const directory = require("../../pathDirectory");
 const dir = "images";
 require("dotenv").config();
+const socket= require("../../server");
+
 exports.signup = (req, res, next) => {
   bcrypt
     .hash(req.body.password, 10)
@@ -84,6 +86,7 @@ exports.login = (req, res, next) => {
                 .status(401)
                 .json({ error: "vous n êtes pas encore accepter !" });
             let urlImage = getImageFromDossierImagesAndCreateItIfNotExist(user._id, user.urlImage);
+            //socket.emit('notification', user);
             res.status(200).json({
               userId: user._id,
               token: jwt.sign(
