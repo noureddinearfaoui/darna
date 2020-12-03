@@ -31,9 +31,9 @@ exports.signup = (req, res, next) => {
             }</strong>!<br>
                         Pour confirmer votre compte utilisez ce lien:
                         <a href= "${
-                          process.env.SERVER_BACKEND_ADDRESS ||
-                          "http://localhost:3000"
-                        }/api/user/confirm/${user._id}">Confirmer</a></p>`,
+                          process.env.SERVER_FRONTEND_ADDRESS ||
+                          "http://localhost:4200"
+                        }/pages/confirmEmail/${user._id}">Confirmer</a></p>`,
             // Plain text body
           };
           res.status(201).json({ message: "Utilisateur créé !" });
@@ -70,9 +70,9 @@ exports.login = (req, res, next) => {
               }</strong>!<br>
                           Pour confirmer votre compte utilisez ce lien:
                           <a href= "${
-                            process.env.SERVER_BACKEND_ADDRESS ||
-                            "http://localhost:3000"
-                          }/api/user/confirm/${user._id}">Confirmer</a></p>`,
+                            process.env.SERVER_FRONTEND_ADDRESS ||
+                            "http://localhost:4200"
+                          }/pages/confirmEmail/${user._id}">Confirmer</a></p>`,
             };
             email.send(message);
             return res
@@ -198,9 +198,9 @@ exports.addMember = (req, res) => {
                    Votre mot de passe est: <strong> ${pass}</strong><br>
                       Pour confirmer votre compte utilisez ce lien:
                       <a href= "${
-                        process.env.SERVER_BACKEND_ADDRESS ||
-                        "http://localhost:3000"
-                      }/api/user/confirm/${user._id}">Confirmer</a></p>`,
+                        process.env.SERVER_FRONTEND_ADDRESS ||
+                        "http://localhost:4200"
+                      }/pages/confirmEmail/${user._id}">Confirmer</a></p>`,
           // Plain text body
         };
         email.send(message);
@@ -359,6 +359,13 @@ exports.deleteOneMember = (req, res) => {
             message: "Member not found",
           });
         }
+        if (fs.existsSync(dir)) {
+          let files = fs.readdirSync(dir);
+          if (files.find((el)=>el.indexOf(user._id)!==-1)) {
+            file = files.find((el) => el.indexOf(user._id) !== -1);
+            fs.unlinkSync(dir+'/'+file,()=>{});
+          }
+        }
         res.status(200).send({ message: "member deleted successfully!" });
       })
       .catch((err) => {
@@ -492,7 +499,7 @@ function getImageFromDossierImagesAndCreateItIfNotExist(id, base64) {
   let files = fs.readdirSync(dir);
   let file;
   let urlImage;
-  if (files.includes(id)) {
+  if (files.find((el)=>el.indexOf(id)!==-1)) {
     file = files.find((el) => el.indexOf(id) !== -1);
     urlImage =
       `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}` +
