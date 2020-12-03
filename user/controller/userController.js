@@ -108,7 +108,7 @@ exports.login = (req, res, next) => {
 exports.confirmAccount = (req, res, next) => {
   User.findById(req.params.id)
     .then((user) => {
-      if (user.confirm) res.status(301).json({ message: "Confirmed! deja" });
+      if (user.confirm) res.status(404).json({ message: "Confirmed! deja" });
       else {
         user.confirm = true;
         user
