@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const CommentaireSchema = mongoose.Schema(
+const CommentSchema = mongoose.Schema(
   {
-    date: { type: Date, required: true },
+    date: { type: Date, required: true, default: Date },
     typeMessage: { type: String, required: true },
     message: { type: String, required: true },
     member: {
@@ -17,4 +17,4 @@ const CommentaireSchema = mongoose.Schema(
   },
   { timestamps: true }
 );
-module.exports = mongoose.model("Commentaire", CommentaireSchema);
+module.exports = mongoose.model("Comment", CommentSchema);
