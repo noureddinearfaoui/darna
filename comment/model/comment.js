@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const CommentSchema = mongoose.Schema(
   {
-    date: { type: Date, required: true, default: Date },
+    date: { type: Date, default: new Date() },
     typeMessage: { type: String, required: true },
     message: { type: String, required: true },
     member: {
