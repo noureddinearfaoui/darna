@@ -23,10 +23,11 @@ exports.addComment = (req, res, next) => {
           comment
             .save()
             .then(
-              () => (comment.member = comment.member._id),
-              (comment.action = comment.action._id),
-              res.status(200).json(comment)
-            )
+              () => {
+                comment.member = comment.member._id;
+                comment.action = comment.action._id;
+                res.status(200).json(comment);
+            })
             .catch((error) =>
               res.status(500).json({ message: "error server" + error })
             );
