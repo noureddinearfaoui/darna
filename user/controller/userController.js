@@ -168,12 +168,12 @@ exports.updateUserDetails = (req, res) => {
         let extension = user.urlImage.split(";base64,")[0].split("/")[1];
         let fileName = dir + "/" + user._id + "." + extension;
         fs.writeFileSync(fileName, buff);
+        let file = user._id + "." + extension;
         urlImage =`${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}` +
         "/api/user/app/images/" +
         file;
       }
-      commentCtrl.updateCommentsOfMember(user._id,urlImage,user.firstName+" "+user.lastName);
-      res.send(user);
+      commentCtrl.updateCommentsOfMember(user._id,urlImage,user.firstName+" "+user.lastName);      res.send(user);
     })
     .catch((err) => {
       if (err.kind === "ObjectId") {
