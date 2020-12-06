@@ -16,13 +16,17 @@ exports.addComment = (req, res, next) => {
             message: req.body.message,
             nameOfSender: req.body.nameOfSender,
             urlImageOfSender: req.body.urlImageOfSender,
-            member: idUser,
-            action: idAction,
+            member: user,
+            action: action,
           });
 
           comment
             .save()
-            .then(() => res.status(200).json(comment))
+            .then(
+              () => (comment.member = comment.member._id),
+              (comment.action = comment.action._id),
+              res.status(200).json(comment)
+            )
             .catch((error) =>
               res.status(500).json({ message: "error server" + error })
             );

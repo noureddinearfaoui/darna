@@ -16,7 +16,11 @@ exports.addDemande = (req, res, next) => {
 
           demande
             .save()
-            .then(() => res.status(200).json(demande))
+            .then(
+              () => (demande.member = demande.member._id),
+              (demande.action = demande.action._id),
+              res.status(200).json(demande)
+            )
             .catch((error) =>
               res.status(500).json({ message: "error server" + error })
             );
