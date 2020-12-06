@@ -10,15 +10,17 @@ exports.addDemande = (req, res, next) => {
       Action.findById(idAction)
         .then((action) => {
           const demande = new DemandeParticipation({
-            status: "attente",
-            participated: false,
             member: user,
             action: action,
           });
 
           demande
             .save()
-            .then(() => res.status(200).json(demande))
+            .then(
+              () => (demande.member = demande.member._id),
+              (demande.action = demande.action._id),
+              res.status(200).json(demande)
+            )
             .catch((error) =>
               res.status(500).json({ message: "error server" + error })
             );
