@@ -58,3 +58,15 @@ exports.getAllCommentsByAction = (req, res) => {
       });
     });
 };
+
+exports.updateCommentsOfMember = (idUser,urlImageOfSender, nameOfSender)=>{
+  Comment.find({member:idUser}).then((comments)=>{
+    comments.forEach(comment=>{
+      if(urlImageOfSender){
+        comment.urlImageOfSender=urlImageOfSender;
+      }
+      comment.nameOfSender=nameOfSender;
+      comment.save();
+    })
+  })
+}

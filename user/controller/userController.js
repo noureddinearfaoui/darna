@@ -9,6 +9,7 @@ const email = require("../../config/email");
 const fs = require("fs");
 const directory = require("../../pathDirectory");
 const dir = "images";
+const commentCtrl = require("../../comment/controller/commentController");
 require("dotenv").config();
 exports.signup = (req, res, next) => {
   bcrypt
@@ -161,7 +162,17 @@ exports.updateUserDetails = (req, res) => {
           message: "Member not found",
         });
       }
-      getImageFromDossierImagesAndCreateItIfNotExist(user._id,user.urlImage);
+      let urlImage="";
+      if (user.urlImage) {
+        let buff = Buffer.from(user.urlImage.split(";base64,")[1], "base64");
+        let extension = user.urlImage.split(";base64,")[0].split("/")[1];
+        let fileName = dir + "/" + user._id + "." + extension;
+        fs.writeFileSync(fileName, buff);
+        urlImage =`${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}` +
+        "/api/user/app/images/" +
+        file;
+      }
+      commentCtrl.updateCommentsOfMember(user._id,urlImage,user.firstName+" "+user.lastName);
       res.send(user);
     })
     .catch((err) => {
