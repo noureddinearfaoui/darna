@@ -68,5 +68,7 @@ exports.updateCommentsOfMember = (idUser,urlImageOfSender, nameOfSender)=>{
       comment.nameOfSender=nameOfSender;
       comment.save();
     })
+  }).catch(err=>{
+    console.log(err)
   })
 }
