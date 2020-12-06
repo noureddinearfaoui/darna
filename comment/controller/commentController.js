@@ -16,8 +16,8 @@ exports.addComment = (req, res, next) => {
             message: req.body.message,
             nameOfSender: req.body.nameOfSender,
             urlImageOfSender: req.body.urlImageOfSender,
-            member: user,
-            action: action,
+            member: idUser,
+            action: idAction,
           });
 
           comment

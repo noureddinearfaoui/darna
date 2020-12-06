@@ -10,8 +10,6 @@ exports.addDemande = (req, res, next) => {
       Action.findById(idAction)
         .then((action) => {
           const demande = new DemandeParticipation({
-            status: "attente",
-            participated: false,
             member: user,
             action: action,
           });
