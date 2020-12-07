@@ -13,7 +13,7 @@ var cors = require("cors");
 //connexion base de donneés
 config.connectMongodb;
 const app = express();
-app.use(cors());
+//app.use(cors());
 // Cross Origin Resource Sharing(pour éviter CORS)
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");

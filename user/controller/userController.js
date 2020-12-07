@@ -11,6 +11,7 @@ const directory = require("../../pathDirectory");
 const dir = "images";
 const commentCtrl = require("../../comment/controller/commentController");
 require("dotenv").config();
+
 exports.signup = (req, res, next) => {
   bcrypt
     .hash(req.body.password, 10)
@@ -85,6 +86,7 @@ exports.login = (req, res, next) => {
                 .status(401)
                 .json({ error: "vous n êtes pas encore accepter !" });
             let urlImage = getImageFromDossierImagesAndCreateItIfNotExist(user._id, user.urlImage);
+            //socket.emit('notification', user);
             res.status(200).json({
               userId: user._id,
               token: jwt.sign(
@@ -350,10 +352,13 @@ exports.getUserByEmail = (req, res) => {
 
   User.findOne({ email: userEmail })
     .then((user) => {
-      if (user) res.status(200).json({ user: user });
+      if (user) {
+        res.status(200).json({ user: user });
+      }
       else res.status(200).json("pas de user");
     })
     .catch((err) => {
+      console.log(err)
       console.log("error");
       res.status(500).json({
         message: "user not found",
