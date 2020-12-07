@@ -64,12 +64,12 @@ io.on('connection', socket => {
     //   nameOfSender:"Tarek Bjaoui",
     //   urlImageOfSender:"http://localhost:3000/api/user/app/images/5fc437a1ca5b6b002497da84.jpeg"
     // });
-    socket.broadcast.emit('test:1',{test:'project updated'});
-    socket.on("notification",val=>{
-      socket.broadcast.emit('notification',val);
+    //socket.broadcast.emit('test:1',{test:'project updated'});
+    socket.on("action",(message,idAction)=>{
+      socket.broadcast.emit(idAction+"",message);
     });
-    socket.on("notification:typing",(user,message)=>{
-      socket.broadcast.emit('notification:typing',user,message);
+    socket.on("action:typing",(user,message,idAction)=>{
+      socket.broadcast.emit(idAction+':typing',user,message);
     });
 });
 
