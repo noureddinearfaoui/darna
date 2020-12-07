@@ -9,6 +9,7 @@ const roleRoutes = require("./role/routes");
 const ActionRouts = require("./action/routes");
 const DemandeParticipationRoutes = require("./demandeParticipation/routes");
 const CommentRoutes = require("./comment/routes");
+const NotificationRoutes = require("./notification/routes");
 var cors = require("cors");
 //connexion base de donneés
 config.connectMongodb;
@@ -38,5 +39,6 @@ app.use("/api/user", userRoutes);
 app.use("/api/action", ActionRouts);
 app.use("/api/demandeParticipation", DemandeParticipationRoutes);
 app.use("/api/Comment", CommentRoutes);
+app.use("/api/notification", NotificationRoutes);
 
 module.exports = app;
