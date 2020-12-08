@@ -1,5 +1,6 @@
 const User = require("../../user/model/user");
 const Notification = require("../../notification/model/notification");
+const Action = require("../../action/model/action");
 
 exports.addNotification = (req, res, next) => {
   let idUser = req.body.receiver;
@@ -23,6 +24,54 @@ exports.addNotification = (req, res, next) => {
     })
     .catch((error) => res.status(404).json({ message: "Membre non trouvé" }));
 };
+exports.addNotificationActionToAllUser = (req, res, next) => {
+  //console.log(req.params)
+  let idAction = req.params.id;
+  //console.log(idAction)
+
+  Action.findById(idAction)
+    . select({__id:1,beginDate:1})
+    .then((action) => {
+      
+    //  res.json(action)
+     /* const notification = new Notification({
+        title:"Nouvelle Action ",
+        Date: new Date(),
+        description: `Chèrs membres on vous informe que tarna va lancer une action qui va démarrer le ${action.beginDate} pour plus de détails consulter le site`,
+      });*/
+        User.find({role : {$ne :'admin'}})
+        . select({__id:1,email:1})
+      .then(users=>{
+        let notification=null;
+        users.forEach(user=>
+          {
+             notification = new Notification({
+              title:"Nouvelle Action ",
+              Date: new Date(),
+              description: `Chèrs membres on vous informe que tarna va lancer une action qui va démarrer le ${action.beginDate} pour plus de détails consulter le site`,
+              receiver:user
+            });
+            
+            //console.log(notification)
+            notification
+            .save()
+            .then(() => {
+            })
+            .catch((error) =>
+              res.status(500).json({ message: "error server" + error })
+            );
+
+          })
+          delete  notification.receiver;
+
+          res.status(200).json(notification);
+
+       })
+      .catch((error) => res.status(404).json({ message: "Membre non trouvé" }));
+    
+    })
+    .catch((error) => res.status(404).json({ message: "action non trouvé" }));
+};
 
 exports.getNotification = (req, res) => {
   Notification.findById(req.params.idNotif)
@@ -40,11 +89,27 @@ exports.getNotification = (req, res) => {
       });
     });
 };
+exports.getNotificationToAUser = (req, res) => {
+ let idUser= req.params.id ; 
+  Notification.find({receiver:idUser})
+    .then((notifications) => {
+      
+      res.status(200).json(notifications);
+    })
+    .catch((err) => {
+     
+      return res.status(500).send({
+        message: "Erreur serveur",
+      });
+    });
+};
 
 exports.getAllNotifications = (req, res) => {
+  //console.log("hi")
   Notification.find()
     .sort({ date: 1 })
     .then((notifications) => {
+      
       res.status(200).json(notifications);
     })
     .catch((error) =>

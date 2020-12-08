@@ -23,6 +23,14 @@ router.get(
   permit("admin", "membre"),
   NotifCtrl.getAllNotifications
 );
+router.get(
+  "/notifyAll/:id",
+  NotifCtrl.addNotificationActionToAllUser
+);
+router.get(
+  "/getNotificationsUser/:id",
+  NotifCtrl.getNotificationToAUser
+);
 
 router.put(
   "/updateSeen/:idNotif",

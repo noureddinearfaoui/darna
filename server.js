@@ -60,6 +60,13 @@ io.on("connection", (socket) => {
   socket.on("action:typing", (user, message, idAction) => {
     socket.broadcast.emit(idAction + ":typing", user, message);
   });
+  //notification
+  socket.on("nour", (data) => {
+    console.log("nour envoyer",data)
+  });
+  socket.on("adminNewEvent", (data) => {
+    io.emit("newEvent",data)
+  });
 });
 
 server.listen(port);
