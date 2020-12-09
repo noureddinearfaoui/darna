@@ -557,50 +557,63 @@ exports.updateConnectedUser = (req, res) => {
   const userId = decodedToken.userId;
   if (userId !== idUser) {
     return res.status(404).send({
-      message: "Error",
+      message: "Vous n'êtes pas l'utilisateur connecté",
     });
   } else {
-    User.findByIdAndUpdate(
-      idUser,
-      {
-        ...req.body,
-      },
-      { new: true }
-    )
+    User.findById(idUser)
       .then((user) => {
-        if (!user) {
-          return res.status(404).send({
-            message: "Member not found",
-          });
-        }
-        let urlImage = "";
-        if (user.urlImage) {
-          let buff = Buffer.from(user.urlImage.split(";base64,")[1], "base64");
-          let extension = user.urlImage.split(";base64,")[0].split("/")[1];
-          let fileName = dir + "/" + user._id + "." + extension;
-          fs.writeFileSync(fileName, buff);
-          let file = user._id + "." + extension;
-          urlImage =
-            `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}` +
-            "/api/user/app/images/" +
-            file;
-        }
-        commentCtrl.updateCommentsOfMember(
-          user._id,
-          urlImage,
-          user.firstName + " " + user.lastName
-        );
-        res.send(user);
+        user.firstName = req.body.firstName;
+        user.lastName = req.body.lastName;
+        user.adress = req.body.adress;
+        user.tel = req.body.tel;
+        user
+          .save()
+          .then(() => res.status(200).json(user))
+          .catch((error) =>
+            res.status(500).json({ message: "Erreur serveur" + error })
+          );
       })
-      .catch((err) => {
-        if (err.kind === "ObjectId") {
-          return res.status(404).send({
-            message: "Member not found",
-          });
-        }
-        return res.status(500).send({
-          message: "Error updating details",
-        });
-      });
+      .catch((error) =>
+        res.status(404).json({ message: "Utilisateur non trouvé" })
+      );
+  }
+};
+
+exports.updatePassword = (req, res, next) => {
+  const idUser = req.params.id;
+  const token = req.headers.authorization.split(" ")[1];
+  const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
+  const userId = decodedToken.userId;
+  if (userId !== idUser) {
+    return res.status(404).send({
+      message: "Vous n'êtes pas l'utilisateur connecté",
+    });
+  } else {
+    User.findById(idUser)
+      .then((user) => {
+        bcrypt
+          .compare(req.body.oldPassword, user.password)
+          .then((valid) => {
+            if (!valid) {
+              return res.status(401).json({
+                error: "Veuillez entrer votre mot de passe courante !",
+              });
+            }
+
+            bcrypt.hash(req.body.newPassword, 10).then((hash) => {
+              user.password = hash;
+              user
+                .save()
+                .then(() => res.status(200).json(user))
+                .catch((error) =>
+                  res.status(500).json({ message: "Erreur serveur" + error })
+                );
+            });
+          })
+          .catch((error) => res.status(500).json({ error }));
+      })
+      .catch((error) =>
+        res.status(404).json({ message: "Utilisateur non trouvé" })
+      );
   }
 };

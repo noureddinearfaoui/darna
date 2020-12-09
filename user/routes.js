@@ -48,4 +48,6 @@ router.get("/getAllImagesLinksOfUsers", UserCtrl.getAllImagesLinksOfUsers);
 
 router.get("/app/images/:nomImage", UserCtrl.getImageByNom);
 router.put("/updateConnectedUser/:id", auth, UserCtrl.updateConnectedUser);
+router.put("/updatePassword/:id", auth, UserCtrl.updatePassword);
+
 module.exports = router;
