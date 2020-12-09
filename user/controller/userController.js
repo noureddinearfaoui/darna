@@ -85,7 +85,10 @@ exports.login = (req, res, next) => {
               return res
                 .status(401)
                 .json({ error: "vous n êtes pas encore accepter !" });
-            let urlImage = getImageFromDossierImagesAndCreateItIfNotExist(user._id, user.urlImage);
+            let urlImage = getImageFromDossierImagesAndCreateItIfNotExist(
+              user._id,
+              user.urlImage
+            );
             //socket.emit('notification', user);
             res.status(200).json({
               userId: user._id,
@@ -164,18 +167,23 @@ exports.updateUserDetails = (req, res) => {
           message: "Member not found",
         });
       }
-      let urlImage="";
+      let urlImage = "";
       if (user.urlImage) {
         let buff = Buffer.from(user.urlImage.split(";base64,")[1], "base64");
         let extension = user.urlImage.split(";base64,")[0].split("/")[1];
         let fileName = dir + "/" + user._id + "." + extension;
         fs.writeFileSync(fileName, buff);
         let file = user._id + "." + extension;
-        urlImage =`${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}` +
-        "/api/user/app/images/" +
-        file;
+        urlImage =
+          `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}` +
+          "/api/user/app/images/" +
+          file;
       }
-      commentCtrl.updateCommentsOfMember(user._id,urlImage,user.firstName+" "+user.lastName);
+      commentCtrl.updateCommentsOfMember(
+        user._id,
+        urlImage,
+        user.firstName + " " + user.lastName
+      );
       res.send(user);
     })
     .catch((err) => {
@@ -355,11 +363,10 @@ exports.getUserByEmail = (req, res) => {
     .then((user) => {
       if (user) {
         res.status(200).json({ user: user });
-      }
-      else res.status(200).json("pas de user");
+      } else res.status(200).json("pas de user");
     })
     .catch((err) => {
-      console.log(err)
+      console.log(err);
       console.log("error");
       res.status(500).json({
         message: "user not found",
@@ -378,9 +385,9 @@ exports.deleteOneMember = (req, res) => {
         }
         if (fs.existsSync(dir)) {
           let files = fs.readdirSync(dir);
-          if (files.find((el)=>el.indexOf(user._id)!==-1)) {
+          if (files.find((el) => el.indexOf(user._id) !== -1)) {
             file = files.find((el) => el.indexOf(user._id) !== -1);
-            fs.unlinkSync(dir+'/'+file,()=>{});
+            fs.unlinkSync(dir + "/" + file, () => {});
           }
         }
         res.status(200).send({ message: "member deleted successfully!" });
@@ -516,7 +523,7 @@ function getImageFromDossierImagesAndCreateItIfNotExist(id, base64) {
   let files = fs.readdirSync(dir);
   let file;
   let urlImage;
-  if (files.find((el)=>el.indexOf(id)!==-1)) {
+  if (files.find((el) => el.indexOf(id) !== -1)) {
     file = files.find((el) => el.indexOf(id) !== -1);
     urlImage =
       `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}` +
@@ -540,3 +547,60 @@ function getImageFromDossierImagesAndCreateItIfNotExist(id, base64) {
 
   return urlImage;
 }
+
+//update user details
+
+exports.updateConnectedUser = (req, res) => {
+  const idUser = req.params.id;
+  const token = req.headers.authorization.split(" ")[1];
+  const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
+  const userId = decodedToken.userId;
+  if (userId !== idUser) {
+    return res.status(404).send({
+      message: "Error",
+    });
+  } else {
+    User.findByIdAndUpdate(
+      idUser,
+      {
+        ...req.body,
+      },
+      { new: true }
+    )
+      .then((user) => {
+        if (!user) {
+          return res.status(404).send({
+            message: "Member not found",
+          });
+        }
+        let urlImage = "";
+        if (user.urlImage) {
+          let buff = Buffer.from(user.urlImage.split(";base64,")[1], "base64");
+          let extension = user.urlImage.split(";base64,")[0].split("/")[1];
+          let fileName = dir + "/" + user._id + "." + extension;
+          fs.writeFileSync(fileName, buff);
+          let file = user._id + "." + extension;
+          urlImage =
+            `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}` +
+            "/api/user/app/images/" +
+            file;
+        }
+        commentCtrl.updateCommentsOfMember(
+          user._id,
+          urlImage,
+          user.firstName + " " + user.lastName
+        );
+        res.send(user);
+      })
+      .catch((err) => {
+        if (err.kind === "ObjectId") {
+          return res.status(404).send({
+            message: "Member not found",
+          });
+        }
+        return res.status(500).send({
+          message: "Error updating details",
+        });
+      });
+  }
+};
