@@ -568,7 +568,7 @@ exports.updateConnectedUser = (req, res) => {
         user.tel = req.body.tel;
         user
           .save()
-          .then(() => res.status(200).json(user))
+          .then(() => res.status(200).json({message:"Votre compte a été modifié avec succès"}))
           .catch((error) =>
             res.status(500).json({ message: "Erreur serveur" + error })
           );
@@ -604,7 +604,7 @@ exports.updatePassword = (req, res, next) => {
               user.password = hash;
               user
                 .save()
-                .then(() => res.status(200).json(user))
+                .then(() => res.status(200).json({message:"Votre mot de passe a été modifié avec succès"}))
                 .catch((error) =>
                   res.status(500).json({ message: "Erreur serveur" + error })
                 );
