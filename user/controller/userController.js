@@ -595,7 +595,7 @@ exports.updatePassword = (req, res, next) => {
           .compare(req.body.oldPassword, user.password)
           .then((valid) => {
             if (!valid) {
-              return res.status(401).json({
+              return res.status(404).json({
                 error: "Veuillez entrer votre mot de passe courante !",
               });
             }
