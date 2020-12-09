@@ -556,7 +556,7 @@ exports.updateConnectedUser = (req, res) => {
   const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
   const userId = decodedToken.userId;
   if (userId !== idUser) {
-    return res.status(404).send({
+    return res.status(401).send({
       message: "Vous n'êtes pas l'utilisateur connecté",
     });
   } else {
@@ -585,7 +585,7 @@ exports.updatePassword = (req, res, next) => {
   const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
   const userId = decodedToken.userId;
   if (userId !== idUser) {
-    return res.status(404).send({
+    return res.status(401).send({
       message: "Vous n'êtes pas l'utilisateur connecté",
     });
   } else {
