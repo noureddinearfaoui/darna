@@ -620,3 +620,27 @@ exports.updatePassword = (req, res, next) => {
       );
   }
 };
+
+
+exports.getConnectedUserdetails = (req, res) => {
+  User.findById(req.params.id).select({ firstName: 1, lastName: 1, email:1,adress:1, tel:1,dateOfBirth:1,banni:1,
+    confirm:1,role:1,renewal:1 })
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send({
+          message: "Utilisateur non trouvé",
+        });
+      }
+      res.send(user);
+    })
+    .catch((err) => {
+      if (err.kind === "ObjectId") {
+        return res.status(404).send({
+          message: "Utilisateur non trouvé",
+        });
+      }
+      return res.status(500).send({
+        message: "Erreur serveur",
+      });
+    });
+};

@@ -11,7 +11,7 @@ router.get("/confirm/:id", UserCtrl.confirmAccount);
 router.get(
   "/details/:id",
   auth,
-  permit("admin", "membre"),
+  permit("admin"),
   UserCtrl.getUserDetails
 );
 router.put("/details/:id", auth, permit("admin"), UserCtrl.updateUserDetails);
@@ -49,5 +49,5 @@ router.get("/getAllImagesLinksOfUsers", UserCtrl.getAllImagesLinksOfUsers);
 router.get("/app/images/:nomImage", UserCtrl.getImageByNom);
 router.put("/updateConnectedUser/:id", auth, UserCtrl.updateConnectedUser);
 router.put("/updatePassword/:id", auth, UserCtrl.updatePassword);
-
+router.get("/getConnectedUserdetails/:id",auth,UserCtrl.getConnectedUserdetails);
 module.exports = router;
