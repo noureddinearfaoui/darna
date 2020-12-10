@@ -599,7 +599,7 @@ exports.updatePassword = (req, res, next) => {
           .then((valid) => {
             if (!valid) {
               return res.status(404).json({
-                error: "Veuillez entrer votre mot de passe courante !",
+                error: "Veuillez entrer votre mot de passe courant correctement !",
               });
             }
 
