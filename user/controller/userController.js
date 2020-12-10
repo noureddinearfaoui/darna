@@ -168,7 +168,14 @@ exports.updateUserDetails = (req, res) => {
         });
       }
       let urlImage = "";
-      if (user.urlImage) {
+      if (req.body.urlImage) {
+        if (fs.existsSync(dir)) {
+          let files = fs.readdirSync(dir);
+          if (files.find((el) => el.indexOf(user._id) !== -1)) {
+            let fileT = files.find((el) => el.indexOf(user._id) !== -1);
+            fs.unlinkSync(dir + "/" + fileT, () => {});
+          }
+        }
         let buff = Buffer.from(user.urlImage.split(";base64,")[1], "base64");
         let extension = user.urlImage.split(";base64,")[0].split("/")[1];
         let fileName = dir + "/" + user._id + "." + extension;
@@ -659,22 +666,33 @@ exports.updateConnectedUserImage = (req, res) => {
     User.findById(idUser)
       .then((user) => {
         user.urlImage = req.body.newurlImage;
-        let urlImage = "";
-        let buff = Buffer.from(user.urlImage.split(";base64,")[1], "base64");
-        let extension = user.urlImage.split(";base64,")[0].split("/")[1];
-        let fileName = dir + "/" + user._id + "." + extension;
-        fs.writeFileSync(fileName, buff);
-        let file = user._id + "." + extension;
-        urlImage =`${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}` +"/api/user/app/images/" +file;
-          user
-          .save()
-          .then(() =>{ 
-            commentCtrl.updateCommentsOfMember(user._id,urlImage,user.firstName + " " + user.lastName);
-          res.status(200).json({message:"Votre compte a été modifié avec succès"})
-           })
-          .catch((error) =>
-            res.status(500).json({ message: "Erreur serveur" + error })
-          );
+        user.save()
+        .then(() => {
+          if (fs.existsSync(dir)) {
+            let files = fs.readdirSync(dir);
+            if (files.find((el) => el.indexOf(user._id) !== -1)) {
+              let fileT = files.find((el) => el.indexOf(user._id) !== -1);
+              fs.unlinkSync(dir + "/" + fileT, () => {});
+            }
+          }
+          let urlImage = "";
+          if (req.body.newurlImage) {
+            let buff = Buffer.from(user.urlImage.split(";base64,")[1], "base64");
+            let extension = user.urlImage.split(";base64,")[0].split("/")[1];
+            let fileName = dir + "/" + user._id + "." + extension;
+            fs.writeFileSync(fileName, buff);
+            let file = user._id + "." + extension;
+            urlImage =
+              `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}` +
+              "/api/user/app/images/" +
+              file;
+          }
+          commentCtrl.updateCommentsOfMember(user._id,urlImage,null);
+          res.status(200).json({message:"Votre image a été modifié avec succès",urlImage:urlImage})
+        })
+        .catch((error) =>
+          res.status(500).json({ message: "Erreur serveur" + error })
+        );
       })
       .catch((error) =>
         res.status(404).json({ message: "Utilisateur non trouvé" })
