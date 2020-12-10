@@ -644,3 +644,40 @@ exports.getConnectedUserdetails = (req, res) => {
       });
     });
 };
+
+
+exports.updateConnectedUserImage = (req, res) => {
+  const idUser = req.params.id;
+  const token = req.headers.authorization.split(" ")[1];
+  const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
+  const userId = decodedToken.userId;
+  if (userId !== idUser) {
+    return res.status(401).send({
+      message: "Vous n'êtes pas l'utilisateur connecté",
+    });
+  } else {
+    User.findById(idUser)
+      .then((user) => {
+        user.urlImage = req.body.newurlImage;
+        let urlImage = "";
+        let buff = Buffer.from(user.urlImage.split(";base64,")[1], "base64");
+        let extension = user.urlImage.split(";base64,")[0].split("/")[1];
+        let fileName = dir + "/" + user._id + "." + extension;
+        fs.writeFileSync(fileName, buff);
+        let file = user._id + "." + extension;
+        urlImage =`${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}` +"/api/user/app/images/" +file;
+          user
+          .save()
+          .then(() =>{ 
+            commentCtrl.updateCommentsOfMember(user._id,urlImage,user.firstName + " " + user.lastName);
+          res.status(200).json({message:"Votre compte a été modifié avec succès"})
+           })
+          .catch((error) =>
+            res.status(500).json({ message: "Erreur serveur" + error })
+          );
+      })
+      .catch((error) =>
+        res.status(404).json({ message: "Utilisateur non trouvé" })
+      );
+  }
+};

@@ -50,4 +50,7 @@ router.get("/app/images/:nomImage", UserCtrl.getImageByNom);
 router.put("/updateConnectedUser/:id", auth, UserCtrl.updateConnectedUser);
 router.put("/updatePassword/:id", auth, UserCtrl.updatePassword);
 router.get("/getConnectedUserdetails/:id",auth,UserCtrl.getConnectedUserdetails);
+router.put("/updateConnectedUserImage/:id", auth, UserCtrl.updateConnectedUserImage);
+
+
 module.exports = router;
