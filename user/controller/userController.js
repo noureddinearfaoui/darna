@@ -492,11 +492,16 @@ exports.getAllImagesLinksOfUsers = (req, res, next) => {
 
 exports.getImageByNom = (req, res) => {
   let nomImage = req.params.nomImage;
-  let files = fs.readdirSync(dir);
-  if (!files.includes(nomImage)) {
-    return res.status(404).json({ message: "Image n'existe pas!!" });
+  let idUser=nomImage.split(".")[0];
+  if (fs.existsSync(dir)) {
+    let files = fs.readdirSync(dir);
+    let file=files.find((el) => el.indexOf(idUser) !== -1);
+    if (!file) {
+      return res.status(404).json({ message: "Image n'existe pas!!" });
+    }  
+    return res.sendFile(directory + "/" + dir + "/" + file);
   }
-  return res.sendFile(directory + "/" + dir + "/" + nomImage);
+  res.status(404).send();
 };
 
 exports.createImagesOfUsers = () => {
