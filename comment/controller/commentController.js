@@ -65,10 +65,12 @@ exports.updateCommentsOfMember = (idUser,urlImageOfSender, nameOfSender)=>{
       if(urlImageOfSender){
         comment.urlImageOfSender=urlImageOfSender;
       }
-      comment.nameOfSender=nameOfSender;
+      if(nameOfSender){
+        comment.nameOfSender=nameOfSender;
+      }
       comment.save();
-    })
+    });
   }).catch(err=>{
     console.log(err)
-  })
+  });
 }
