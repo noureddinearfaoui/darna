@@ -28,8 +28,17 @@ router.get(
   NotifCtrl.addNotificationActionToAllUser
 );
 router.get(
+  "/test",
+  NotifCtrl.nearbyEvents
+);
+
+router.get(
   "/getNotificationsUser/:id",
   NotifCtrl.getNotificationToAUser
+);
+router.get(
+  "/getNotificationsAdmin",
+  NotifCtrl.getNotificationAdmin
 );
 
 router.put(

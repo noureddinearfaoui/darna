@@ -11,10 +11,12 @@ const DemandeParticipationRoutes = require("./demandeParticipation/routes");
 const CommentRoutes = require("./comment/routes");
 const NotificationRoutes = require("./notification/routes");
 var cors = require("cors");
+const NotifCtrl = require("./notification/controller/notificationController");
 //connexion base de donneés
 config.connectMongodb;
 const app = express();
-//app.use(cors());
+//setInterval(()=>{ NotifCtrl.nearbyEvents() }, 300000);
+app.use(cors());
 // Cross Origin Resource Sharing(pour éviter CORS)
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");

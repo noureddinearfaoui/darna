@@ -1,6 +1,7 @@
 const User = require("../../user/model/user");
 const Notification = require("../../notification/model/notification");
 const Action = require("../../action/model/action");
+const DemandeParticipation = require("../../demandeParticipation/model/demandeParticipation");
 
 exports.addNotification = (req, res, next) => {
   let idUser = req.body.receiver;
@@ -49,7 +50,8 @@ exports.addNotificationActionToAllUser = (req, res, next) => {
               title:"Nouvelle Action ",
               Date: new Date(),
               description: `Chèrs membres on vous informe que tarna va lancer une action qui va démarrer le ${action.beginDate} pour plus de détails consulter le site`,
-              receiver:user
+              receiver:user,
+              typeNotification:'m'
             });
             
             //console.log(notification)
@@ -91,6 +93,7 @@ exports.getNotification = (req, res) => {
 };
 exports.getNotificationToAUser = (req, res) => {
  let idUser= req.params.id ; 
+
   Notification.find({receiver:idUser})
     .then((notifications) => {
       
@@ -103,6 +106,21 @@ exports.getNotificationToAUser = (req, res) => {
       });
     });
 };
+exports.getNotificationAdmin = (req, res) => {
+  
+ 
+   Notification.find({typeNotification:'a'})
+     .then((notifications) => {
+       
+       res.status(200).json(notifications);
+     })
+     .catch((err) => {
+      
+       return res.status(500).send({
+         message: "Erreur serveur",
+       });
+     });
+ };
 
 exports.getAllNotifications = (req, res) => {
   //console.log("hi")
@@ -168,3 +186,52 @@ exports.deleteNotification = (req, res) => {
       });
     });
 };
+
+exports.nearbyEvents  = () => {
+ 
+   let date = new Date(); 
+   console.log('ner')
+
+  Action.find({beginDate : {$gt :date}})
+  . select({__id:1,numberOfMembers:1,beginDate:1,actionName:1})
+  .then((data)=>{
+    //console.log(el._id)
+        
+     data.forEach((el)=>{
+    
+      DemandeParticipation.find({action:el._id})
+      .populate()
+      .then((reslt)=>{
+        //console.log(reslt)
+        notification = new Notification({
+          title:"Le nombre de membre est manquant ",
+          Date: new Date(),
+          description: `il y a encore des places vides pour l'evenement ${el.actionName}`,
+          receiver:null,
+          typeNotification:'a'
+        });
+        
+        
+        notification
+            .save()
+            .then(() => {
+            })
+            .catch((error) =>
+              console.log(error)
+            );
+    
+      })
+     })
+   //es.status(200).send(data);
+
+  })
+
+  /*DemandeParticipation.find({action:'5fbbeedb1762261da0e11990'})
+  .populate()
+  .then((data)=>{
+    res.status(200).send(data);
+
+  })*/
+
+
+}
