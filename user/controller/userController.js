@@ -568,7 +568,10 @@ exports.updateConnectedUser = (req, res) => {
         user.tel = req.body.tel;
         user
           .save()
-          .then(() => res.status(200).json({message:"Votre compte a été modifié avec succès"}))
+          .then(() =>{ 
+          commentCtrl.updateCommentsOfMember(user._id,"",user.firstName + " " + user.lastName );
+          res.status(200).json({message:"Votre compte a été modifié avec succès"})
+           })
           .catch((error) =>
             res.status(500).json({ message: "Erreur serveur" + error })
           );
