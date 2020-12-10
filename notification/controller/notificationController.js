@@ -31,14 +31,14 @@ exports.addNotificationActionToAllUser = (req, res, next) => {
   //console.log(idAction)
 
   Action.findById(idAction)
-    . select({__id:1,beginDate:1})
+    . select({__id:1,beginDate:1,actionName:1})
     .then((action) => {
       
     //  res.json(action)
      /* const notification = new Notification({
         title:"Nouvelle Action ",
         Date: new Date(),
-        description: `Chèrs membres on vous informe que tarna va lancer une action qui va démarrer le ${action.beginDate} pour plus de détails consulter le site`,
+        description: `Chèrs membres on vous informe que tarna va lancer une action qui va démarrer prochainement pour plus de détails consulter le site`,
       });*/
         User.find({role : {$ne :'admin'}})
         . select({__id:1,email:1})
@@ -49,7 +49,7 @@ exports.addNotificationActionToAllUser = (req, res, next) => {
              notification = new Notification({
               title:"Nouvelle Action ",
               Date: new Date(),
-              description: `Chèrs membres on vous informe que tarna va lancer une action qui va démarrer le ${action.beginDate} pour plus de détails consulter le site`,
+              description: `Chèrs membres on vous informe que tarna va lancer une action ${action.actionName} qui va démarrer le ${action.beginDate} pour plus de détails consulter le site`,
               receiver:user,
               typeNotification:'m'
             });
