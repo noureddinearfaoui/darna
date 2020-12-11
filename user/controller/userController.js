@@ -492,16 +492,11 @@ exports.getAllImagesLinksOfUsers = (req, res, next) => {
 
 exports.getImageByNom = (req, res) => {
   let nomImage = req.params.nomImage;
-  let idUser=nomImage.split(".")[0];
-  if (fs.existsSync(dir)) {
-    let files = fs.readdirSync(dir);
-    let file=files.find((el) => el.indexOf(idUser) !== -1);
-    if (!file) {
-      return res.status(404).json({ message: "Image n'existe pas!!" });
-    }  
-    return res.sendFile(directory + "/" + dir + "/" + file);
+  let files = fs.readdirSync(dir);
+  if (!files.includes(nomImage)) {
+    return res.status(404).json({ message: "Image n'existe pas!!" });
   }
-  res.status(404).send();
+  return res.sendFile(directory + "/" + dir + "/" + nomImage);
 };
 
 exports.createImagesOfUsers = () => {
@@ -582,7 +577,7 @@ exports.updateConnectedUser = (req, res) => {
           .save()
           .then(() =>{ 
           commentCtrl.updateCommentsOfMember(user._id,"",user.firstName + " " + user.lastName );
-          res.status(200).json({message:"Votre compte a été modifié avec succès"})
+          res.status(200).json({message:"Votre compte a été modifié avec succès"});
            })
           .catch((error) =>
             res.status(500).json({ message: "Erreur serveur" + error })
@@ -643,6 +638,7 @@ exports.getConnectedUserdetails = (req, res) => {
           message: "Utilisateur non trouvé",
         });
       }
+      user.urlImage=getImageFromDossierImagesAndCreateItIfNotExist(req.params.id,"");
       res.send(user);
     })
     .catch((err) => {
