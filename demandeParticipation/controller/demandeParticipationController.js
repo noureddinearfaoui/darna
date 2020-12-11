@@ -13,7 +13,14 @@ exports.addDemande = (req, res, next) => {
             member: user,
             action: action,
           });
-
+          DemandeParticipation.findOne({action:idAction,member:idUser})
+          .then((existdemande)=>{
+        if(existdemande){
+          return res.status(404).send({
+            message: "Demande existe déjà",
+          });
+        }  
+        else{ 
           demande
             .save()
             .then(
@@ -21,9 +28,15 @@ exports.addDemande = (req, res, next) => {
                 demande.member = demande.member._id;
                 demande.action = demande.action._id;
                 res.status(200).json(demande);
-            }).catch((error) =>
+            })
+            .catch((error) =>
               res.status(500).json({ message: "error server" + error })
             );
+          }
+             })
+            .catch((error) =>
+            res.status(404).json({ message: "demande Non trouvé" })
+          );
         })
         .catch((error) =>
           res.status(404).json({ message: "action Non trouvé" })
