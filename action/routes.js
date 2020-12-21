@@ -32,6 +32,8 @@ router.delete(
 
 router.get(
   "/actionDetailsWithoutPhoto/:id",
+  auth,
+  permit("membre", "admin"),
   ActionCtrl.getActionWithoutPhoto
 );
 
