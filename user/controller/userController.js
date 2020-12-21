@@ -702,7 +702,7 @@ exports.updateConnectedUserImage = (req, res) => {
 };
 
 
-exports.getmembrewithoutphoto = (req, res) => {
+exports.getMembreWithoutPhoto = (req, res) => {
   User.findById(req.params.id).select({ email: 1, firstName: 1, lastName:1,adress:1, tel:1,dateOfBirth:1,confirm:1,
     banni:1,accepted:1 ,renewal:1 ,role:1 })
     .then((user) => {
