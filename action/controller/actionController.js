@@ -169,3 +169,29 @@ exports.getAllActions = (req, res, next) => {
     })
     .catch((error) => res.status(400).json({ message: "Actions not found" }));
 };
+
+
+
+
+exports.getActionWithoutPhoto = (req, res) => {
+  Action.findById(req.params.id).select({ actionName: 1, description: 1, location:1,beginDate:1, endDate:1,beginDateInscription:1,endDateInscription:1,
+    numberOfMembers:1,isPublished:1 })
+    .then((action) => {
+      if (!action) {
+        return res.status(404).send({
+          message: "Action not found ",
+        });
+      }
+      res.send(action);
+    })
+    .catch((err) => {
+      if (err.kind === "ObjectId") {
+        return res.status(404).send({
+          message: "Action not found ",
+        });
+      }
+      return res.status(500).send({
+        message: "Error retrieving action details",
+      });
+    });
+};

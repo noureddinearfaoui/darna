@@ -29,4 +29,11 @@ router.delete(
   permit("admin"),
   ActionCtrl.deleteOneAction
 );
+
+router.get(
+  "/action_details/:id",
+  ActionCtrl.getActionWithoutPhoto
+);
+
+
 module.exports = router;
