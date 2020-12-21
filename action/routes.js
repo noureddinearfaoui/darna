@@ -31,7 +31,7 @@ router.delete(
 );
 
 router.get(
-  "/action_details/:id",
+  "/actionDetailsWithoutPhoto/:id",
   ActionCtrl.getActionWithoutPhoto
 );
 
