@@ -700,3 +700,27 @@ exports.updateConnectedUserImage = (req, res) => {
       );
   }
 };
+
+
+exports.getmembrewithoutphoto = (req, res) => {
+  User.findById(req.params.id).select({ email: 1, firstName: 1, lastName:1,adress:1, tel:1,dateOfBirth:1,confirm:1,
+    banni:1,accepted:1 ,renewal:1 ,role:1 })
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send({
+          message: "Member not found ",
+        });
+      }
+      res.send(user);
+    })
+    .catch((err) => {
+      if (err.kind === "ObjectId") {
+        return res.status(404).send({
+          message: "Member not found ",
+        });
+      }
+      return res.status(500).send({
+        message: "Error retrieving member details",
+      });
+    });
+};
