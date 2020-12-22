@@ -12,7 +12,6 @@ exports.addComment = (req, res, next) => {
     .then((user) => {
       Action.findById(idAction)
         .then((action) => {
-          console.log(UserController.getImageFromDossierImagesAndCreateItIfNotExist(idUser,user.urlImage))
           const comment = new Comment({
             date: req.body.date,
             typeMessage: req.body.typeMessage,
