@@ -15,7 +15,7 @@ exports.addComment = (req, res, next) => {
             date: req.body.date,
             typeMessage: req.body.typeMessage,
             message: req.body.message,
-            nameOfSender: user.fistName +""+ user.lastName,
+            nameOfSender: user.firstName +" "+ user.lastName,
             urlImageOfSender: userCtrl.getImageFromDossierImagesAndCreateItIfNotExist(idUser,user.urlImage),
             member: user,
             action: action,
