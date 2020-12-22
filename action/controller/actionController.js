@@ -81,7 +81,8 @@ exports.updateActionDetails = (req, res) => {
 // delete action by id
 exports.deleteOneAction = (req, res) => {
   DemandeParticipation.remove({ action: req.params.id }).then(() => {
-    Action.findByIdAndRemove(req.params.id)
+    Action.findByIdAndRemove(req.params.id).select({ _id:1,email: 1, firstName: 1, lastName:1,adress:1, tel:1,dateOfBirth:1,confirm:1,
+      banni:1,accepted:1 ,renewal:1 ,role:1 })
       .then((action) => {
         if (!action) {
           return res.status(404).send({

@@ -387,7 +387,8 @@ exports.getUserByEmail = (req, res) => {
 // delete member by id
 exports.deleteOneMember = (req, res) => {
   DemandeParticipation.remove({ member: req.params.id }).then(() => {
-    User.findByIdAndRemove(req.params.id)
+    User.findByIdAndRemove(req.params.id).select({ _id:1,email: 1, firstName: 1, lastName:1,adress:1, tel:1,dateOfBirth:1,confirm:1,
+      banni:1,accepted:1 ,renewal:1 ,role:1 })
       .then((user) => {
         if (!user) {
           return res.status(404).send({
