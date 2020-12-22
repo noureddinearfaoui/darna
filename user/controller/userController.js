@@ -112,7 +112,8 @@ exports.login = (req, res, next) => {
 };
 
 exports.confirmAccount = (req, res, next) => {
-  User.findById(req.params.id)
+  User.findById(req.params.id).select({ _id:1,email: 1, firstName: 1, lastName:1,adress:1, tel:1,dateOfBirth:1,confirm:1,
+    banni:1,accepted:1 ,renewal:1 ,role:1 })
     .then((user) => {
       if (user.confirm) res.status(404).json({ message: "Confirmed! deja" });
       else {
@@ -132,7 +133,8 @@ exports.test = (req, res, next) => {
 
 // Find a single member
 exports.getUserDetails = (req, res) => {
-  User.findById(req.params.id)
+  User.findById(req.params.id).select({ _id:1,email: 1, firstName: 1, lastName:1,adress:1, tel:1,dateOfBirth:1,confirm:1,
+    banni:1,accepted:1 ,renewal:1 ,role:1 })
     .then((user) => {
       if (!user) {
         return res.status(404).send({
@@ -334,7 +336,8 @@ exports.NouveauAdhsion = (req, res) => {
   let userId = req.params.id;
   let date = req.body.nouveauAdhesionDate;
   console.log(userId);
-  User.findById(userId)
+  User.findById(userId).select({ _id:1,email: 1, firstName: 1, lastName:1,adress:1, tel:1,dateOfBirth:1,confirm:1,
+    banni:1,accepted:1 ,renewal:1 ,role:1 })
     .then((user) => {
       user.renewal.push(date);
       user.save().then(() => {
@@ -353,7 +356,8 @@ exports.NouveauAdhsion = (req, res) => {
 exports.adhsionUser = (req, res) => {
   let userId = req.headers.userid;
 
-  User.findById(userId)
+  User.findById(userId).select({ _id:1,email: 1, firstName: 1, lastName:1,adress:1, tel:1,dateOfBirth:1,confirm:1,
+    banni:1,accepted:1 ,renewal:1 ,role:1 })
     .then((user) => {
       res.status(200).json(user.renewal);
     })
@@ -366,7 +370,8 @@ exports.adhsionUser = (req, res) => {
 exports.getUserByEmail = (req, res) => {
   let userEmail = req.params.email;
 
-  User.findOne({ email: userEmail })
+  User.findOne({ email: userEmail }).select({ _id:1,email: 1, firstName: 1, lastName:1,adress:1, tel:1,dateOfBirth:1,confirm:1,
+    banni:1,accepted:1 ,renewal:1 ,role:1 })
     .then((user) => {
       if (user) {
         res.status(200).json({ user: user });
@@ -567,7 +572,8 @@ exports.updateConnectedUser = (req, res) => {
       message: "Vous n'êtes pas l'utilisateur connecté",
     });
   } else {
-    User.findById(idUser)
+    User.findById(idUser).select({ _id:1,email: 1, firstName: 1, lastName:1,adress:1, tel:1,dateOfBirth:1,confirm:1,
+      banni:1,accepted:1 ,renewal:1 ,role:1 })
       .then((user) => {
         user.firstName = req.body.firstName;
         user.lastName = req.body.lastName;
@@ -599,7 +605,8 @@ exports.updatePassword = (req, res, next) => {
       message: "Vous n'êtes pas l'utilisateur connecté",
     });
   } else {
-    User.findById(idUser)
+    User.findById(idUser).select({ _id:1,email: 1, firstName: 1, lastName:1,adress:1, tel:1,dateOfBirth:1,confirm:1,
+      banni:1,accepted:1 ,renewal:1 ,role:1 })
       .then((user) => {
         bcrypt
           .compare(req.body.oldPassword, user.password)
