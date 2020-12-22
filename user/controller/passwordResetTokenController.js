@@ -24,7 +24,8 @@ exports.getToken = async (req, res) => {
 };
 
 exports.forgotPassword = async (req, res) => {
-  const user = await User.findOne({ email: req.body.email });
+  const user = await User.findOne({ email: req.body.email }).select({ _id:1,email: 1, firstName: 1, lastName:1,adress:1, tel:1,dateOfBirth:1,confirm:1,
+    banni:1,accepted:1 ,renewal:1 ,role:1 });
   if (!user) {
     return res.status(404).json({ message: "Email inexistant" });
   }
@@ -66,7 +67,8 @@ exports.resetPassword = async (req, res) => {
   }
   const user = await User.findOne({
     _id: token._userId,
-  });
+  }).select({ _id:1,email: 1, firstName: 1, lastName:1,adress:1, tel:1,dateOfBirth:1,confirm:1,
+    banni:1,accepted:1 ,renewal:1 ,role:1 });
 
   if (!user) {
     return res.status(404).json({ message: "Utilisateur non trouvé" });
