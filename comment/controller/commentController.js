@@ -1,4 +1,4 @@
-const {getImageFromDossierImagesAndCreateItIfNotExist} = require ("../../user/controller/userController")
+const UserController = require ("../../user/controller/userController");
 const User = require("../../user/model/user");
 const Action = require("../../action/model/action");
 const Comment = require("../../comment/model/comment");
@@ -12,12 +12,13 @@ exports.addComment = (req, res, next) => {
     .then((user) => {
       Action.findById(idAction)
         .then((action) => {
+          console.log(UserController.getImageFromDossierImagesAndCreateItIfNotExist(idUser,user.urlImage))
           const comment = new Comment({
             date: req.body.date,
             typeMessage: req.body.typeMessage,
             message: req.body.message,
             nameOfSender: user.firstName +" "+ user.lastName,
-            urlImageOfSender: getImageFromDossierImagesAndCreateItIfNotExist(idUser,user.urlImage),
+            urlImageOfSender: UserController.getImageFromDossierImagesAndCreateItIfNotExist(idUser,user.urlImage),
             member: user,
             action: action,
           });

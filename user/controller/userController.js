@@ -554,7 +554,7 @@ function getImageFromDossierImagesAndCreateItIfNotExist(id, base64) {
 
   return urlImage;
 }
-exports.getImageFromDossierImagesAndCreateItIfNotExist=getImageFromDossierImagesAndCreateItIfNotExist();
+exports.getImageFromDossierImagesAndCreateItIfNotExist=(id,base64)=>getImageFromDossierImagesAndCreateItIfNotExist(id,base64);
 //update user details
 
 exports.updateConnectedUser = (req, res) => {
