@@ -1,6 +1,7 @@
 const User = require("../../user/model/user");
 const Action = require("../../action/model/action");
 const Comment = require("../../comment/model/comment");
+const userCtrl= require("../../user/controller/userController")
 
 exports.addComment = (req, res, next) => {
   let idUser = req.body.member;
@@ -14,8 +15,8 @@ exports.addComment = (req, res, next) => {
             date: req.body.date,
             typeMessage: req.body.typeMessage,
             message: req.body.message,
-            nameOfSender: req.body.nameOfSender,
-            urlImageOfSender: req.body.urlImageOfSender,
+            nameOfSender: user.fistName +""+ user.lastName,
+            urlImageOfSender: userCtrl.getImageFromDossierImagesAndCreateItIfNotExist(idUser,user.urlImage),
             member: user,
             action: action,
           });

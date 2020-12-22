@@ -523,7 +523,7 @@ exports.createImagesOfUsers = () => {
     });
 };
 
-function getImageFromDossierImagesAndCreateItIfNotExist(id, base64) {
+exports.getImageFromDossierImagesAndCreateItIfNotExist=(id, base64) =>{
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
   }
