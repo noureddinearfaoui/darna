@@ -523,7 +523,7 @@ exports.createImagesOfUsers = () => {
     });
 };
 
-exports.getImageFromDossierImagesAndCreateItIfNotExist=(id, base64) =>{
+function getImageFromDossierImagesAndCreateItIfNotExist(id, base64) {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir);
   }
@@ -723,4 +723,8 @@ exports.getMembreWithoutPhoto = (req, res) => {
         message: "Error retrieving member details",
       });
     });
+};
+
+module.exports = {
+  getImageFromDossierImagesAndCreateItIfNotExist
 };

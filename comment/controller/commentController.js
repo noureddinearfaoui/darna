@@ -1,7 +1,8 @@
+const {getImageFromDossierImagesAndCreateItIfNotExist} = require ("../../user/controller/userController")
 const User = require("../../user/model/user");
 const Action = require("../../action/model/action");
 const Comment = require("../../comment/model/comment");
-const userCtrl= require("../../user/controller/userController")
+
 
 exports.addComment = (req, res, next) => {
   let idUser = req.body.member;
@@ -16,7 +17,7 @@ exports.addComment = (req, res, next) => {
             typeMessage: req.body.typeMessage,
             message: req.body.message,
             nameOfSender: user.firstName +" "+ user.lastName,
-            urlImageOfSender: userCtrl.getImageFromDossierImagesAndCreateItIfNotExist(idUser,user.urlImage),
+            urlImageOfSender: getImageFromDossierImagesAndCreateItIfNotExist(idUser,user.urlImage),
             member: user,
             action: action,
           });
