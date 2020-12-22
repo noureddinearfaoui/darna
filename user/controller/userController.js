@@ -554,7 +554,7 @@ function getImageFromDossierImagesAndCreateItIfNotExist(id, base64) {
 
   return urlImage;
 }
-
+exports.getImageFromDossierImagesAndCreateItIfNotExist=getImageFromDossierImagesAndCreateItIfNotExist();
 //update user details
 
 exports.updateConnectedUser = (req, res) => {
@@ -723,8 +723,4 @@ exports.getMembreWithoutPhoto = (req, res) => {
         message: "Error retrieving member details",
       });
     });
-};
-
-module.exports = {
-  getImageFromDossierImagesAndCreateItIfNotExist
 };
