@@ -105,8 +105,7 @@ exports.deleteOneAction = (req, res) => {
 
 // Find a single action
 exports.getActionDetails = (req, res) => {
-  Action.findById(req.params.id).select({ _id:1, actionName: 1, description: 1, location:1,beginDate:1, endDate:1,beginDateInscription:1,endDateInscription:1,
-    numberOfMembers:1,isPublished:1 })
+  Action.findById(req.params.id)
     .then((action) => {
       if (!action) {
         return res.status(404).send({
