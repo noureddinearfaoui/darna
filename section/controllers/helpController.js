@@ -1,4 +1,4 @@
-const Help=require("../models/help")
+const Help= require("../models/help")
 const Link= require("../link")
 
 
