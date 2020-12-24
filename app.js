@@ -9,6 +9,7 @@ const roleRoutes = require("./role/routes");
 const ActionRouts = require("./action/routes");
 const DemandeParticipationRoutes = require("./demandeParticipation/routes");
 const CommentRoutes = require("./comment/routes");
+const helpRoutes= require("./section/helpRoute")
 const NotificationRoutes = require("./notification/routes");
 var cors = require("cors");
 //connexion base de donneés
@@ -35,10 +36,10 @@ app.use(bodyParser.json());
 
 //middleware user
 app.use("/api/user", userRoutes);
-
 app.use("/api/action", ActionRouts);
 app.use("/api/demandeParticipation", DemandeParticipationRoutes);
 app.use("/api/Comment", CommentRoutes);
 app.use("/api/notification", NotificationRoutes);
+app.use("/api/help", helpRoutes);
 
 module.exports = app;
