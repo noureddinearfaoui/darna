@@ -38,3 +38,13 @@ exports.manageHome = (req, res) => {
     );
   }
 };
+
+
+
+exports.getHome = (req, res, next) => {
+  Home.find()
+    .then((home) => {
+        res.status(200).json(home); 
+    })
+    .catch((error) => res.status(400).json({ message: "Erreur de récupération" }));
+};
