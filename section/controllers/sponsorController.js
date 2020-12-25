@@ -38,10 +38,10 @@ exports.updateSponsor = (req, res) => {
     const idSponsor = req.params.id;
       Sponsor.findById(idSponsor)
         .then((sponsor) => {
-            if(req.body.newlinkSponsor){
-          sponsor.linkSponsor = req.body.newlinkSponsor;
+            if(req.body.linkSponsor){
+          sponsor.linkSponsor = req.body.linkSponsor;
         }
-          sponsor.linkPicture = req.body.newlinkPicture;
+          sponsor.linkPicture = req.body.linkPicture;
           sponsor
           .save()
           .then(() =>{ 
@@ -53,7 +53,7 @@ exports.updateSponsor = (req, res) => {
                 }
               }
               let linkPicture = "";
-          if (req.body.newlinkSponsor) {
+          if (req.body.linkPicture) {
             let buff = Buffer.from(sponsor.linkPicture.split(";base64,")[1], "base64");
             let extension = sponsor.linkPicture.split(";base64,")[0].split("/")[1];
             let fileName = dir + "/" + sponsor._id + "." + extension;
