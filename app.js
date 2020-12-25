@@ -11,6 +11,7 @@ const DemandeParticipationRoutes = require("./demandeParticipation/routes");
 const CommentRoutes = require("./comment/routes");
 const helpRoutes= require("./section/helpRoutes");
 const homeRoutes=require("./section/homeRoutes");
+const sponsorRoutes=require("./section/sponsorRoutes")
 const NotificationRoutes = require("./notification/routes");
 var cors = require("cors");
 //connexion base de donneés
@@ -43,4 +44,5 @@ app.use("/api/Comment", CommentRoutes);
 app.use("/api/notification", NotificationRoutes);
 app.use("/api/help", helpRoutes);
 app.use("/api/home", homeRoutes);
+app.use("/api/sponsor", sponsorRoutes);
 module.exports = app;
