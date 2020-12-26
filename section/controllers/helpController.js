@@ -28,9 +28,10 @@ exports.addHelp = (req, res) => {
       let url =manageFiles.createFile(dirUploads,dir,el.url,help.answers[i]._id,
         `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}`,
         "/api/help/app/images/");
-      el.url=url;
-      console.log(el);
-      el.save().then((resultat)=>{
+      //el.url=url;
+      help.answers[i].url=url;
+      console.log(help.answers[i]);
+      help.answers[i].save().then((resultat)=>{
         res.status(200).json(resultat);
       }).catch((error) =>
         res.status(500).json({ message: error })
