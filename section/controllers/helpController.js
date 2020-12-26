@@ -13,7 +13,6 @@ exports.addHelp = (req, res) => {
   table.forEach(element => {
     answers.push(new Link({
       description:element.description,
-      //url: element.url
     }));
   });
   }
@@ -22,25 +21,19 @@ exports.addHelp = (req, res) => {
     answers:answers
   });
   help.save()
-    .then(() => {
+    .then(async() => {
      req.body.answers.forEach((el,i) => { 
-    if(el.url){
-      let url =manageFiles.createFile(dirUploads,dir,el.url,help.answers[i]._id,
-        `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}`,
-        "/api/help/app/images/");
-      //el.url=url;
-      help.answers[i].url=url;
-      console.log(help.answers[i]);
-      help.answers[i].save().then((resultat)=>{
-        console.log(resultat);
-        res.status(200).json(help);
-      }).catch((error) =>
-        res.status(500).json({ message: error })
-      )}
-      else {
-        res.status(200).json(help);
-      }
+        if(el.url){
+          let url =manageFiles.createFile(dirUploads,dir,el.url,help.answers[i]._id,
+            `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}`,
+            "/api/help/app/images/");
+          help.answers[i].url=url;
+          console.log(help.answers[i]);
+          await help.save();
+        }
       });
+      console.log("help:",help)
+      res.status(200).json(help);
     })
     .catch((error) =>
       res.status(500).json({ message: "error server" + error })
