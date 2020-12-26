@@ -32,7 +32,8 @@ exports.addHelp = (req, res) => {
       help.answers[i].url=url;
       console.log(help.answers[i]);
       help.answers[i].save().then((resultat)=>{
-        res.status(200).json(resultat);
+        console.log(resultat);
+        res.status(200).json(help);
       }).catch((error) =>
         res.status(500).json({ message: error })
       )}
@@ -40,10 +41,8 @@ exports.addHelp = (req, res) => {
         res.status(200).json(help);
       }
       });
-      res.status(200).json(help);
     })
     .catch((error) =>
       res.status(500).json({ message: "error server" + error })
     );
 };
-//map
