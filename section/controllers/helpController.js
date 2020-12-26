@@ -23,14 +23,20 @@ exports.addHelp = (req, res) => {
   help.save()
     .then(async() => {
      req.body.answers.forEach((el,i) => { 
+       let newTable=[];
+       let newUrl;
         if(el.url){
-          let url =manageFiles.createFile(dirUploads,dir,el.url,help.answers[i]._id,
+          newUrl =manageFiles.createFile(dirUploads,dir,el.url,help.answers[i]._id,
             `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}`,
             "/api/help/app/images/");
-          help.answers[i].url=url;
-          console.log(help.answers[i]);
-          await help.save();
         }
+        let newAnswer=new Link({
+          description:help.answers[i].description,
+          url:newUrl
+        });
+        newTable.push(newAnswer);
+        help.answers=newTable;
+        await help.save();
       });
       console.log("help:",help)
       res.status(200).json(help);
