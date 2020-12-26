@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const HelpSchema = mongoose.Schema(
   {
     question: { type: String, required: true},
-    answer :  {type: Array, required: true},
+    answers :  {type: Array, required: true},
   },
   { timestamps: true }
 );
