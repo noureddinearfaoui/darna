@@ -21,8 +21,11 @@ exports.addHelp = (req, res) => {
     answers:answers
   });
   help.save()
-    .then(async() => {
-     req.body.answers.forEach((el,i) => { 
+    .then(() => {
+
+      console.log(help);
+     req.body.answers.forEach(async(el,i) => { 
+       console.log("baaaaaaaaaaaaaaat",i);
        let newTable=[];
        let newUrl;
         if(el.url){
