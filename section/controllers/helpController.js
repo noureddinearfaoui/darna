@@ -3,7 +3,10 @@ const Link= require("../link")
 
 
 exports.addHelp = (req, res) => {
-       const link=new Link(req.body.description,req.body.url);
+       const link= new Link({
+         description:req.body.description,
+         url: req.body.url
+       });
         const help = new Help({
           question: req.body.question, 
         });
