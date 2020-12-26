@@ -44,14 +44,13 @@ exports.updateSponsor = (req, res) => {
           `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}`,
           "/api/sponsor/app/images/");
         sponsor.linkPicture=linkPicture;
+      } 
         sponsor.save().then((resultat)=>{
           res.status(200).json(resultat);
         }).catch((error) =>
           res.status(500).json({ message: error })
         );
-      }else{
-        res.status(200).json(sponsor);
-      }      
+          
     })
     .catch((error) =>
       res.status(404).json({ message: "Sponsor non trouvé" })
