@@ -1,4 +1,5 @@
 const fs = require("fs");
+const directory = require("../pathDirectory");
 
 exports.createFile=(dirUploads,dir,base64,id,host,apiUrl)=>{
     if (!fs.existsSync(dirUploads)) {
@@ -16,6 +17,7 @@ exports.createFile=(dirUploads,dir,base64,id,host,apiUrl)=>{
     urlFile =host+apiUrl+id+"." +extension;
     return urlFile;
 }
+
 function removeFile(dir,id){
     if(fs.existsSync(dir)){
         let files = fs.readdirSync(dir);
@@ -26,3 +28,14 @@ function removeFile(dir,id){
     }
 }
 exports.deleteFile=(dir,id)=>removeFile(dir,id);
+
+exports.getFileByNom=(dir,nomFile)=>{
+    if(!fs.existsSync(dir)){
+        return null;
+    }
+    let files = fs.readdirSync(dir);
+    if (!files.includes(nomFile)) {
+        return null;
+    }
+    return directory + "/" + dir + "/" + nomFile;
+}

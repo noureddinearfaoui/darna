@@ -110,10 +110,9 @@ exports.getProductDetails = (req, res) => {
   };
 
 exports.getImageByNom = (req, res) => {
-  let nomImage = req.params.nomImage;
-  let files = fs.readdirSync(dir);
-  if (!files.includes(nomImage)) {
+  let urlImage=manageFiles.getFileByNom(dir,req.params.nomImage);
+  if (!urlImage) {
     return res.status(404).json({ message: "Image n'existe pas!!" });
   }
-  return res.sendFile(directory + "/" + dir + "/" + nomImage);
+  return res.sendFile(urlImage);
 };
