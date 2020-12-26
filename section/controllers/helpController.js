@@ -23,12 +23,13 @@ exports.addHelp = (req, res) => {
   });
   help.save()
     .then(() => {
-      help.answers.forEach((el) => { 
+     req.body.answers.forEach((el,i) => { 
     if(el.url){
-      let url =manageFiles.createFile(dirUploads,dir,el.url,el._id,
+      let url =manageFiles.createFile(dirUploads,dir,el.url,help.answers[i]._id,
         `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}`,
         "/api/help/app/images/");
       el.url=url;
+      console.log(el);
       el.save().then((resultat)=>{
         res.status(200).json(resultat);
       }).catch((error) =>
@@ -44,3 +45,4 @@ exports.addHelp = (req, res) => {
       res.status(500).json({ message: "error server" + error })
     );
 };
+//map
