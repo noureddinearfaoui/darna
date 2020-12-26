@@ -1,8 +1,15 @@
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+
+var Link = new Schema({
+  description : String,
+  url : String
+});
+
 const HelpSchema = mongoose.Schema(
   {
     question: { type: String, required: true},
-    answers :  {type: Array, required: true},
+    answers :  [Link],
   },
   { timestamps: true }
 );

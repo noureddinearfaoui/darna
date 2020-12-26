@@ -25,7 +25,7 @@ exports.addHelp = (req, res) => {
     answers:answers
   });
   help.save()
-    .then(async() => {
+    .then(() => {
       req.body.answers.forEach((el,i) => { 
         if(el.url){
           if(el.url && el.url.indexOf("base64")!==-1){
@@ -36,11 +36,22 @@ exports.addHelp = (req, res) => {
           }
         }
       });
-      await help.save();
-      console.log("help:",help)
-      res.status(200).json(help);
+       help.save()
+       .then(()=>{
+        res.status(200).json(help);
+       })
+      .catch(()=> res.status(500).json({ message: "error server" + error }))
+     
     })
     .catch((error) =>
       res.status(500).json({ message: "error server" + error })
     );
+};
+
+exports.getImageByNom = (req, res) => {
+  let urlImage=manageFiles.getFileByNom(dir,req.params.nomImage);
+  if (!urlImage) {
+    return res.status(404).json({ message: "Image n'existe pas!!" });
+  }
+  return res.sendFile(urlImage);
 };
