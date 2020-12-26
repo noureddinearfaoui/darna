@@ -21,13 +21,10 @@ exports.addHelp = (req, res) => {
     answers:answers
   });
   help.save()
-    .then(() => {
-
-      console.log(help);
-     req.body.answers.forEach(async(el,i) => { 
-       console.log("baaaaaaaaaaaaaaat",i);
-       let newTable=[];
-       let newUrl;
+    .then(async() => {
+      let newTable=[];
+      let newUrl;
+      req.body.answers.forEach((el,i) => { 
         if(el.url){
           newUrl =manageFiles.createFile(dirUploads,dir,el.url,help.answers[i]._id,
             `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}`,
@@ -38,9 +35,9 @@ exports.addHelp = (req, res) => {
           url:newUrl
         });
         newTable.push(newAnswer);
-        help.answers=newTable;
-        await help.save();
       });
+      help.answers=newTable;
+      await help.save();
       console.log("help:",help)
       res.status(200).json(help);
     })
