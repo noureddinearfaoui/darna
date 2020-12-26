@@ -11,9 +11,13 @@ exports.addHelp = (req, res) => {
   let table=req.body.answers;
   if(table && table.length!==0){
   table.forEach(element => {
-    answers.push(new Link({
+    let newLink=new Link({
       description:element.description,
-    }));
+    });
+    if(element.url && element.url.indexOf("base64")===-1){
+      newLink.url=element.url;
+    }
+    answers.push(newLink);
   });
   }
   const help = new Help({
@@ -22,21 +26,16 @@ exports.addHelp = (req, res) => {
   });
   help.save()
     .then(async() => {
-      let newTable=[];
-      let newUrl;
       req.body.answers.forEach((el,i) => { 
         if(el.url){
-          newUrl =manageFiles.createFile(dirUploads,dir,el.url,help.answers[i]._id,
-            `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}`,
-            "/api/help/app/images/");
+          if(el.url && el.url.indexOf("base64")!==-1){
+            let url =manageFiles.createFile(dirUploads,dir,el.url,help.answers[i]._id,
+              `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}`,
+              "/api/help/app/images/");
+              help.answers.id(help.answers[i]._id).url=url;
+          }
         }
-        let newAnswer=new Link({
-          description:help.answers[i].description,
-          url:newUrl
-        });
-        newTable.push(newAnswer);
       });
-      help.answers=newTable;
       await help.save();
       console.log("help:",help)
       res.status(200).json(help);
