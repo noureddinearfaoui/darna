@@ -4,7 +4,7 @@ const Link= require("../link")
 
 exports.addHelp = (req, res) => {
   let answers=[];
-  let table=req.body.answer;
+  let table=req.body.answers;
   if(table && table.length!==0){
   table.forEach(element => {
     answers.push(new Link({
