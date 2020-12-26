@@ -22,7 +22,7 @@ exports.addHelp = (req, res) => {
     answers:answers
   });
   help.save()
-    .then((help) => {
+    .then(() => {
       help.answers.forEach((el) => { 
     if(el.url){
       let url =manageFiles.createFile(dirUploads,dir,el.url,el._id,
