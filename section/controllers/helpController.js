@@ -145,7 +145,6 @@ exports.deleteAnswerByIdHelpAndIdAnswer = (req, res) => {
 
 exports.addAnswerByIdHelp = (req, res) => {
     const idHelp=req.params.id;
-    console.log("-----------------",req.body.url);
     Help.findById(idHelp)
     .then((help) => {
        let newLink=new Link({
@@ -184,18 +183,16 @@ exports.updateAnswerByIdHelpAndIdAnswer = (req, res) => {
     Help.findById(idHelp)
       .then((help) => {
       let reponse= help.answers.id(idAns);
-      /*if(url && url.indexOf("base64")===-1){
+      if(url && url.indexOf("base64")===-1){
         reponse.url=url;
       }
-      else if(req.body.url){
-        let url =manageFiles.createFile(dirUploads,dir,req.body.url,newLink._id,
+       else if(url){
+        let linkPicture=manageFiles.createFile(dirUploads,dir,url,reponse._id,
           `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}`,
           "/api/help/app/images/");
-          newLink.url=url;
-        }*/
-
+        reponse.url=linkPicture;
+        }
       reponse.description=description;
-      //reponse.url=url;
       help.save()
       .then(()=>{
         res.status(200).json(help);
