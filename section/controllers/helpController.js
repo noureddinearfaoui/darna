@@ -55,3 +55,143 @@ exports.getImageByNom = (req, res) => {
   }
   return res.sendFile(urlImage);
 };
+
+exports.getAllHelps = (req, res, next) => {
+  Help.find()
+    .then((helps) => {
+      res.status(200).json(helps);
+    })
+    .catch((error) => res.status(404).json({ message: "Erreur pendant la récupération des aides" }));
+};
+
+
+exports.getHelpDetails = (req, res) => {
+  Help.findById(req.params.id)
+    .then((help) => {
+      res.send(help);
+    })
+    .catch((err) => {
+      if (err.kind === "ObjectId") {
+        return res.status(404).send({
+          message: "Aide non trouvée",
+        });
+      }
+      return res.status(500).send({
+        message: "Erreur serveur",
+      });
+    });
+};
+
+exports.deleteHelp = (req, res) => {
+  const idHelp = req.params.id;
+    Help.findById(idHelp)
+      .then((help) => {
+        help.answers.forEach((el) => { 
+          manageFiles.deleteFile(dir,el._id);
+        });
+        help
+          .remove()
+          .then(() =>{ 
+            res.status(200).json({message:"Aide supprimée avec succès"});
+          })
+          .catch((error) =>
+            res.status(500).json({ message: "Erreur serveur" + error })
+          );
+      })
+      .catch((error) =>
+        res.status(404).json({ message: "Aide non trouvée" })
+      );
+};
+
+exports.updateHelp = (req, res) => {
+  const idHelp = req.params.id;
+  Help.findById(idHelp)
+  .then((help) => {
+    if(req.body.question){
+      help.question = req.body.question;
+    }
+    if(req.body.answers){
+      req.body.answers.forEach((el,i) => { 
+        if(el.url){
+          if(el.url && el.url.indexOf("base64")!==-1){
+            let url =manageFiles.createFile(dirUploads,dir,el.url,req.body.answers[i]._id,
+              `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}`,
+              "/api/help/app/images/"); 
+              help.answers[i].url=url;  
+          }
+          else{
+            help.answers[i].url=el.url;
+          }
+        help.answers.id(help.answers[i]._id).url=url;
+        }
+      });
+    } 
+      help.save().then(()=>{
+        res.status(200).json(help);
+      }).catch((error) =>
+        res.status(500).json({ message: error })
+      );
+        
+  })
+  .catch((error) =>
+    res.status(404).json({ message: "Aide non trouvée" })
+  );
+};
+
+exports.deleteAnswerByIdHelpAndIdAnswer = (req, res) => {
+  const idHelp = req.params.id;
+  const idAns= req.params.idAnswer;
+    Help.findById(idHelp)
+      .then((help) => {
+        help.answers.id(idAns).remove();
+        help.save()
+        .then(()=>{
+          manageFiles.deleteFile(dir,idAns);
+          res.status(200).json({message:"Réponse supprimée avec succès"});
+        })
+        .catch((error) =>
+        res.status(404).json({ message: error})
+      );
+        
+      })
+      .catch((error) =>
+        res.status(404).json({ message: "Aide non trouvée" })
+      );
+};
+
+exports.addAnswersByIdHelp = (req, res) => {
+    const idHelp=req.params.id;
+    Help.findById(idHelp)
+    .then((help) => {
+
+       let newLink=new Link({
+        description:req.body.description,
+     });
+
+    if(req.body.url && req.body.url.indexOf("base64")===-1){
+      newLink.url=req.body.url;
+    }
+    else{
+      let url =manageFiles.createFile(dirUploads,dir,el.url,help.answers[i]._id,
+        `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}`,
+        "/api/help/app/images/");
+        help.answers.id(help.answers[i]._id).url=url;
+      }
+      help.answers.push(newLink);
+      help.save()
+      .then(()=>{
+       res.status(200).json(help);
+      })
+      .catch((error) =>
+       res.status(404).json({ message: "Aide non trouvée" })
+      );
+    })
+    .catch((error) =>
+      res.status(404).json({ message: "Aide non trouvée" })
+    );
+};
+
+
+
+
+
