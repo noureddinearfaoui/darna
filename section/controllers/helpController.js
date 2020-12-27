@@ -184,7 +184,25 @@ exports.updateAnswerByIdHelpAndIdAnswer = (req, res) => {
     Help.findById(idHelp)
       .then((help) => {
       let reponse= help.answers.id(idAns);
-      console.log(reponse);
+      /*if(url && url.indexOf("base64")===-1){
+        reponse.url=url;
+      }
+      else if(req.body.url){
+        let url =manageFiles.createFile(dirUploads,dir,req.body.url,newLink._id,
+          `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}`,
+          "/api/help/app/images/");
+          newLink.url=url;
+        }*/
+
+      reponse.description=description;
+      //reponse.url=url;
+      help.save()
+      .then(()=>{
+        res.status(200).json(help);
+      })
+      .catch((error) =>
+      res.status(404).json(error)
+    );
       })
       .catch((error) =>
         res.status(404).json({ message: "Aide non trouvée" })
