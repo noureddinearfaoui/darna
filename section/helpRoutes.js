@@ -9,5 +9,7 @@ router.get("/getHelpDetails/:id",HelpCtrl.getHelpDetails);
 router.delete("/deleteHelp/:id",HelpCtrl.deleteHelp);
 router.put("/updateHelp/:id",HelpCtrl.updateHelp);
 router.delete("/deleteAnswerByIdHelpAndIdAnswer/:id/:idAnswer",HelpCtrl.deleteAnswerByIdHelpAndIdAnswer);
+router.put("/addAnswerByIdHelp/:id", HelpCtrl.addAnswerByIdHelp);
+
 
 module.exports = router;

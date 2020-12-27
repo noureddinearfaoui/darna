@@ -159,23 +159,22 @@ exports.deleteAnswerByIdHelpAndIdAnswer = (req, res) => {
       );
 };
 
-exports.addAnswersByIdHelp = (req, res) => {
+exports.addAnswerByIdHelp = (req, res) => {
     const idHelp=req.params.id;
     Help.findById(idHelp)
     .then((help) => {
-
        let newLink=new Link({
         description:req.body.description,
      });
-
+     
     if(req.body.url && req.body.url.indexOf("base64")===-1){
       newLink.url=req.body.url;
     }
     else{
-      let url =manageFiles.createFile(dirUploads,dir,el.url,help.answers[i]._id,
+      let url =manageFiles.createFile(dirUploads,dir,req.body.url,newLink._id,
         `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}`,
         "/api/help/app/images/");
-        help.answers.id(help.answers[i]._id).url=url;
+        newLink.url=url;
       }
       help.answers.push(newLink);
       help.save()
