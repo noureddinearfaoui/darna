@@ -7,9 +7,10 @@ router.get("/app/images/:nomImage", HelpCtrl.getImageByNom);
 router.get("/getAllHelps", HelpCtrl.getAllHelps);
 router.get("/getHelpDetails/:id",HelpCtrl.getHelpDetails);
 router.delete("/deleteHelp/:id",HelpCtrl.deleteHelp);
-router.put("/updateHelp/:id",HelpCtrl.updateHelp);
+router.put("/updateQuestion/:id",HelpCtrl.updateQuestion);
 router.delete("/deleteAnswerByIdHelpAndIdAnswer/:id/:idAnswer",HelpCtrl.deleteAnswerByIdHelpAndIdAnswer);
 router.put("/addAnswerByIdHelp/:id", HelpCtrl.addAnswerByIdHelp);
+router.put("/updateAnswerByIdHelpAndIdAnswer/:id/:idAnswer",HelpCtrl.updateAnswerByIdHelpAndIdAnswer);
 
 
 module.exports = router;

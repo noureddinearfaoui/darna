@@ -103,33 +103,17 @@ exports.deleteHelp = (req, res) => {
       );
 };
 
-exports.updateHelp = (req, res) => {
+exports.updateQuestion= (req, res) => {
   const idHelp = req.params.id;
   Help.findById(idHelp)
   .then((help) => {
     if(req.body.question){
       help.question = req.body.question;
-    }
-    if(req.body.answers){
-      req.body.answers.forEach((el,i) => { 
-        if(el.url){
-          if(el.url && el.url.indexOf("base64")!==-1){
-            let url =manageFiles.createFile(dirUploads,dir,el.url,req.body.answers[i]._id,
-              `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}`,
-              "/api/help/app/images/"); 
-              help.answers[i].url=url;  
-          }
-          else{
-            help.answers[i].url=el.url;
-          }
-        help.answers.id(help.answers[i]._id).url=url;
-        }
-      });
     } 
       help.save().then(()=>{
         res.status(200).json(help);
       }).catch((error) =>
-        res.status(500).json({ message: error })
+        res.status(404).json({ message: error })
       );
         
   })
@@ -161,6 +145,7 @@ exports.deleteAnswerByIdHelpAndIdAnswer = (req, res) => {
 
 exports.addAnswerByIdHelp = (req, res) => {
     const idHelp=req.params.id;
+    console.log("-----------------",req.body.url);
     Help.findById(idHelp)
     .then((help) => {
        let newLink=new Link({
@@ -170,7 +155,7 @@ exports.addAnswerByIdHelp = (req, res) => {
     if(req.body.url && req.body.url.indexOf("base64")===-1){
       newLink.url=req.body.url;
     }
-    else{
+    else if(req.body.url){
       let url =manageFiles.createFile(dirUploads,dir,req.body.url,newLink._id,
         `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}`,
         "/api/help/app/images/");
@@ -182,12 +167,28 @@ exports.addAnswerByIdHelp = (req, res) => {
        res.status(200).json(help);
       })
       .catch((error) =>
-       res.status(404).json({ message: "Aide non trouvée" })
+       res.status(400).json(error)
       );
     })
     .catch((error) =>
       res.status(404).json({ message: "Aide non trouvée" })
     );
+};
+
+
+exports.updateAnswerByIdHelpAndIdAnswer = (req, res) => {
+  const idHelp = req.params.id;
+  const idAns= req.params.idAnswer;
+  const url=req.body.url;
+  const description=req.body.description;
+    Help.findById(idHelp)
+      .then((help) => {
+      let reponse= help.answers.id(idAns);
+      console.log(reponse);
+      })
+      .catch((error) =>
+        res.status(404).json({ message: "Aide non trouvée" })
+      );
 };
 
 
