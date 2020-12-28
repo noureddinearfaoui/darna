@@ -31,7 +31,7 @@ exports.addHelp = (req, res) => {
           if(el.url && el.url.indexOf("base64")!==-1){
             let url =manageFiles.createFile(dirUploads,dir,el.url,help.answers[i]._id,
               `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}`,
-              "/api/help/app/images/");
+              "/api/help/app/files/");
               help.answers.id(help.answers[i]._id).url=url;
           }
         }
@@ -48,12 +48,12 @@ exports.addHelp = (req, res) => {
     );
 };
 
-exports.getImageByNom = (req, res) => {
-  let urlImage=manageFiles.getFileByNom(dir,req.params.nomImage);
-  if (!urlImage) {
-    return res.status(404).json({ message: "Image n'existe pas!!" });
+exports.getFileByNom = (req, res) => {
+  let urlFile=manageFiles.getFileByNom(dir,req.params.nomFile);
+  if (!urlFile) {
+    return res.status(404).json({ message: "Fichier n'existe pas!!" });
   }
-  return res.sendFile(urlImage);
+  return res.sendFile(urlFile);
 };
 
 exports.getAllHelps = (req, res, next) => {
@@ -157,7 +157,7 @@ exports.addAnswerByIdHelp = (req, res) => {
     else if(req.body.url){
       let url =manageFiles.createFile(dirUploads,dir,req.body.url,newLink._id,
         `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}`,
-        "/api/help/app/images/");
+        "/api/help/app/files/");
         newLink.url=url;
       }
       help.answers.push(newLink);
@@ -189,7 +189,7 @@ exports.updateAnswerByIdHelpAndIdAnswer = (req, res) => {
        else if(url){
         let linkPicture=manageFiles.createFile(dirUploads,dir,url,reponse._id,
           `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}`,
-          "/api/help/app/images/");
+          "/api/help/app/files/");
         reponse.url=linkPicture;
         }
       reponse.description=description;

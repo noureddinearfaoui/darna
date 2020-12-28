@@ -3,7 +3,7 @@ const router = express.Router();
 const HelpCtrl = require("./controllers/helpController");
 
 router.post("/addHelp", HelpCtrl.addHelp);
-router.get("/app/images/:nomImage", HelpCtrl.getImageByNom);
+router.get("/app/files/:nomFile", HelpCtrl.getFileByNom);
 router.get("/getAllHelps", HelpCtrl.getAllHelps);
 router.get("/getHelpDetails/:id",HelpCtrl.getHelpDetails);
 router.delete("/deleteHelp/:id",HelpCtrl.deleteHelp);
