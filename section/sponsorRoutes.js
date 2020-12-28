@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const SponsorCtrl = require(".//controllers/sponsorController");
-
-router.post("/addSponsor",SponsorCtrl.addSponsor);
+const auth = require("../config/middleware/auth");
+const permit = require("../config/middleware/authorization");
+router.post("/addSponsor", auth, permit("admin"),SponsorCtrl.addSponsor);
 router.get("/getAllSponsors", SponsorCtrl.getAllSponsors);
-router.get("/getSponsorDetails/:id",SponsorCtrl.getSponsorDetails);
-router.put("/updateSponsor/:id",SponsorCtrl.updateSponsor);
-router.delete("/deleteSponsor/:id",SponsorCtrl.deleteSponsor);
+router.get("/getSponsorDetails/:id", auth, permit("admin"),SponsorCtrl.getSponsorDetails);
+router.put("/updateSponsor/:id", auth, permit("admin"),SponsorCtrl.updateSponsor);
+router.delete("/deleteSponsor/:id", auth, permit("admin"),SponsorCtrl.deleteSponsor);
 router.get("/app/images/:nomImage", SponsorCtrl.getImageByNom);
 
 
