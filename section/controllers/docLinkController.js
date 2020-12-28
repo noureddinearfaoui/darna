@@ -60,9 +60,14 @@ exports.updateDocLink = (req, res) => {
           dl.url=req.body.url;
         }
         else if(req.body.type==="droit"||req.body.type==="statut-juridique"||req.body.type==="étude"){
-          let linkFile=manageFiles.createFile(dir,req.body.url,dl._id,
-            "/api/docLink/app/files/");
-            dl.url=linkFile;
+          if(req.body.url.indexOf("base64")!==-1){ 
+            let linkFile=manageFiles.createFile(dir,req.body.url,dl._id,
+              "/api/docLink/app/files/");
+              dl.url=linkFile;
+          }
+          else{
+            dl.url=req.body.url;
+          }
         } 
         dl.save().then((resultat)=>{
           res.status(200).json(resultat);
