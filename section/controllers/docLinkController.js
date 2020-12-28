@@ -4,14 +4,14 @@ require("dotenv").config();
 const manageFiles = require("../../config/manageFiles");
 
 exports.addDocLink = (req, res, next) => {
-  if(req.body.type && (req.body.type==!"droit"||req.body.type==!"statut-juridique"||req.body.type==!"étude"||req.body.type==!"partenaire")){
-    res.status(403).json({ message: "type incorrecte"});
-  }
+  if(req.body.type && (req.body.type!=="droit"||req.body.type!=="statut-juridique"||req.body.type!=="étude"||req.body.type!=="partenaire")){
+    return  res.status(400).json({ message: "Type incorrecte"});
+    }
   if(!req.body.url ){
-    res.status(403).json({ message: "vous devez ajouter l'url"});
+    return  res.status(400).json({ message: "Vous devez ajouter l'url"});
   }
   if(!req.body.description ){
-    res.status(403).json({ message: "vous devez ajouter la description"});
+    return  res.status(400).json({ message: "Vous devez ajouter la description"});
   }
     const docLink = new DocLink({
         description: req.body.description,
@@ -25,11 +25,11 @@ exports.addDocLink = (req, res, next) => {
               }
               else if(req.body.type==="droit"||req.body.type==="statut-juridique"||req.body.type==="étude"){
                 let linkFile=manageFiles.createFile(dir,req.body.url,dl._id,
-                  "/api/documentsLinks/app/files/");
+                  "/api/documents/app/files/");
                   dl.url=linkFile;
               }
               else{
-                res.status(403).json({ message: "type incorrecte"})
+              return  res.status(400).json({ message: "type incorrecte"})
               }
                 dl.save().then((resultat)=>{
                 res.status(200).json(resultat);
@@ -45,14 +45,14 @@ exports.addDocLink = (req, res, next) => {
 
 exports.updateDocLink = (req, res) => {
     const idDl = req.params.id;
-    if(req.body.type && (req.body.type==!"droit"||req.body.type==!"statut-juridique"||req.body.type==!"étude"||req.body.type==!"partenaire")){
-      res.status(403).json({ message: "type incorrecte"});
+    if(req.body.type && (req.body.type!=="droit"||req.body.type!=="statut-juridique"||req.body.type!=="étude"||req.body.type!=="partenaire")){
+    return  res.status(400).json({ message: "Type incorrecte"});
     }
     if(!req.body.url ){
-      res.status(403).json({ message: "vous devez ajouter l'url"});
+      return  res.status(400).json({ message: "Vous devez ajouter l'url"});
     }
     if(!req.body.description ){
-      res.status(403).json({ message: "vous devez ajouter la description"});
+     return res.status(400).json({ message: "Vous devez ajouter la description"});
     }
     DocLink.findById(idDl)
     .then((dl) => {
@@ -64,11 +64,11 @@ exports.updateDocLink = (req, res) => {
         }
         else if(req.body.type==="droit"||req.body.type==="statut-juridique"||req.body.type==="étude"){
           let linkFile=manageFiles.createFile(dir,req.body.url,dl._id,
-            "/api/documentsLinks/app/files/");
+            "/api/documents/app/files/");
             dl.url=linkFile;
         }
         else{
-          res.status(403).json({ message: "type incorrecte"})
+        return  res.status(400).json({ message: "Type incorrecte"})
         }  
         dl.save().then((resultat)=>{
           res.status(200).json(resultat);
