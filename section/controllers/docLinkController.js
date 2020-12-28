@@ -4,6 +4,15 @@ require("dotenv").config();
 const manageFiles = require("../../config/manageFiles");
 
 exports.addDocLink = (req, res, next) => {
+  if(req.body.type && (req.body.type==!"droit"||req.body.type==!"statut-juridique"||req.body.type==!"étude"||req.body.type==!"partenaire")){
+    res.status(403).json({ message: "type incorrecte"});
+  }
+  if(!req.body.url ){
+    res.status(403).json({ message: "vous devez ajouter l'url"});
+  }
+  if(!req.body.description ){
+    res.status(403).json({ message: "vous devez ajouter la description"});
+  }
     const docLink = new DocLink({
         description: req.body.description,
         type: req.body.type,
@@ -11,7 +20,6 @@ exports.addDocLink = (req, res, next) => {
         docLink
           .save() 
           .then((dl) => {
-            if (req.body.url) {
               if(req.body.type ==="partenaire"){
                 dl.url=req.body.url;
               }
@@ -29,9 +37,6 @@ exports.addDocLink = (req, res, next) => {
                 res.status(500).json({ message: error })
               
               );
-            }else {
-              res.status(200).json(dl);
-            }
           })
           .catch((error) =>
             res.status(500).json({ message: error })
@@ -40,15 +45,20 @@ exports.addDocLink = (req, res, next) => {
 
 exports.updateDocLink = (req, res) => {
     const idDl = req.params.id;
+    if(req.body.type && (req.body.type==!"droit"||req.body.type==!"statut-juridique"||req.body.type==!"étude"||req.body.type==!"partenaire")){
+      res.status(403).json({ message: "type incorrecte"});
+    }
+    if(!req.body.url ){
+      res.status(403).json({ message: "vous devez ajouter l'url"});
+    }
+    if(!req.body.description ){
+      res.status(403).json({ message: "vous devez ajouter la description"});
+    }
     DocLink.findById(idDl)
     .then((dl) => {
-      if(req.body.description){
         dl.description = req.body.description;
-      }
-      if(req.body.type && req.body.type==="droit"||req.body.type==="statut-juridique"||req.body.type==="étude"||req.body.type==="partenaire"){
         dl.type = req.body.type;
-      }
-      if(req.body.url){
+      
         if(req.body.type ==="partenaire"){
           dl.url=req.body.url;
         }
@@ -60,8 +70,7 @@ exports.updateDocLink = (req, res) => {
         else{
           res.status(403).json({ message: "type incorrecte"})
         }  
-      } 
-      dl.save().then((resultat)=>{
+        dl.save().then((resultat)=>{
           res.status(200).json(resultat);
         }).catch((error) =>
           res.status(500).json({ message: error })
