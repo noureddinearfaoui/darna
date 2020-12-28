@@ -25,7 +25,7 @@ exports.addDocLink = (req, res, next) => {
               }
               else if(req.body.type==="droit"||req.body.type==="statut-juridique"||req.body.type==="étude"){
                 let linkFile=manageFiles.createFile(dir,req.body.url,dl._id,
-                  "/api/documents/app/files/");
+                  "/api/docLink/app/files/");
                   dl.url=linkFile;
               }
               dl.save().then((resultat)=>{
@@ -61,7 +61,7 @@ exports.updateDocLink = (req, res) => {
         }
         else if(req.body.type==="droit"||req.body.type==="statut-juridique"||req.body.type==="étude"){
           let linkFile=manageFiles.createFile(dir,req.body.url,dl._id,
-            "/api/documents/app/files/");
+            "/api/docLink/app/files/");
             dl.url=linkFile;
         } 
         dl.save().then((resultat)=>{
