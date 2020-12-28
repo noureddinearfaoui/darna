@@ -4,7 +4,7 @@ require("dotenv").config();
 const manageFiles = require("../../config/manageFiles");
 
 exports.addDocLink = (req, res, next) => {
-  if(req.body.type && (req.body.type!=="droit"||req.body.type!=="statut-juridique"||req.body.type!=="étude"||req.body.type!=="partenaire")){
+  if(req.body.type && (req.body.type!=="droit"&& req.body.type!=="statut-juridique"&& req.body.type!=="étude"&& req.body.type!=="partenaire")){
     return  res.status(400).json({ message: "Type incorrecte"});
     }
   if(!req.body.url ){
@@ -28,10 +28,7 @@ exports.addDocLink = (req, res, next) => {
                   "/api/documents/app/files/");
                   dl.url=linkFile;
               }
-              else{
-              return  res.status(400).json({ message: "type incorrecte"})
-              }
-                dl.save().then((resultat)=>{
+              dl.save().then((resultat)=>{
                 res.status(200).json(resultat);
               }).catch((error) =>
                 res.status(500).json({ message: error })
@@ -45,7 +42,7 @@ exports.addDocLink = (req, res, next) => {
 
 exports.updateDocLink = (req, res) => {
     const idDl = req.params.id;
-    if(req.body.type && (req.body.type!=="droit"||req.body.type!=="statut-juridique"||req.body.type!=="étude"||req.body.type!=="partenaire")){
+    if(req.body.type && (req.body.type!=="droit"&& req.body.type!=="statut-juridique" && req.body.type!=="étude" && req.body.type!=="partenaire")){
     return  res.status(400).json({ message: "Type incorrecte"});
     }
     if(!req.body.url ){
@@ -66,10 +63,7 @@ exports.updateDocLink = (req, res) => {
           let linkFile=manageFiles.createFile(dir,req.body.url,dl._id,
             "/api/documents/app/files/");
             dl.url=linkFile;
-        }
-        else{
-        return  res.status(400).json({ message: "Type incorrecte"})
-        }  
+        } 
         dl.save().then((resultat)=>{
           res.status(200).json(resultat);
         }).catch((error) =>
