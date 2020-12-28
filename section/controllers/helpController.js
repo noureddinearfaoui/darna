@@ -1,7 +1,5 @@
 const Help= require("../models/help")
 const Link= require("../link")
-const directory = require("../../pathDirectory");
-const dirUploads = "uploads";
 const dir = "uploads/helps";
 const manageFiles = require("../../config/manageFiles");
 require("dotenv").config();
@@ -29,8 +27,7 @@ exports.addHelp = (req, res) => {
       req.body.answers.forEach((el,i) => { 
         if(el.url){
           if(el.url && el.url.indexOf("base64")!==-1){
-            let url =manageFiles.createFile(dirUploads,dir,el.url,help.answers[i]._id,
-              `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}`,
+            let url =manageFiles.createFile(dir,el.url,help.answers[i]._id,
               "/api/help/app/files/");
               help.answers.id(help.answers[i]._id).url=url;
           }
@@ -155,8 +152,7 @@ exports.addAnswerByIdHelp = (req, res) => {
       newLink.url=req.body.url;
     }
     else if(req.body.url){
-      let url =manageFiles.createFile(dirUploads,dir,req.body.url,newLink._id,
-        `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}`,
+      let url =manageFiles.createFile(dir,req.body.url,newLink._id,
         "/api/help/app/files/");
         newLink.url=url;
       }
@@ -187,8 +183,7 @@ exports.updateAnswerByIdHelpAndIdAnswer = (req, res) => {
         reponse.url=url;
       }
        else if(url){
-        let linkPicture=manageFiles.createFile(dirUploads,dir,url,reponse._id,
-          `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}`,
+        let linkPicture=manageFiles.createFile(dir,url,reponse._id,
           "/api/help/app/files/");
         reponse.url=linkPicture;
         }

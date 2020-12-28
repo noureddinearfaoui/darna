@@ -1,5 +1,4 @@
 const LegalStatus = require("../models/legalStatus");
-const dirUploads = "uploads";
 const dir = "uploads/legalStatus";
 require("dotenv").config();
 const manageFiles = require("../../config/manageFiles");
@@ -12,8 +11,7 @@ exports.addLegalStatus = (req, res, next) => {
           .save()
           .then((s) => {
             if (req.body.url) {
-              let linkFile=manageFiles.createFile(dirUploads,dir,req.body.url,s._id,
-                `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}`,
+              let linkFile=manageFiles.createFile(dir,req.body.url,s._id,
                 "/api/legalStatus/app/files/");
               s.url=linkFile;
               s.save().then((resultat)=>{
@@ -39,8 +37,7 @@ exports.updateLegalStatus = (req, res) => {
         ls.description = req.body.description;
       }
       if(req.body.url){
-        let linkFile=manageFiles.createFile(dirUploads,dir,req.body.url,ls._id,
-          `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}`,
+        let linkFile=manageFiles.createFile(dir,req.body.url,ls._id,
           "/api/legalStatus/app/files/");
         ls.url=linkFile;
       } 

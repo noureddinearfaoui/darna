@@ -1,7 +1,4 @@
 const Sponsor = require("../models/sponsor");
-const fs = require("fs");
-const directory = require("../../pathDirectory");
-const dirUploads = "uploads";
 const dir = "uploads/sponsors";
 require("dotenv").config();
 const manageFiles = require("../../config/manageFiles");
@@ -13,8 +10,7 @@ exports.addSponsor = (req, res, next) => {
           .save()
           .then((s) => {
             if (req.body.linkPicture) {
-              let linkPicture=manageFiles.createFile(dirUploads,dir,req.body.linkPicture,s._id,
-                `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}`,
+              let linkPicture=manageFiles.createFile(dir,req.body.linkPicture,s._id,
                 "/api/sponsor/app/images/");
               s.linkPicture=linkPicture;
               s.save().then((resultat)=>{
@@ -40,8 +36,7 @@ exports.updateSponsor = (req, res) => {
         sponsor.linkSponsor = req.body.linkSponsor;
       }
       if(req.body.linkPicture){
-        let linkPicture=manageFiles.createFile(dirUploads,dir,req.body.linkPicture,sponsor._id,
-          `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}`,
+        let linkPicture=manageFiles.createFile(dir,req.body.linkPicture,sponsor._id,
           "/api/sponsor/app/images/");
         sponsor.linkPicture=linkPicture;
       } 

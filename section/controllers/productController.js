@@ -1,7 +1,4 @@
 const Product = require("../models/product");
-const fs = require("fs");
-const directory = require("../../pathDirectory");
-const dirUploads = "uploads";
 const dir = "uploads/products";
 const manageFiles = require("../../config/manageFiles");
 require("dotenv").config();
@@ -15,8 +12,7 @@ exports.addProduct = (req, res, next) => {
         .save()
         .then((p) => {
           if (req.body.picture) {
-            let picture=manageFiles.createFile(dirUploads,dir,req.body.picture,p._id,
-              `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}`,
+            let picture=manageFiles.createFile(dir,req.body.picture,p._id,
               "/api/product/app/images/");
             p.picture=picture;
             p.save().then((resultat)=>{
@@ -45,8 +41,7 @@ exports.updateProduct = (req, res) => {
       product.price = req.body.price;
     }
     if(req.body.picture){
-      let picture=manageFiles.createFile(dirUploads,dir,req.body.picture,product._id,
-        `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}`,
+      let picture=manageFiles.createFile(dir,req.body.picture,product._id,
         "/api/product/app/images/");
       product.picture=picture;
     }

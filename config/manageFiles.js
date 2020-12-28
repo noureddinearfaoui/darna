@@ -1,7 +1,9 @@
 const fs = require("fs");
 const directory = require("../pathDirectory");
+const dirUploads = "uploads";
+const host=`${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}`;
 
-exports.createFile=(dirUploads,dir,base64,id,host,apiUrl)=>{
+exports.createFile=(dir,base64,id,apiUrl)=>{
     if (!fs.existsSync(dirUploads)) {
         fs.mkdirSync(dirUploads);
     }
