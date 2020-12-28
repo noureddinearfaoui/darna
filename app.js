@@ -13,7 +13,7 @@ const helpRoutes= require("./section/helpRoutes");
 const homeRoutes=require("./section/homeRoutes");
 const sponsorRoutes=require("./section/sponsorRoutes")
 const productRoutes=require("./section/productRoutes")
-const legalStatusRoutes=require("./section/legalStatusRoutes")
+const docLinkRoutes=require("./section/docLinkRoutes")
 const NotificationRoutes = require("./notification/routes");
 var cors = require("cors");
 //connexion base de donneés
@@ -48,6 +48,6 @@ app.use("/api/help", helpRoutes);
 app.use("/api/home", homeRoutes);
 app.use("/api/sponsor", sponsorRoutes);
 app.use("/api/product", productRoutes);
-app.use("/api/legalStatus", legalStatusRoutes);
+app.use("/api/docLink", docLinkRoutes);
 
 module.exports = app;
