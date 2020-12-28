@@ -53,7 +53,7 @@ exports.updateSponsor = (req, res) => {
           
     })
     .catch((error) =>
-      res.status(404).json({ message: "Sponsor non trouvé" })
+      res.status(404).json({ message: "Sponsor non trouvé" }) 
     );
   };
 
