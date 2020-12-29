@@ -133,3 +133,19 @@ exports.getFileByNom = (req, res) => {
   }
   return res.sendFile(urlFile);
 };
+
+exports.getAllLegalStatuses = (req, res) => {
+  DocLink.find({ type: "statut-juridique"})
+    .then((sj) => {
+        res.status(200).json(sj);
+    })
+    .catch((error) => res.status(404).json({ message: "Statuts juridiques non trouvés" }));
+};
+
+exports.getAllOtherDocs = (req, res) => {
+  DocLink.find({ type: { $ne: "statut-juridique" }})
+    .then((dl) => {
+        res.status(200).json(dl);
+    })
+    .catch((error) => res.status(404).json({ message: "Documents non trouvés" }));
+};
