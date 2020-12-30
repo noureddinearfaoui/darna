@@ -14,6 +14,7 @@ const homeRoutes=require("./section/homeRoutes");
 const sponsorRoutes=require("./section/sponsorRoutes")
 const productRoutes=require("./section/productRoutes")
 const docLinkRoutes=require("./section/docLinkRoutes")
+const donationRoutes=require("./section/donationRoutes")
 const NotificationRoutes = require("./notification/routes");
 var cors = require("cors");
 //connexion base de donneés
@@ -49,5 +50,5 @@ app.use("/api/home", homeRoutes);
 app.use("/api/sponsor", sponsorRoutes);
 app.use("/api/product", productRoutes);
 app.use("/api/docLink", docLinkRoutes);
-
+app.use("/api/donation",donationRoutes)
 module.exports = app;

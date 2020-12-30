@@ -12,17 +12,20 @@ exports.addProduct = (req, res, next) => {
         .save()
         .then((p) => {
           if (req.body.picture) {
+            if (req.body.picture.indexOf("base64")!==-1) {
             let picture=manageFiles.createFile(dir,req.body.picture,p._id,
               "/api/product/app/images/");
             p.picture=picture;
+            }
+            else{
+              p.picture=req.body.picture;
+            }
+          }
             p.save().then((resultat)=>{
               res.status(200).json(resultat);
             }).catch((error) =>
               res.status(500).json({ message: error })
-            );
-          }else {
-            res.status(200).json(p);
-          }
+            );   
         })
         .catch((error) =>
           res.status(500).json({ message: error })
@@ -41,9 +44,15 @@ exports.updateProduct = (req, res) => {
       product.price = req.body.price;
     }
     if(req.body.picture){
+      if (req.body.picture.indexOf("base64")!==-1) {
+      
       let picture=manageFiles.createFile(dir,req.body.picture,product._id,
         "/api/product/app/images/");
       product.picture=picture;
+      }
+      else{
+        product.picture=req.body.picture;
+      }
     }
       product.save().then((resultat)=>{
         res.status(200).json(resultat);

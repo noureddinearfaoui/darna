@@ -32,19 +32,21 @@ exports.addAction = (req, res, next) => {
         action
           .save()
           .then((a) => {
-            if (req.body.urlPhoto) {
+            if(req.body.urlPhoto){ 
+            if (req.body.urlPhoto.indexOf("base64")!==-1) {
               let urlPhoto=manageFiles.createFile(dir,req.body.urlPhoto,a._id,
                 "/api/action/app/images/");
-              a.urlPhoto=urlPhoto;
+              a.urlPhoto=urlPhoto;}
+              else{
+                a.urlPhoto=req.body.urlPhoto;
+              }
+              }
               a.save().then((resultat)=>{
                 res.status(200).json(resultat);
               })
               .catch((error) =>
                 res.status(500).json({ message: error })
               );
-            }else {
-              res.status(200).json(a);
-            }
           })
           .catch((error) =>
             res.status(500).json({ message: "Erreur serveur" + error })
@@ -94,10 +96,14 @@ exports.updateActionDetails = (req, res) => {
     if(req.body.isPublished){
       action.isPublished = req.body.isPublished;
     }
-    if(req.body.urlPhoto){
+    if(req.body.urlPhoto){ 
+    if (req.body.urlPhoto.indexOf("base64")!==-1) {
       let urlPhoto=manageFiles.createFile(dir,req.body.urlPhoto,action._id,
         "/api/action/app/images/");
-      action.urlPhoto=urlPhoto;
+      action.urlPhoto=urlPhoto;}
+      else{
+        action.urlPhoto=req.body.urlPhoto;
+      }
     }
     action.save().then((resultat)=>{
         res.status(200).json(resultat);
