@@ -6,9 +6,8 @@ const password = require("secure-random-password");
 const Role = require("../../role/model/role");
 const user = require("../model/user");
 const email = require("../../config/email");
-const fs = require("fs");
-const directory = require("../../pathDirectory");
-const dir = "images";
+const dir = "uploads/users";
+const manageFiles = require("../../config/manageFiles");
 const commentCtrl = require("../../comment/controller/commentController");
 require("dotenv").config();
 
@@ -217,11 +216,22 @@ exports.addMember = (req, res) => {
     user.accepted = true;
     user
       .save()
-      .then(() => {
+      .then((usr) => {
+        if (req.body.urlImage) {
+          if (req.body.urlImage.indexOf("base64")!==-1) {
+          let urlImage=manageFiles.createFile(dir,req.body.urlImage,usr._id,
+            "/api/user/app/images/");
+            usr.urlImage=urlImage;
+          }
+          else{
+            usr.urlImage=req.body.urlImage;
+          }
+        }
+        usr.save(); 
         const message = {
-          from: process.env.EMAIL_USER, // Sender address
-          to: user.email, // List of recipients
-          subject: "Confirmer votre compte", // Subject line
+          from: process.env.EMAIL_USER,
+          to: user.email,
+          subject: "Confirmer votre compte",
           html: `<p>Bonjour<strong> ${user.firstName} ${
             user.lastName
           }</strong>!<br>
@@ -231,11 +241,10 @@ exports.addMember = (req, res) => {
                         process.env.SERVER_FRONTEND_ADDRESS ||
                         "http://localhost:4200"
                       }/pages/confirmEmail/${user._id}">Confirmer</a></p>`,
-          // Plain text body
         };
         email.send(message);
         res.status(201).json({
-          message: "member added successfully",
+          message: "Membre ajouté avec succès",
         });
         console.log("ppppp", pass);
       })
@@ -250,7 +259,7 @@ exports.getAllUsers = (req, res) => {
       return res.status(400).json({ success: false, error: err });
     }
     if (!users.length) {
-      return res.status(404).json({ error: `User not found` });
+      return res.status(404).json({ error: `Utilisateurs non trouvés` });
     }
     return res.status(200).json(users);
   }).catch((err) => console.log(err));
@@ -273,9 +282,9 @@ exports.getAcceptedMembers = (req, res, next) => {
     .then((users) => {
       if (users) {
         res.status(200).json(users);
-      } else res.status(404).json({ message: "Users not found" });
+      } else res.status(404).json({ message: "Utilisateurs non trouvés" });
     })
-    .catch((error) => res.status(400).json({ message: "Users not found" }));
+    .catch((error) => res.status(400).json({ message: "Utilisateurs non trouvés" }));
 };
 
 exports.getDemandes = (req, res, next) => {
@@ -295,9 +304,9 @@ exports.getDemandes = (req, res, next) => {
     .then((users) => {
       if (users) {
         res.status(200).json(users);
-      } else res.status(404).json({ message: "Demandes not found" });
+      } else res.status(404).json({ message: "Demandes non trouvées" });
     })
-    .catch((error) => res.status(400).json({ message: "Demandes not found" }));
+    .catch((error) => res.status(400).json({ message: "Demandes non trouvées" }));
 };
 
 //bannir member
@@ -312,21 +321,21 @@ exports.banniMember = (req, res) => {
     .then((user) => {
       if (!user) {
         return res.status(404).send({
-          message: "Member not found",
+          message: "Membre non trouvé",
         });
       }
       res.status(201).send({
-        message: "Member banni",
+        message: "Membre banni",
       });
     })
     .catch((err) => {
       if (err.kind === "ObjectId") {
         return res.status(404).send({
-          message: "Member not found",
+          message: "Membre non trouvé",
         });
       }
       return res.status(500).send({
-        message: "Error bannir",
+        message: "Erreur",
       });
     });
 };
@@ -335,19 +344,18 @@ exports.NouveauAdhsion = (req, res) => {
   let userId = req.params.id;
   let date = req.body.nouveauAdhesionDate;
   console.log(userId);
-  User.findById(userId).select({ _id:1,email: 1, firstName: 1, lastName:1,adress:1, tel:1,dateOfBirth:1,confirm:1,
-    banni:1,accepted:1 ,renewal:1 ,role:1 })
+  User.findById(userId)
     .then((user) => {
       user.renewal.push(date);
       user.save().then(() => {
         res.status(200).json({
-          message: "Success",
+          message: "Succès",
         });
       });
     })
     .catch((err) => {
       res.status(500).json({
-        message: "Something went wrong, please try again later." + err,
+        message: "Erreur" + err,
       });
     });
 };
@@ -355,65 +363,52 @@ exports.NouveauAdhsion = (req, res) => {
 exports.adhsionUser = (req, res) => {
   let userId = req.headers.userid;
 
-  User.findById(userId).select({ _id:1,email: 1, firstName: 1, lastName:1,adress:1, tel:1,dateOfBirth:1,confirm:1,
-    banni:1,accepted:1 ,renewal:1 ,role:1 })
+  User.findById(userId)
     .then((user) => {
       res.status(200).json(user.renewal);
     })
     .catch((err) => {
       res.status(500).json({
-        message: "Something went wrong, please try again later." + err,
+        message: "Erreur" + err,
       });
     });
 };
 exports.getUserByEmail = (req, res) => {
   let userEmail = req.params.email;
 
-  User.findOne({ email: userEmail }).select({ _id:1,email: 1, firstName: 1, lastName:1,adress:1, tel:1,dateOfBirth:1,confirm:1,
-    banni:1,accepted:1 ,renewal:1 ,role:1 })
+  User.findOne({ email: userEmail })
     .then((user) => {
       if (user) {
         res.status(200).json({ user: user });
-      } else res.status(200).json("pas de user");
+      } else res.status(200).json("Utilisateur non trouvé");
     })
     .catch((err) => {
       console.log(err);
       console.log("error");
       res.status(500).json({
-        message: "user not found",
+        message: "Erreur",
       });
     });
 };
 // delete member by id
 exports.deleteOneMember = (req, res) => {
-  DemandeParticipation.remove({ member: req.params.id }).then(() => {
-    User.findByIdAndRemove(req.params.id).select({ _id:1,email: 1, firstName: 1, lastName:1,adress:1, tel:1,dateOfBirth:1,confirm:1,
-      banni:1,accepted:1 ,renewal:1 ,role:1 })
-      .then((user) => {
-        if (!user) {
-          return res.status(404).send({
-            message: "Member not found",
-          });
-        }
-        if (fs.existsSync(dir)) {
-          let files = fs.readdirSync(dir);
-          if (files.find((el) => el.indexOf(user._id) !== -1)) {
-            file = files.find((el) => el.indexOf(user._id) !== -1);
-            fs.unlinkSync(dir + "/" + file, () => {});
-          }
-        }
-        res.status(200).send({ message: "member deleted successfully!" });
-      })
-      .catch((err) => {
-        if (err.kind === "ObjectId" || err.name === "NotFound") {
-          return res.status(404).send({
-            message: "member not found",
-          });
-        }
-        return res.status(500).send({
-          message: "Could not delete member",
-        });
-      });
+  const idUser=req.params.id;
+  DemandeParticipation.remove({ member: idUser}).then(() => {
+    User.findByIdAndRemove(idUser)
+    .then((user) => {
+      user
+        .remove()
+        .then(() =>{ 
+          manageFiles.deleteFile(dir,idUser);
+          res.status(200).json({message:"Utilisateur supprimé avec succès"});
+        })
+        .catch((error) =>
+          res.status(500).json({ message: "Erreur serveur" + error })
+        );
+    })
+    .catch((error) =>
+      res.status(404).json({ message: "Utilisateur non trouvé" })
+    );
   });
 };
 
@@ -429,7 +424,7 @@ exports.acceptMember = (req, res) => {
     .then((user) => {
       if (!user) {
         return res.status(404).send({
-          message: "member not found",
+          message: "Utilisateur non trouvé",
         });
       }
       res.send(user);
@@ -437,11 +432,11 @@ exports.acceptMember = (req, res) => {
     .catch((err) => {
       if (err.kind === "ObjectId") {
         return res.status(404).send({
-          message: "member not found",
+          message: "Utilisateur non trouvé",
         });
       }
       return res.status(500).send({
-        message: "Error updating accepted ",
+        message: "Erreur",
       });
     });
 };
@@ -572,8 +567,7 @@ exports.updateConnectedUser = (req, res) => {
       message: "Vous n'êtes pas l'utilisateur connecté",
     });
   } else {
-    User.findById(idUser).select({ _id:1,email: 1, firstName: 1, lastName:1,adress:1, tel:1,dateOfBirth:1,confirm:1,
-      banni:1,accepted:1 ,renewal:1 ,role:1 })
+    User.findById(idUser)
       .then((user) => {
         user.firstName = req.body.firstName;
         user.lastName = req.body.lastName;
@@ -605,8 +599,7 @@ exports.updatePassword = (req, res, next) => {
       message: "Vous n'êtes pas l'utilisateur connecté",
     });
   } else {
-    User.findById(idUser).select({ _id:1,email: 1, firstName: 1, lastName:1,adress:1, tel:1,dateOfBirth:1,confirm:1,
-      banni:1,accepted:1 ,renewal:1 ,role:1 })
+    User.findById(idUser)
       .then((user) => {
         bcrypt
           .compare(req.body.oldPassword, user.password)
@@ -637,8 +630,7 @@ exports.updatePassword = (req, res, next) => {
 
 
 exports.getConnectedUserdetails = (req, res) => {
-  User.findById(req.params.id).select({ firstName: 1, lastName: 1, email:1,adress:1, tel:1,dateOfBirth:1,banni:1,
-    confirm:1,role:1,renewal:1 ,createdAt:1 ,updatedAt:1 })
+  User.findById(req.params.id)
     .then((user) => {
       if (!user) {
         return res.status(404).send({
@@ -673,17 +665,20 @@ exports.updateConnectedUserImage = (req, res) => {
   } else {
     User.findById(idUser)
       .then((user) => {
-        user.urlImage = req.body.newurlImage;
+        if(req.body.newurlImage){
+          if (req.body.newurlImage.indexOf("base64")!==-1) {
+          
+          let urlImage=manageFiles.createFile(dir,req.body.newurlImage,user._id,
+            "/api/user/app/images/");
+          user.urlImage=urlImage;
+          }
+          else{
+            product.picture=req.body.picture;
+          }
+        }
         user.save()
         .then(() => {
-          if (fs.existsSync(dir)) {
-            let files = fs.readdirSync(dir);
-            if (files.find((el) => el.indexOf(user._id) !== -1)) {
-              let fileT = files.find((el) => el.indexOf(user._id) !== -1);
-              fs.unlinkSync(dir + "/" + fileT, () => {});
-            }
-          }
-          let urlImage = "";
+         
           if (req.body.newurlImage) {
             let buff = Buffer.from(user.urlImage.split(";base64,")[1], "base64");
             let extension = user.urlImage.split(";base64,")[0].split("/")[1];

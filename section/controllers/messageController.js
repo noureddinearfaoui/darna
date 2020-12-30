@@ -14,8 +14,8 @@ exports.addMessage=(req,res)=>{
     return  res.status(400).json({ message: "Vous devez ajouter un message"});
   }
     const message=new Message({
-        role:req.body.req.body.firstName,
-        fullName: req.body.lastName,
+       firstName:req.body.firstName,
+       lastName: req.body.lastName,
         email:req.body.email,
         message:req.body.message,
     })

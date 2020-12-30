@@ -1,7 +1,7 @@
 const Staff = require("../models/staff");
 
 exports.addStaff=(req,res)=>{
-  if(req.body.role && (req.body.role!=="président"&& req.body.role!=="vice-président"&& req.body.role!=="secrétaire générale"&& req.body.role!=="trésorier")){
+  if(req.body.role && (req.body.role!=="président"&& req.body.role!=="vice-président"&& req.body.role!=="secrétaire-générale"&& req.body.role!=="trésorier")){
     return  res.status(400).json({ message: "Role incorrecte"});
     }
   if(!req.body.fullName ){
@@ -25,7 +25,7 @@ exports.addStaff=(req,res)=>{
 }
 
 exports.updateStaff = (req, res) => {
-    if(req.body.role && (req.body.role!=="président"&& req.body.role!=="vice-président"&& req.body.role!=="secrétaire générale"&& req.body.role!=="trésorier")){
+    if(req.body.role && (req.body.role!=="président"&& req.body.role!=="vice-président"&& req.body.role!=="secrétaire-générale"&& req.body.role!=="trésorier")){
         return  res.status(400).json({ message: "Role incorrecte"});
         }
    Staff.findById(req.params.id)
