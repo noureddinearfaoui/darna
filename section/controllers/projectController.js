@@ -1,47 +1,65 @@
 const Project = require("../models/project");
 
 exports.addProject=(req,res)=>{
-    delete req.body._id;
+  if(req.body.projectStatus && (req.body.projectStatus!=="en-cours"&& req.body.projectStatus!=="future")){
+    return  res.status(400).json({ message: "Statut incorrecte"});
+    }
+  if(!req.body.projectDescription ){
+    return  res.status(400).json({ message: "Vous devez ajouter la description du projet"});
+  }
     const project=new Project({
-        ...req.body,
+      projectStatus:req.body.projectStatus,
+      projectDescription: req.body.projectDescription,
     })
     project.save()
         .then(() => {
-            res.status(200).json({ message:"project added successfully"})
+            res.status(200).json(project)
         })
         .catch(error => {
              res.status(400).json({ error})
             })
-
 }
 
 exports.updateProject = (req, res) => {
-    Project.findByIdAndUpdate(
-      req.params.id,
-      {
-        ...req.body,
-      },
-      { new: true }
-    )
-      .then((project) => {
-        if (!project) {
-          return res.status(404).send({
-            message: "Project not found",
-          });
-        }
-        res.send(project);
-      })
-      .catch((err) => {
-        if (err.kind === "ObjectId") {
-          return res.status(404).send({
-            message: "Project not found",
-          });
-        }
-        return res.status(500).send({
-          message: "Error updating Project",
-        });
-      });
+  if(req.body.projectStatus && (req.body.projectStatus!=="en-cours"&& req.body.projectStatus!=="future")){
+    return  res.status(400).json({ message: "Statut incorrecte"});
+    }
+   Project.findById(req.params.id)
+   .then((project)=>{
+    if(req.body.projectDescription){
+      project.projectDescription = req.body.projectDescription;
+    }
+      project.projectStatus = req.body.projectStatus;
+
+      project.save().then((resultat)=>{
+        res.status(200).json(resultat);
+      }).catch((error) =>
+        res.status(500).json({ message: error })
+      );
+   })
+   .catch((error) =>
+    res.status(404).json({ message: "Projet non trouvé" })
+  );
+     
   };
+  exports.updateProjectStatus = (req, res) => {
+    if(req.body.projectStatus && (req.body.projectStatus!=="en-cours"&& req.body.projectStatus!=="future")){
+      return  res.status(400).json({ message: "Statut incorrecte"});
+      }
+     Project.findById(req.params.id)
+     .then((project)=>{
+        project.projectStatus = req.body.projectStatus;
+        project.save().then((resultat)=>{
+          res.status(200).json(resultat);
+        }).catch((error) =>
+          res.status(500).json({ message: error })
+        );
+     })
+     .catch((error) =>
+      res.status(404).json({ message: "Projet non trouvé" })
+    );
+       
+    };
   
   exports.deleteProject = (req, res) => {
     const idProject = req.params.id;
@@ -51,14 +69,14 @@ exports.updateProject = (req, res) => {
             .remove()
             .then(() =>{ 
               
-              res.status(200).json({message:"project deleted successfully"});
+              res.status(200).json({message:"Projet supprimé avec succès"});
             })
             .catch((error) =>
-              res.status(500).json({ message: "Error server" + error })
+              res.status(500).json({ message: "Erreur serveur" + error })
             );
         })
         .catch((error) =>
-          res.status(404).json({ message: "Project not  found" +error})
+          res.status(404).json({ message: "Projet non trouvé" +error})
         );
   };
 
@@ -70,11 +88,11 @@ exports.updateProject = (req, res) => {
       .catch((err) => {
         if (err.kind === "ObjectId") {
           return res.status(404).send({
-            message: "Project not found",
+            message: "Projet non trouvé",
           });
         }
         return res.status(500).send({
-          message: "Error server",
+          message: "Erreur serveur",
         });
       });
   };
@@ -84,5 +102,5 @@ exports.updateProject = (req, res) => {
       .then((projects) => {
         res.status(200).json(projects);
       })
-      .catch((error) => res.status(404).json({ message: "can not get all projects" }));
+      .catch((error) => res.status(404).json({ message: "Erreur"+error }));
   };

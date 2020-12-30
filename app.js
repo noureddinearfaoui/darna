@@ -16,7 +16,9 @@ const productRoutes=require("./section/productRoutes")
 const docLinkRoutes=require("./section/docLinkRoutes")
 const donationRoutes=require("./section/donationRoutes")
 const projectRoutes=require("./section/projectRoutes");
+const contactRoutes=require("./section/contactRoutes");
 const NotificationRoutes = require("./notification/routes");
+const staffRoutes=require("./section/staffRoutes")
 var cors = require("cors");
 //connexion base de donneés
 config.connectMongodb;
@@ -53,4 +55,6 @@ app.use("/api/product", productRoutes);
 app.use("/api/docLink", docLinkRoutes);
 app.use("/api/project", projectRoutes);
 app.use("/api/donation",donationRoutes)
+app.use("/api/contact",contactRoutes);
+app.use("/api/staff",staffRoutes);
 module.exports = app;
