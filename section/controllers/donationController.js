@@ -57,7 +57,7 @@ exports.manageDonation = (req, res) => {
 
 
 exports.getDonation = (req, res, next) => {
-  Home.find()
+  Donation.find()
     .then((donation) => {
         res.status(200).json(donation); 
     })
