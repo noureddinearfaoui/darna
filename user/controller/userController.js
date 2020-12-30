@@ -112,15 +112,14 @@ exports.login = (req, res, next) => {
 };
 
 exports.confirmAccount = (req, res, next) => {
-  User.findById(req.params.id).select({ _id:1,email: 1, firstName: 1, lastName:1,adress:1, tel:1,dateOfBirth:1,confirm:1,
-    banni:1,accepted:1 ,renewal:1 ,role:1 })
+  User.findById(req.params.id)
     .then((user) => {
-      if (user.confirm) res.status(404).json({ message: "Confirmed! deja" });
+      if (user.confirm) res.status(404).json({ message: "utilisateur déjà confirmé" });
       else {
         user.confirm = true;
         user
           .save()
-          .then(() => res.status(200).json({ message: "Confirmed!" }))
+          .then(() => res.status(200).json({ message: "Confirmé!" }))
           .catch((error) => res.status(500).json({ error }));
       }
     })
@@ -137,7 +136,7 @@ exports.getUserDetails = (req, res) => {
     .then((user) => {
       if (!user) {
         return res.status(404).send({
-          message: "Member not found ",
+          message: "Membre non trouvé",
         });
       }
       res.send(user);
@@ -145,63 +144,72 @@ exports.getUserDetails = (req, res) => {
     .catch((err) => {
       if (err.kind === "ObjectId") {
         return res.status(404).send({
-          message: "Member not found ",
+          message: "Membre non trouvé",
         });
       }
       return res.status(500).send({
-        message: "Error retrieving member details",
+        message: "Erreur",
       });
     });
 };
 // Update member details
 exports.updateUserDetails = (req, res) => {
-  User.findByIdAndUpdate(
-    req.params.id,
-    {
-      ...req.body,
-    },
-    { new: true }
-  )
+  User.findById(req.params.id)
     .then((user) => {
-      if (!user) {
-        return res.status(404).send({
-          message: "Member not found",
-        });
+      if(req.body.email){
+        user.email = req.body.email;
       }
-      let urlImage = "";
-      if (req.body.urlImage) {
-        if (fs.existsSync(dir)) {
-          let files = fs.readdirSync(dir);
-          if (files.find((el) => el.indexOf(user._id) !== -1)) {
-            let fileT = files.find((el) => el.indexOf(user._id) !== -1);
-            fs.unlinkSync(dir + "/" + fileT, () => {});
-          }
+      if(req.body.firstName){
+        user.firstName = req.body.firstName;
+      }
+      if(req.body.lastName){
+        user.lastName = req.body.lastName;
+      }
+      if(req.body.adress){
+        user.adress = req.body.adress;
+      }
+      if(req.body.tel){
+        user.tel = req.body.tel;
+      }
+      if(req.body.dateOfBirth){
+        user.dateOfBirth = req.body.dateOfBirth;
+      }
+      if(req.body.confirm){
+        user.confirm = req.body.confirm;
+      }
+      if(req.body.accepted){
+        user.accepted = req.body.accepted;
+      }
+      if(req.body.urlImage){
+        if (req.body.urlImage.indexOf("base64")!==-1) {
+        
+        let urlImage=manageFiles.createFile(dir,req.body.urlImage,user._id,
+          "/api/user/app/images/");
+        user.urlImage=urlImage;
         }
-        let buff = Buffer.from(user.urlImage.split(";base64,")[1], "base64");
-        let extension = user.urlImage.split(";base64,")[0].split("/")[1];
-        let fileName = dir + "/" + user._id + "." + extension;
-        fs.writeFileSync(fileName, buff);
-        let file = user._id + "." + extension;
-        urlImage =
-          `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}` +
-          "/api/user/app/images/" +
-          file;
+        else{
+          user.urlImage=req.body.urlImage;
+        }
       }
-      commentCtrl.updateCommentsOfMember(
-        user._id,
-        urlImage,
-        user.firstName + " " + user.lastName
+      user.save().then((resultat)=>{
+        res.status(200).json(resultat);
+        commentCtrl.updateCommentsOfMember(
+          user._id,
+          urlImage,
+          user.firstName + " " + user.lastName
+        );
+      }).catch((error) =>
+        res.status(500).json({ message: error })
       );
-      res.send(user);
     })
     .catch((err) => {
       if (err.kind === "ObjectId") {
         return res.status(404).send({
-          message: "Member not found",
+          message: "Membre non trouvé",
         });
       }
       return res.status(500).send({
-        message: "Error updating details",
+        message: "Erreur",
       });
     });
 };
@@ -679,7 +687,6 @@ exports.updateConnectedUserImage = (req, res) => {
         }
         user.save()
         .then(() => {
-
           commentCtrl.updateCommentsOfMember(user._id,urlImage,null);
           res.status(200).json({message:"Votre image a été modifié avec succès",urlImage:urlImage})
         })
@@ -700,7 +707,7 @@ exports.getMembreWithoutPhoto = (req, res) => {
     .then((user) => {
       if (!user) {
         return res.status(404).send({
-          message: "Member not found ",
+          message: "Membre non trouvé",
         });
       }
       res.send(user);
@@ -708,11 +715,11 @@ exports.getMembreWithoutPhoto = (req, res) => {
     .catch((err) => {
       if (err.kind === "ObjectId") {
         return res.status(404).send({
-          message: "Member not found ",
+          message: "Membre non trouvé",
         });
       }
       return res.status(500).send({
-        message: "Error retrieving member details",
+        message: "Erreur",
       });
     });
 };
