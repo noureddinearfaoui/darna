@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const password = require("secure-random-password");
 const Role = require("../../role/model/role");
 const user = require("../model/user");
+const directory=require("../../pathDirectory");
 const email = require("../../config/email");
 const dir = "uploads/users";
 const manageFiles = require("../../config/manageFiles");
@@ -673,23 +674,12 @@ exports.updateConnectedUserImage = (req, res) => {
           user.urlImage=urlImage;
           }
           else{
-            product.picture=req.body.picture;
+            user.urlImage=req.body.newurlImage;
           }
         }
         user.save()
         .then(() => {
-         
-          if (req.body.newurlImage) {
-            let buff = Buffer.from(user.urlImage.split(";base64,")[1], "base64");
-            let extension = user.urlImage.split(";base64,")[0].split("/")[1];
-            let fileName = dir + "/" + user._id + "." + extension;
-            fs.writeFileSync(fileName, buff);
-            let file = user._id + "." + extension;
-            urlImage =
-              `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}` +
-              "/api/user/app/images/" +
-              file;
-          }
+
           commentCtrl.updateCommentsOfMember(user._id,urlImage,null);
           res.status(200).json({message:"Votre image a été modifié avec succès",urlImage:urlImage})
         })

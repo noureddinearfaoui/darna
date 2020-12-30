@@ -8,7 +8,7 @@ exports.connectMongodb = mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    userCtrl.createImagesOfUsers();
+    //userCtrl.createImagesOfUsers();
     console.log("Connexion à MongoDB réussie !");
     
   })
