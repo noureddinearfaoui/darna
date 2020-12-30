@@ -19,6 +19,8 @@ const projectRoutes=require("./section/projectRoutes");
 const contactRoutes=require("./section/contactRoutes");
 const NotificationRoutes = require("./notification/routes");
 const staffRoutes=require("./section/staffRoutes")
+const messageRoutes=require("./section/messageRoutes")
+
 var cors = require("cors");
 //connexion base de donneés
 config.connectMongodb;
@@ -57,4 +59,6 @@ app.use("/api/project", projectRoutes);
 app.use("/api/donation",donationRoutes)
 app.use("/api/contact",contactRoutes);
 app.use("/api/staff",staffRoutes);
+app.use("/api/message",messageRoutes);
+
 module.exports = app;

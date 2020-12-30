@@ -2,8 +2,9 @@
 const express = require("express");
 const router = express.Router();
 const DonationCtrl = require("./controllers/donationController");
-
-router.post("/manageDonation", DonationCtrl.manageDonation);
+const auth = require("../config/middleware/auth");
+const permit = require("../config/middleware/authorization");
+router.post("/manageDonation", auth, permit("admin"), DonationCtrl.manageDonation);
 router.get("/getDonation", DonationCtrl.getDonation);
 
 
