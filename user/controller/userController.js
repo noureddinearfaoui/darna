@@ -85,10 +85,6 @@ exports.login = (req, res, next) => {
               return res
                 .status(401)
                 .json({ error: "vous n êtes pas encore accepter !" });
-            let urlImage = getImageFromDossierImagesAndCreateItIfNotExist(
-              user._id,
-              user.urlImage
-            );
             //socket.emit('notification', user);
             res.status(200).json({
               userId: user._id,
@@ -98,7 +94,7 @@ exports.login = (req, res, next) => {
                   role: user.role,
                   firstName: user.firstName,
                   lastName: user.lastName,
-                  urlImage: urlImage,
+                  urlImage: user.urlImage,
                 },
                 process.env.RANDOM_TOKEN_SECRET,
                 { expiresIn: "24h" }
