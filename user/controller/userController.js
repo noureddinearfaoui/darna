@@ -3,9 +3,6 @@ const DemandeParticipation = require("../../demandeParticipation/model/demandePa
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const password = require("secure-random-password");
-const Role = require("../../role/model/role");
-const user = require("../model/user");
-const directory=require("../../pathDirectory");
 const email = require("../../config/email");
 const dir = "uploads/users";
 const manageFiles = require("../../config/manageFiles");
@@ -176,10 +173,10 @@ exports.updateUserDetails = (req, res) => {
       if(req.body.accepted){
         user.accepted = req.body.accepted;
       }
+      let urlImage=req.body.urlImage;
       if(req.body.urlImage){
-        if (req.body.urlImage.indexOf("base64")!==-1) {
-        
-        let urlImage=manageFiles.createFile(dir,req.body.urlImage,user._id,
+        if (req.body.urlImage.indexOf("base64")!==-1) { 
+         urlImage=manageFiles.createFile(dir,req.body.urlImage,user._id,
           "/api/user/app/images/");
         user.urlImage=urlImage;
         }
@@ -232,7 +229,16 @@ exports.addMember = (req, res) => {
             usr.urlImage=req.body.urlImage;
           }
         }
-        usr.save(); 
+        usr.save()
+        .then(()=>{
+          res.status(201).json({
+            message: "Membre ajouté avec succès",
+          });
+          console.log("ppppp", pass);
+        })
+        .catch((error) => {
+          res.status(500).json({ error: error });
+        });       
         const message = {
           from: process.env.EMAIL_USER,
           to: user.email,
@@ -248,10 +254,7 @@ exports.addMember = (req, res) => {
                       }/pages/confirmEmail/${user._id}">Confirmer</a></p>`,
         };
         email.send(message);
-        res.status(201).json({
-          message: "Membre ajouté avec succès",
-        });
-        console.log("ppppp", pass);
+       
       })
       .catch((error) => {
         res.status(500).json({ error: error });
@@ -272,18 +275,6 @@ exports.getAllUsers = (req, res) => {
 
 exports.getAcceptedMembers = (req, res, next) => {
   User.find({ accepted: "true", confirm: "true", role: "membre" })
-    .select({
-      email: 1,
-      firstName: 1,
-      lastName: 1,
-      adress: 1,
-      tel: 1,
-      dateOfBirth: 1,
-      banni: 1,
-      accepted: 1,
-      confirm: 1,
-      renewal: 1,
-    })
     .then((users) => {
       if (users) {
         res.status(200).json(users);
@@ -294,18 +285,6 @@ exports.getAcceptedMembers = (req, res, next) => {
 
 exports.getDemandes = (req, res, next) => {
   User.find({ accepted: "false", confirm: "true", role: "membre" })
-    .select({
-      email: 1,
-      firstName: 1,
-      lastName: 1,
-      adress: 1,
-      tel: 1,
-      dateOfBirth: 1,
-      banni: 1,
-      accepted: 1,
-      confirm: 1,
-      renewal: 1,
-    })
     .then((users) => {
       if (users) {
         res.status(200).json(users);
@@ -446,55 +425,6 @@ exports.acceptMember = (req, res) => {
     });
 };
 
-exports.getAllImagesLinksOfUsers = (req, res, next) => {
-  let result = [];
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir);
-  }
-  let files = fs.readdirSync(dir);
-  let tableOfId = [];
-  files.forEach((element) => {
-    tableOfId.push(element.split(".")[0]);
-    result.push({
-      _id: element.split(".")[0],
-      urlImage:
-        `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}` +
-        "/api/user/app/images/" +
-        element,
-    });
-  });
-  User.find({ accepted: true, confirm: true, _id: { $nin: tableOfId } })
-    .select({ _id: 1, urlImage: 1 })
-    .then((users) => {
-      users.forEach((element) => {
-        if (element.urlImage) {
-          let data = element.urlImage;
-          let buff = Buffer.from(data.split(";base64,")[1], "base64");
-          let extension = data.split(";base64,")[0].split("/")[1];
-          let fileName = dir + "/" + element._id + "." + extension;
-          fs.writeFileSync(fileName, buff);
-          const file = element._id + "." + extension;
-          result.push({
-            _id: element._id,
-            urlImage:
-              `${
-                process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"
-              }` +
-              "/api/user/app/images/" +
-              file,
-          });
-        } else {
-          result.push({
-            _id: element._id,
-            urlImage: "",
-          });
-        }
-      });
-      return res.status(200).json(result);
-    })
-    .catch((error) => res.status(400).json({ message: "Users not found" }));
-};
-
 exports.getImageByNom = (req, res) => {
   let nomImage = req.params.nomImage;
   let files = fs.readdirSync(dir);
@@ -504,62 +434,6 @@ exports.getImageByNom = (req, res) => {
   return res.sendFile(directory + "/" + dir + "/" + nomImage);
 };
 
-exports.createImagesOfUsers = () => {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir);
-  }
-  let files = fs.readdirSync(dir);
-  let tableOfId = [];
-  files.forEach((element) => {
-    tableOfId.push(element.split(".")[0]);
-  });
-  User.find({ accepted: true, confirm: true, _id: { $nin: tableOfId } })
-    .select({ _id: 1, urlImage: 1 })
-    .then((users) => {
-      users.forEach((element) => {
-        if (element.urlImage) {
-          let data = element.urlImage;
-          let buff = Buffer.from(data.split(";base64,")[1], "base64");
-          let extension = data.split(";base64,")[0].split("/")[1];
-          let fileName = dir + "/" + element._id + "." + extension;
-          fs.writeFileSync(fileName, buff);
-        }
-      });
-    });
-};
-
-function getImageFromDossierImagesAndCreateItIfNotExist(id, base64) {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir);
-  }
-  let files = fs.readdirSync(dir);
-  let file;
-  let urlImage;
-  if (files.find((el) => el.indexOf(id) !== -1)) {
-    file = files.find((el) => el.indexOf(id) !== -1);
-    urlImage =
-      `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}` +
-      "/api/user/app/images/" +
-      file;
-  } else {
-    if (base64) {
-      let buff = Buffer.from(base64.split(";base64,")[1], "base64");
-      let extension = base64.split(";base64,")[0].split("/")[1];
-      let fileName = dir + "/" + id + "." + extension;
-      fs.writeFileSync(fileName, buff);
-      file = id + "." + extension;
-      urlImage =
-        `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}` +
-        "/api/user/app/images/" +
-        file;
-    } else {
-      urlImage = "";
-    }
-  }
-
-  return urlImage;
-}
-exports.getImageFromDossierImagesAndCreateItIfNotExist=(id,base64)=>getImageFromDossierImagesAndCreateItIfNotExist(id,base64);
 //update user details
 
 exports.updateConnectedUser = (req, res) => {
@@ -642,7 +516,6 @@ exports.getConnectedUserdetails = (req, res) => {
           message: "Utilisateur non trouvé",
         });
       }
-      user.urlImage=getImageFromDossierImagesAndCreateItIfNotExist(req.params.id,"");
       res.send(user);
     })
     .catch((err) => {
@@ -670,10 +543,11 @@ exports.updateConnectedUserImage = (req, res) => {
   } else {
     User.findById(idUser)
       .then((user) => {
+        let urlImage= req.body.newurlImage;
         if(req.body.newurlImage){
           if (req.body.newurlImage.indexOf("base64")!==-1) {
           
-          let urlImage=manageFiles.createFile(dir,req.body.newurlImage,user._id,
+           urlImage=manageFiles.createFile(dir,req.body.newurlImage,user._id,
             "/api/user/app/images/");
           user.urlImage=urlImage;
           }

@@ -5,7 +5,6 @@ const config = require("./config/bd");
 
 // import métier
 const userRoutes = require("./user/routes");
-const roleRoutes = require("./role/routes");
 const ActionRouts = require("./action/routes");
 const DemandeParticipationRoutes = require("./demandeParticipation/routes");
 const CommentRoutes = require("./comment/routes");

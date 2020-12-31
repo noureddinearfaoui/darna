@@ -43,9 +43,6 @@ router.get("/UserByEmail/:email", UserCtrl.getUserByEmail);
 router.post("/forgotPassword", resetPassCtrl.forgotPassword);
 router.post("/resetPassword/:token", resetPassCtrl.resetPassword);
 router.get("/getToken/:token", resetPassCtrl.getToken);
-
-router.get("/getAllImagesLinksOfUsers", UserCtrl.getAllImagesLinksOfUsers);
-
 router.get("/app/images/:nomImage", UserCtrl.getImageByNom);
 router.put("/updateConnectedUser/:id", auth, UserCtrl.updateConnectedUser);
 router.put("/updatePassword/:id", auth, UserCtrl.updatePassword);

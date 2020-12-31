@@ -10,15 +10,14 @@ exports.addComment = (req, res, next) => {
 
   User.findById(idUser)
     .then((user) => {
-      Action.findById(idAction).select({ _id:1, actionName: 1, description: 1, location:1,beginDate:1, endDate:1,beginDateInscription:1,endDateInscription:1,
-        numberOfMembers:1,isPublished:1 })
+      Action.findById(idAction)
         .then((action) => {
           const comment = new Comment({
             date: req.body.date,
             typeMessage: req.body.typeMessage,
             message: req.body.message,
             nameOfSender: user.firstName +" "+ user.lastName,
-            urlImageOfSender: UserController.getImageFromDossierImagesAndCreateItIfNotExist(idUser,user.urlImage),
+            urlImageOfSender: user.urlImage,
             member: user,
             action: action,
           });

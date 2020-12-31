@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const userCtrl = require("../user/controller/userController");
 require("dotenv").config();
 
 exports.connectMongodb = mongoose
@@ -8,7 +7,6 @@ exports.connectMongodb = mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    //userCtrl.createImagesOfUsers();
     console.log("Connexion à MongoDB réussie !");
     
   })
