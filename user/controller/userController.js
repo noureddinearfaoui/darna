@@ -426,14 +426,12 @@ exports.acceptMember = (req, res) => {
 };
 
 exports.getImageByNom = (req, res) => {
-  let nomImage = req.params.nomImage;
-  let files = fs.readdirSync(dir);
-  if (!files.includes(nomImage)) {
+  let urlImage=manageFiles.getFileByNom(dir,req.params.nomImage);
+  if (!urlImage) {
     return res.status(404).json({ message: "Image n'existe pas!!" });
   }
-  return res.sendFile(directory + "/" + dir + "/" + nomImage);
+  return res.sendFile(urlImage);
 };
-
 //update user details
 
 exports.updateConnectedUser = (req, res) => {
@@ -568,28 +566,4 @@ exports.updateConnectedUserImage = (req, res) => {
         res.status(404).json({ message: "Utilisateur non trouvé" })
       );
   }
-};
-
-
-exports.getMembreWithoutPhoto = (req, res) => {
-  User.findById(req.params.id).select({ email: 1, firstName: 1, lastName:1,adress:1, tel:1,dateOfBirth:1,confirm:1,
-    banni:1,accepted:1 ,renewal:1 ,role:1 })
-    .then((user) => {
-      if (!user) {
-        return res.status(404).send({
-          message: "Membre non trouvé",
-        });
-      }
-      res.send(user);
-    })
-    .catch((err) => {
-      if (err.kind === "ObjectId") {
-        return res.status(404).send({
-          message: "Membre non trouvé",
-        });
-      }
-      return res.status(500).send({
-        message: "Erreur",
-      });
-    });
 };
