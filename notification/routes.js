@@ -32,6 +32,10 @@ router.get(
   NotifCtrl.nearbyEvents
 );
 router.get(
+  "/test/:id",
+  NotifCtrl.updateSeenForAllNotificateUser
+);
+router.get(
   "/test1",
   NotifCtrl.personNotRenwal
 );

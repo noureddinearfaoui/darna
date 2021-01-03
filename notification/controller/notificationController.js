@@ -164,7 +164,23 @@ exports.updateSeen = (req, res) => {
       });
     });
 };
-
+exports.updateSeenForAllNotificateUser = (req, res) => {
+  console.log(req.params)
+  Notification.updateMany({receiver: req.params.id}, {"$set":{seen: true}})
+    .then((notification) => {
+      res.status(200).send({ message: "suceess" });
+    })
+    .catch((err) => {
+      if (err.kind === "ObjectId") {
+        return res.status(404).send({
+          message: "Notification non trouvée",
+        });
+      }
+      return res.status(500).send({
+        message: "Erreur serveur",
+      });
+    });
+}
 exports.deleteNotification = (req, res) => {
   Notification.findByIdAndRemove(req.params.idNotif)
     .then((notification) => {
@@ -220,7 +236,7 @@ exports.personNotRenwal  = () => {
           title:`Renouvellement `,
           Date: new Date(),
           description: `${nbOfPersonne} qui n'ont pas renouveller leur abonnement`,
-          receiver:user.__id,
+          receiver:user,
           typeNotification:'a'
         });
         console.log(user)
@@ -270,7 +286,7 @@ exports.nearbyEvents  = () => {
                       title:"Le nombre de membre est manquant ",
                       Date: new Date(),
                      description: `il y a encore des places vides pour l'evenement ${el.actionName}`,
-                     receiver:user.__id,
+                     receiver:user,
                      typeNotification:'a'
                      });
         
