@@ -3,12 +3,9 @@ const DemandeParticipation = require("../../demandeParticipation/model/demandePa
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const password = require("secure-random-password");
-const Role = require("../../role/model/role");
-const user = require("../model/user");
 const email = require("../../config/email");
-const fs = require("fs");
-const directory = require("../../pathDirectory");
-const dir = "images";
+const dir = "uploads/users";
+const manageFiles = require("../../config/manageFiles");
 const commentCtrl = require("../../comment/controller/commentController");
 require("dotenv").config();
 
@@ -85,7 +82,6 @@ exports.login = (req, res, next) => {
               return res
                 .status(401)
                 .json({ error: "vous n êtes pas encore accepter !" });
-            let urlImage = getImageFromDossierImagesAndCreateItIfNotExist(user._id, user.urlImage);
             //socket.emit('notification', user);
             res.status(200).json({
               userId: user._id,
@@ -95,7 +91,7 @@ exports.login = (req, res, next) => {
                   role: user.role,
                   firstName: user.firstName,
                   lastName: user.lastName,
-                  urlImage: urlImage,
+                  urlImage: user.urlImage,
                 },
                 process.env.RANDOM_TOKEN_SECRET,
                 { expiresIn: "24h" }
@@ -111,12 +107,12 @@ exports.login = (req, res, next) => {
 exports.confirmAccount = (req, res, next) => {
   User.findById(req.params.id)
     .then((user) => {
-      if (user.confirm) res.status(404).json({ message: "Confirmed! deja" });
+      if (user.confirm) res.status(404).json({ message: "utilisateur déjà confirmé" });
       else {
         user.confirm = true;
         user
           .save()
-          .then(() => res.status(200).json({ message: "Confirmed!" }))
+          .then(() => res.status(200).json({ message: "Confirmé!" }))
           .catch((error) => res.status(500).json({ error }));
       }
     })
@@ -133,7 +129,7 @@ exports.getUserDetails = (req, res) => {
     .then((user) => {
       if (!user) {
         return res.status(404).send({
-          message: "Member not found ",
+          message: "Membre non trouvé",
         });
       }
       res.send(user);
@@ -141,51 +137,72 @@ exports.getUserDetails = (req, res) => {
     .catch((err) => {
       if (err.kind === "ObjectId") {
         return res.status(404).send({
-          message: "Member not found ",
+          message: "Membre non trouvé",
         });
       }
       return res.status(500).send({
-        message: "Error retrieving member details",
+        message: "Erreur",
       });
     });
 };
 // Update member details
 exports.updateUserDetails = (req, res) => {
-  User.findByIdAndUpdate(
-    req.params.id,
-    {
-      ...req.body,
-    },
-    { new: true }
-  )
+  User.findById(req.params.id)
     .then((user) => {
-      if (!user) {
-        return res.status(404).send({
-          message: "Member not found",
-        });
+      if(req.body.email){
+        user.email = req.body.email;
       }
-      let urlImage="";
-      if (user.urlImage) {
-        let buff = Buffer.from(user.urlImage.split(";base64,")[1], "base64");
-        let extension = user.urlImage.split(";base64,")[0].split("/")[1];
-        let fileName = dir + "/" + user._id + "." + extension;
-        fs.writeFileSync(fileName, buff);
-        let file = user._id + "." + extension;
-        urlImage =`${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}` +
-        "/api/user/app/images/" +
-        file;
+      if(req.body.firstName){
+        user.firstName = req.body.firstName;
       }
-      commentCtrl.updateCommentsOfMember(user._id,urlImage,user.firstName+" "+user.lastName);
-      res.send(user);
+      if(req.body.lastName){
+        user.lastName = req.body.lastName;
+      }
+      if(req.body.adress){
+        user.adress = req.body.adress;
+      }
+      if(req.body.tel){
+        user.tel = req.body.tel;
+      }
+      if(req.body.dateOfBirth){
+        user.dateOfBirth = req.body.dateOfBirth;
+      }
+      if(req.body.confirm){
+        user.confirm = req.body.confirm;
+      }
+      if(req.body.accepted){
+        user.accepted = req.body.accepted;
+      }
+      let urlImage=req.body.urlImage;
+      if(req.body.urlImage){
+        if (req.body.urlImage.indexOf("base64")!==-1) { 
+         urlImage=manageFiles.createFile(dir,req.body.urlImage,user._id,
+          "/api/user/app/images/");
+        user.urlImage=urlImage;
+        }
+        else{
+          user.urlImage=req.body.urlImage;
+        }
+      }
+      user.save().then((resultat)=>{
+        res.status(200).json(resultat);
+        commentCtrl.updateCommentsOfMember(
+          user._id,
+          urlImage,
+          user.firstName + " " + user.lastName
+        );
+      }).catch((error) =>
+        res.status(500).json({ message: error })
+      );
     })
     .catch((err) => {
       if (err.kind === "ObjectId") {
         return res.status(404).send({
-          message: "Member not found",
+          message: "Membre non trouvé",
         });
       }
       return res.status(500).send({
-        message: "Error updating details",
+        message: "Erreur",
       });
     });
 };
@@ -201,11 +218,31 @@ exports.addMember = (req, res) => {
     user.accepted = true;
     user
       .save()
-      .then(() => {
+      .then((usr) => {
+        if (req.body.urlImage) {
+          if (req.body.urlImage.indexOf("base64")!==-1) {
+          let urlImage=manageFiles.createFile(dir,req.body.urlImage,usr._id,
+            "/api/user/app/images/");
+            usr.urlImage=urlImage;
+          }
+          else{
+            usr.urlImage=req.body.urlImage;
+          }
+        }
+        usr.save()
+        .then(()=>{
+          res.status(201).json({
+            message: "Membre ajouté avec succès",
+          });
+          console.log("ppppp", pass);
+        })
+        .catch((error) => {
+          res.status(500).json({ error: error });
+        });       
         const message = {
-          from: process.env.EMAIL_USER, // Sender address
-          to: user.email, // List of recipients
-          subject: "Confirmer votre compte", // Subject line
+          from: process.env.EMAIL_USER,
+          to: user.email,
+          subject: "Confirmer votre compte",
           html: `<p>Bonjour<strong> ${user.firstName} ${
             user.lastName
           }</strong>!<br>
@@ -215,13 +252,9 @@ exports.addMember = (req, res) => {
                         process.env.SERVER_FRONTEND_ADDRESS ||
                         "http://localhost:4200"
                       }/pages/confirmEmail/${user._id}">Confirmer</a></p>`,
-          // Plain text body
         };
         email.send(message);
-        res.status(201).json({
-          message: "member added successfully",
-        });
-        console.log("ppppp", pass);
+       
       })
       .catch((error) => {
         res.status(500).json({ error: error });
@@ -234,7 +267,7 @@ exports.getAllUsers = (req, res) => {
       return res.status(400).json({ success: false, error: err });
     }
     if (!users.length) {
-      return res.status(404).json({ error: `User not found` });
+      return res.status(404).json({ error: `Utilisateurs non trouvés` });
     }
     return res.status(200).json(users);
   }).catch((err) => console.log(err));
@@ -242,46 +275,22 @@ exports.getAllUsers = (req, res) => {
 
 exports.getAcceptedMembers = (req, res, next) => {
   User.find({ accepted: "true", confirm: "true", role: "membre" })
-    .select({
-      email: 1,
-      firstName: 1,
-      lastName: 1,
-      adress: 1,
-      tel: 1,
-      dateOfBirth: 1,
-      banni: 1,
-      accepted: 1,
-      confirm: 1,
-      renewal: 1,
-    })
     .then((users) => {
       if (users) {
         res.status(200).json(users);
-      } else res.status(404).json({ message: "Users not found" });
+      } else res.status(404).json({ message: "Utilisateurs non trouvés" });
     })
-    .catch((error) => res.status(400).json({ message: "Users not found" }));
+    .catch((error) => res.status(400).json({ message: "Utilisateurs non trouvés" }));
 };
 
 exports.getDemandes = (req, res, next) => {
   User.find({ accepted: "false", confirm: "true", role: "membre" })
-    .select({
-      email: 1,
-      firstName: 1,
-      lastName: 1,
-      adress: 1,
-      tel: 1,
-      dateOfBirth: 1,
-      banni: 1,
-      accepted: 1,
-      confirm: 1,
-      renewal: 1,
-    })
     .then((users) => {
       if (users) {
         res.status(200).json(users);
-      } else res.status(404).json({ message: "Demandes not found" });
+      } else res.status(404).json({ message: "Demandes non trouvées" });
     })
-    .catch((error) => res.status(400).json({ message: "Demandes not found" }));
+    .catch((error) => res.status(400).json({ message: "Demandes non trouvées" }));
 };
 
 //bannir member
@@ -296,21 +305,21 @@ exports.banniMember = (req, res) => {
     .then((user) => {
       if (!user) {
         return res.status(404).send({
-          message: "Member not found",
+          message: "Membre non trouvé",
         });
       }
       res.status(201).send({
-        message: "Member banni",
+        message: "Membre banni",
       });
     })
     .catch((err) => {
       if (err.kind === "ObjectId") {
         return res.status(404).send({
-          message: "Member not found",
+          message: "Membre non trouvé",
         });
       }
       return res.status(500).send({
-        message: "Error bannir",
+        message: "Erreur",
       });
     });
 };
@@ -324,13 +333,13 @@ exports.NouveauAdhsion = (req, res) => {
       user.renewal.push(date);
       user.save().then(() => {
         res.status(200).json({
-          message: "Success",
+          message: "Succès",
         });
       });
     })
     .catch((err) => {
       res.status(500).json({
-        message: "Something went wrong, please try again later." + err,
+        message: "Erreur" + err,
       });
     });
 };
@@ -344,7 +353,7 @@ exports.adhsionUser = (req, res) => {
     })
     .catch((err) => {
       res.status(500).json({
-        message: "Something went wrong, please try again later." + err,
+        message: "Erreur" + err,
       });
     });
 };
@@ -355,46 +364,35 @@ exports.getUserByEmail = (req, res) => {
     .then((user) => {
       if (user) {
         res.status(200).json({ user: user });
-      }
-      else res.status(200).json("pas de user");
+      } else res.status(200).json("Utilisateur non trouvé");
     })
     .catch((err) => {
-      console.log(err)
+      console.log(err);
       console.log("error");
       res.status(500).json({
-        message: "user not found",
+        message: "Erreur",
       });
     });
 };
 // delete member by id
 exports.deleteOneMember = (req, res) => {
-  DemandeParticipation.remove({ member: req.params.id }).then(() => {
-    User.findByIdAndRemove(req.params.id)
-      .then((user) => {
-        if (!user) {
-          return res.status(404).send({
-            message: "Member not found",
-          });
-        }
-        if (fs.existsSync(dir)) {
-          let files = fs.readdirSync(dir);
-          if (files.find((el)=>el.indexOf(user._id)!==-1)) {
-            file = files.find((el) => el.indexOf(user._id) !== -1);
-            fs.unlinkSync(dir+'/'+file,()=>{});
-          }
-        }
-        res.status(200).send({ message: "member deleted successfully!" });
-      })
-      .catch((err) => {
-        if (err.kind === "ObjectId" || err.name === "NotFound") {
-          return res.status(404).send({
-            message: "member not found",
-          });
-        }
-        return res.status(500).send({
-          message: "Could not delete member",
-        });
-      });
+  const idUser=req.params.id;
+  DemandeParticipation.remove({ member: idUser}).then(() => {
+    User.findByIdAndRemove(idUser)
+    .then((user) => {
+      user
+        .remove()
+        .then(() =>{ 
+          manageFiles.deleteFile(dir,idUser);
+          res.status(200).json({message:"Utilisateur supprimé avec succès"});
+        })
+        .catch((error) =>
+          res.status(500).json({ message: "Erreur serveur" + error })
+        );
+    })
+    .catch((error) =>
+      res.status(404).json({ message: "Utilisateur non trouvé" })
+    );
   });
 };
 
@@ -410,7 +408,7 @@ exports.acceptMember = (req, res) => {
     .then((user) => {
       if (!user) {
         return res.status(404).send({
-          message: "member not found",
+          message: "Utilisateur non trouvé",
         });
       }
       res.send(user);
@@ -418,125 +416,154 @@ exports.acceptMember = (req, res) => {
     .catch((err) => {
       if (err.kind === "ObjectId") {
         return res.status(404).send({
-          message: "member not found",
+          message: "Utilisateur non trouvé",
         });
       }
       return res.status(500).send({
-        message: "Error updating accepted ",
+        message: "Erreur",
       });
     });
-};
-
-exports.getAllImagesLinksOfUsers = (req, res, next) => {
-  let result = [];
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir);
-  }
-  let files = fs.readdirSync(dir);
-  let tableOfId = [];
-  files.forEach((element) => {
-    tableOfId.push(element.split(".")[0]);
-    result.push({
-      _id: element.split(".")[0],
-      urlImage:
-        `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}` +
-        "/api/user/app/images/" +
-        element,
-    });
-  });
-  User.find({ accepted: true, confirm: true, _id: { $nin: tableOfId } })
-    .select({ _id: 1, urlImage: 1 })
-    .then((users) => {
-      users.forEach((element) => {
-        if (element.urlImage) {
-          let data = element.urlImage;
-          let buff = Buffer.from(data.split(";base64,")[1], "base64");
-          let extension = data.split(";base64,")[0].split("/")[1];
-          let fileName = dir + "/" + element._id + "." + extension;
-          fs.writeFileSync(fileName, buff);
-          const file = element._id + "." + extension;
-          result.push({
-            _id: element._id,
-            urlImage:
-              `${
-                process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"
-              }` +
-              "/api/user/app/images/" +
-              file,
-          });
-        } else {
-          result.push({
-            _id: element._id,
-            urlImage: "",
-          });
-        }
-      });
-      return res.status(200).json(result);
-    })
-    .catch((error) => res.status(400).json({ message: "Users not found" }));
 };
 
 exports.getImageByNom = (req, res) => {
-  let nomImage = req.params.nomImage;
-  let files = fs.readdirSync(dir);
-  if (!files.includes(nomImage)) {
+  let urlImage=manageFiles.getFileByNom(dir,req.params.nomImage);
+  if (!urlImage) {
     return res.status(404).json({ message: "Image n'existe pas!!" });
   }
-  return res.sendFile(directory + "/" + dir + "/" + nomImage);
+  return res.sendFile(urlImage);
+};
+//update user details
+
+exports.updateConnectedUser = (req, res) => {
+  const idUser = req.params.id;
+  const token = req.headers.authorization.split(" ")[1];
+  const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
+  const userId = decodedToken.userId;
+  if (userId !== idUser) {
+    return res.status(401).send({
+      message: "Vous n'êtes pas l'utilisateur connecté",
+    });
+  } else {
+    User.findById(idUser)
+      .then((user) => {
+        user.firstName = req.body.firstName;
+        user.lastName = req.body.lastName;
+        user.adress = req.body.adress;
+        user.tel = req.body.tel;
+        user
+          .save()
+          .then(() =>{ 
+          commentCtrl.updateCommentsOfMember(user._id,"",user.firstName + " " + user.lastName );
+          res.status(200).json({message:"Votre compte a été modifié avec succès"});
+           })
+          .catch((error) =>
+            res.status(500).json({ message: "Erreur serveur" + error })
+          );
+      })
+      .catch((error) =>
+        res.status(404).json({ message: "Utilisateur non trouvé" })
+      );
+  }
 };
 
-exports.createImagesOfUsers = () => {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir);
+exports.updatePassword = (req, res, next) => {
+  const idUser = req.params.id;
+  const token = req.headers.authorization.split(" ")[1];
+  const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
+  const userId = decodedToken.userId;
+  if (userId !== idUser) {
+    return res.status(401).send({
+      message: "Vous n'êtes pas l'utilisateur connecté",
+    });
+  } else {
+    User.findById(idUser)
+      .then((user) => {
+        bcrypt
+          .compare(req.body.oldPassword, user.password)
+          .then((valid) => {
+            if (!valid) {
+              return res.status(404).json({
+                error: "Veuillez entrer votre mot de passe courant correctement !",
+              });
+            }
+
+            bcrypt.hash(req.body.newPassword, 10).then((hash) => {
+              user.password = hash;
+              user
+                .save()
+                .then(() => res.status(200).json({message:"Votre mot de passe a été modifié avec succès"}))
+                .catch((error) =>
+                  res.status(500).json({ message: "Erreur serveur" + error })
+                );
+            });
+          })
+          .catch((error) => res.status(500).json({ error }));
+      })
+      .catch((error) =>
+        res.status(404).json({ message: "Utilisateur non trouvé" })
+      );
   }
-  let files = fs.readdirSync(dir);
-  let tableOfId = [];
-  files.forEach((element) => {
-    tableOfId.push(element.split(".")[0]);
-  });
-  User.find({ accepted: true, confirm: true, _id: { $nin: tableOfId } })
-    .select({ _id: 1, urlImage: 1 })
-    .then((users) => {
-      users.forEach((element) => {
-        if (element.urlImage) {
-          let data = element.urlImage;
-          let buff = Buffer.from(data.split(";base64,")[1], "base64");
-          let extension = data.split(";base64,")[0].split("/")[1];
-          let fileName = dir + "/" + element._id + "." + extension;
-          fs.writeFileSync(fileName, buff);
-        }
+};
+
+
+exports.getConnectedUserdetails = (req, res) => {
+  User.findById(req.params.id)
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send({
+          message: "Utilisateur non trouvé",
+        });
+      }
+      res.send(user);
+    })
+    .catch((err) => {
+      if (err.kind === "ObjectId") {
+        return res.status(404).send({
+          message: "Utilisateur non trouvé",
+        });
+      }
+      return res.status(500).send({
+        message: "Erreur serveur",
       });
     });
 };
 
-function getImageFromDossierImagesAndCreateItIfNotExist(id, base64) {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir);
-  }
-  let files = fs.readdirSync(dir);
-  let file;
-  let urlImage;
-  if (files.find((el)=>el.indexOf(id)!==-1)) {
-    file = files.find((el) => el.indexOf(id) !== -1);
-    urlImage =
-      `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}` +
-      "/api/user/app/images/" +
-      file;
-  } else {
-    if (base64) {
-      let buff = Buffer.from(base64.split(";base64,")[1], "base64");
-      let extension = base64.split(";base64,")[0].split("/")[1];
-      let fileName = dir + "/" + id + "." + extension;
-      fs.writeFileSync(fileName, buff);
-      file = id + "." + extension;
-      urlImage =
-        `${process.env.SERVER_BACKEND_ADDRESS || "http://localhost:3000"}` +
-        "/api/user/app/images/" +
-        file;
-    } else {
-      urlImage = "";
-    }
-  }
 
-  return urlImage;
-}
+exports.updateConnectedUserImage = (req, res) => {
+  const idUser = req.params.id;
+  const token = req.headers.authorization.split(" ")[1];
+  const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
+  const userId = decodedToken.userId;
+  if (userId !== idUser) {
+    return res.status(401).send({
+      message: "Vous n'êtes pas l'utilisateur connecté",
+    });
+  } else {
+    User.findById(idUser)
+      .then((user) => {
+        let urlImage= req.body.newurlImage;
+        if(req.body.newurlImage){
+          if (req.body.newurlImage.indexOf("base64")!==-1) {
+          
+           urlImage=manageFiles.createFile(dir,req.body.newurlImage,user._id,
+            "/api/user/app/images/");
+          user.urlImage=urlImage;
+          }
+          else{
+            user.urlImage=req.body.newurlImage;
+          }
+        }
+        user.save()
+        .then(() => {
+          commentCtrl.updateCommentsOfMember(user._id,urlImage,null);
+          res.status(200).json({message:"Votre image a été modifié avec succès",urlImage:urlImage})
+        })
+        .catch((error) =>
+          res.status(500).json({ message: "Erreur serveur" + error })
+        );
+      })
+      .catch((error) =>
+        res.status(404).json({ message: "Utilisateur non trouvé" })
+      );
+  }
+};

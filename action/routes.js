@@ -4,7 +4,7 @@ const ActionCtrl = require("./controller/actionController");
 const auth = require("../config/middleware/auth");
 const permit = require("../config/middleware/authorization");
 router.post("/addAction", auth, permit("admin"), ActionCtrl.addAction);
-router.get("/allActions", ActionCtrl.getAllActions);
+router.get("/allActions", auth, permit("membre", "admin"), ActionCtrl.getAllActions);
 router.get(
   "/action/:id",
   auth,
@@ -29,4 +29,14 @@ router.delete(
   permit("admin"),
   ActionCtrl.deleteOneAction
 );
+
+router.get(
+  "/actionDetailsWithoutPhoto/:id",
+  auth,
+  permit("membre", "admin"),
+  ActionCtrl.getActionWithoutPhoto
+);
+router.get("/app/images/:nomImage", ActionCtrl.getImageByNom);
+router.get("/getAllPublishedActions", ActionCtrl.getAllPublishedActions);
+
 module.exports = router;

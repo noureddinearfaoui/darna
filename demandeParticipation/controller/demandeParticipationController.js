@@ -5,15 +5,24 @@ exports.addDemande = (req, res, next) => {
   let idUser = req.params.idUser;
 
   let idAction = req.params.idAction;
-  User.findById(idUser)
+  User.findById(idUser).select({ _id:1,email: 1, firstName: 1, lastName:1,adress:1, tel:1,dateOfBirth:1,confirm:1,
+    banni:1,accepted:1 ,renewal:1 ,role:1 })
     .then((user) => {
-      Action.findById(idAction)
+      Action.findById(idAction).select({ _id:1, actionName: 1, description: 1, location:1,beginDate:1, endDate:1,beginDateInscription:1,endDateInscription:1,
+        numberOfMembers:1,isPublished:1 })
         .then((action) => {
           const demande = new DemandeParticipation({
             member: user,
             action: action,
           });
-
+          DemandeParticipation.findOne({action:idAction,member:idUser})
+          .then((existdemande)=>{
+        if(existdemande){
+          return res.status(404).send({
+            message: "Demande existe déjà",
+          });
+        }  
+        else{ 
           demande
             .save()
             .then(
@@ -21,9 +30,15 @@ exports.addDemande = (req, res, next) => {
                 demande.member = demande.member._id;
                 demande.action = demande.action._id;
                 res.status(200).json(demande);
-            }).catch((error) =>
+            })
+            .catch((error) =>
               res.status(500).json({ message: "error server" + error })
             );
+          }
+             })
+            .catch((error) =>
+            res.status(404).json({ message: "demande Non trouvé" })
+          );
         })
         .catch((error) =>
           res.status(404).json({ message: "action Non trouvé" })

@@ -11,7 +11,7 @@ module.exports = (...permittedRoles) => {
       const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
       const userId = decodedToken.userId;
 
-      User.findById(userId)
+      User.findById(userId).select({email:1,role:1})
         .then((user) => {
           if (user) {
             if (permittedRoles.includes(user.role)) {

@@ -5,17 +5,27 @@ const config = require("./config/bd");
 
 // import métier
 const userRoutes = require("./user/routes");
-const roleRoutes = require("./role/routes");
 const ActionRouts = require("./action/routes");
 const DemandeParticipationRoutes = require("./demandeParticipation/routes");
 const CommentRoutes = require("./comment/routes");
+const helpRoutes= require("./section/helpRoutes");
+const homeRoutes=require("./section/homeRoutes");
+const sponsorRoutes=require("./section/sponsorRoutes")
+const productRoutes=require("./section/productRoutes")
+const docLinkRoutes=require("./section/docLinkRoutes")
+const donationRoutes=require("./section/donationRoutes")
+const projectRoutes=require("./section/projectRoutes");
+const contactRoutes=require("./section/contactRoutes");
 const NotificationRoutes = require("./notification/routes");
+const staffRoutes=require("./section/staffRoutes")
+const messageRoutes=require("./section/messageRoutes")
+
 var cors = require("cors");
 const NotifCtrl = require("./notification/controller/notificationController");
 //connexion base de donneés
 config.connectMongodb;
 const app = express();
-//setInterval(()=>{ NotifCtrl.nearbyEvents() }, 300000);
+
 app.use(cors());
 // Cross Origin Resource Sharing(pour éviter CORS)
 app.use((req, res, next) => {
@@ -37,10 +47,19 @@ app.use(bodyParser.json());
 
 //middleware user
 app.use("/api/user", userRoutes);
-
 app.use("/api/action", ActionRouts);
 app.use("/api/demandeParticipation", DemandeParticipationRoutes);
 app.use("/api/Comment", CommentRoutes);
 app.use("/api/notification", NotificationRoutes);
+app.use("/api/help", helpRoutes);
+app.use("/api/home", homeRoutes);
+app.use("/api/sponsor", sponsorRoutes);
+app.use("/api/product", productRoutes);
+app.use("/api/docLink", docLinkRoutes);
+app.use("/api/project", projectRoutes);
+app.use("/api/donation",donationRoutes)
+app.use("/api/contact",contactRoutes);
+app.use("/api/staff",staffRoutes);
+app.use("/api/message",messageRoutes);
 
 module.exports = app;
