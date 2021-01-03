@@ -186,6 +186,62 @@ exports.deleteNotification = (req, res) => {
       });
     });
 };
+exports.personNotRenwal  = () => {
+  console.log("personrenw")
+  let date = new Date(); 
+  let datTemp ;
+  let bol ;
+  let nbOfPersonne =0;
+  User.find({role : {$ne :'admin'}})
+      . select({__id:1,renewal:1})
+      .then(users=>{
+       
+        console.log(date.getFullYear());
+        users.forEach(user=>{
+           console.log(user.renewal)
+           bol =false;
+
+           user.renewal.forEach(dateRenewal=>{
+             datTemp = new Date(dateRenewal)
+             console.log(datTemp.getFullYear())
+             if(datTemp.getFullYear()==date.getFullYear())
+              bol=true;
+           })
+           if(bol)
+            nbOfPersonne++;
+        })
+        if(nbOfPersonne>0)
+        {console.log("jj")
+        User.findOne({role : 'admin'})
+            . select({__id:1,firstName:1})
+            .then(user=>{
+       
+        notification = new Notification({
+          title:`Renouvellement `,
+          Date: new Date(),
+          description: `${nbOfPersonne} qui n'ont pas renouveller leur abonnement`,
+          receiver:user.__id,
+          typeNotification:'a'
+        });
+        console.log(user)
+        
+        notification
+            .save()
+            .then(() => {
+            })
+            .catch((error) =>
+              console.log(error)
+            );
+            console.log(nbOfPersonne)
+           
+          })
+          .catch((error)=> console.log(error));
+          }
+        
+      
+      })
+      .catch((error)=> console.log(error));
+}
 
 exports.nearbyEvents  = () => {
  
@@ -195,31 +251,43 @@ exports.nearbyEvents  = () => {
   Action.find({beginDate : {$gt :date}})
   . select({__id:1,numberOfMembers:1,beginDate:1,actionName:1})
   .then((data)=>{
-    //console.log(el._id)
+    console.log(data)
         
      data.forEach((el)=>{
+      //console.log(el)
     
       DemandeParticipation.find({action:el._id})
       .populate()
       .then((reslt)=>{
-        //console.log(reslt)
-        notification = new Notification({
-          title:"Le nombre de membre est manquant ",
-          Date: new Date(),
-          description: `il y a encore des places vides pour l'evenement ${el.actionName}`,
-          receiver:null,
-          typeNotification:'a'
-        });
+        console.log(el.numberOfMembers)
+        console.log(reslt.length)
+        if(el.numberOfMembers>reslt.length)
+        {console.log("notifier")
+        User.findOne({role : 'admin'})
+            . select({__id:1,firstName:1})
+            .then(user=>{
+                      notification = new Notification({
+                      title:"Le nombre de membre est manquant ",
+                      Date: new Date(),
+                     description: `il y a encore des places vides pour l'evenement ${el.actionName}`,
+                     receiver:user.__id,
+                     typeNotification:'a'
+                     });
         
         
-        notification
-            .save()
-            .then(() => {
-            })
-            .catch((error) =>
-              console.log(error)
-            );
-    
+                         notification
+                         .save()
+                         .then(() => {
+                         })
+                        .catch((error) =>
+                       console.log(error)
+                       );
+             })
+             .catch((error) =>
+                       console.log(error)
+                       );
+           }
+              
       })
      })
    //es.status(200).send(data);
