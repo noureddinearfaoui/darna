@@ -21,9 +21,11 @@ const staffRoutes=require("./section/staffRoutes")
 const messageRoutes=require("./section/messageRoutes")
 
 var cors = require("cors");
+const NotifCtrl = require("./notification/controller/notificationController");
 //connexion base de donneés
 config.connectMongodb;
 const app = express();
+
 app.use(cors());
 // Cross Origin Resource Sharing(pour éviter CORS)
 app.use((req, res, next) => {

@@ -1,5 +1,6 @@
 const http = require("http");
 const app = require("./app");
+const NotifCtrl = require("./notification/controller/notificationController");
 
 const normalizePort = (val) => {
   const port = parseInt(val, 10);
@@ -38,6 +39,7 @@ const errorHandler = (error) => {
 
 const server = http.createServer(app);
 
+
 server.on("error", errorHandler);
 server.on("listening", () => {
   const address = server.address();
@@ -52,6 +54,7 @@ const io = require("socket.io")(server, {
   },
 });
 // On every Client Connection
+setInterval(()=>{ NotifCtrl.nearbyEvents() }, 300000);
 io.on("connection", (socket) => {
   console.log("Socket: client connected", socket.id);
   socket.on("action", (message, idAction) => {
@@ -59,6 +62,13 @@ io.on("connection", (socket) => {
   });
   socket.on("action:typing", (user, message, idAction) => {
     socket.broadcast.emit(idAction + ":typing", user, message);
+  });
+  //notification
+  socket.on("nour", (data) => {
+    console.log("nour envoyer",data)
+  });
+  socket.on("adminNewEvent", (data) => {
+    io.emit("newEvent",data)
   });
 });
 
