@@ -32,7 +32,7 @@ router.get(
   NotifCtrl.nearbyEvents
 );
 router.get(
-  "/test/:id",
+  "/seenNotification/:id",
   NotifCtrl.updateSeenForAllNotificateUser
 );
 router.get(

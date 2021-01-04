@@ -50,6 +50,7 @@ exports.addNotificationActionToAllUser = (req, res, next) => {
               title:"Nouvelle Action ",
               Date: new Date(),
               description: `Chèrs membres on vous informe que tarna va lancer une action ${action.actionName} qui va démarrer le ${action.beginDate} pour plus de détails consulter le site`,
+              lien:`accueil/details-action/${action._id}`,
               receiver:user,
               typeNotification:'m'
             });
@@ -165,7 +166,7 @@ exports.updateSeen = (req, res) => {
     });
 };
 exports.updateSeenForAllNotificateUser = (req, res) => {
-  console.log(req.params)
+ 
   Notification.updateMany({receiver: req.params.id}, {"$set":{seen: true}})
     .then((notification) => {
       res.status(200).send({ message: "suceess" });
@@ -203,7 +204,7 @@ exports.deleteNotification = (req, res) => {
     });
 };
 exports.personNotRenwal  = () => {
-  console.log("personrenw")
+  //console.log("personrenw")
   let date = new Date(); 
   let datTemp ;
   let bol ;
@@ -212,34 +213,54 @@ exports.personNotRenwal  = () => {
       . select({__id:1,renewal:1})
       .then(users=>{
        
-        console.log(date.getFullYear());
+       // console.log(date.getFullYear());
         users.forEach(user=>{
-           console.log(user.renewal)
+           //console.log(user.renewal)
            bol =false;
 
            user.renewal.forEach(dateRenewal=>{
              datTemp = new Date(dateRenewal)
-             console.log(datTemp.getFullYear())
+             //console.log(datTemp.getFullYear())
              if(datTemp.getFullYear()==date.getFullYear())
               bol=true;
            })
            if(bol)
-            nbOfPersonne++;
+            {nbOfPersonne++;
+            
+              notification = new Notification({
+                title:`Renouvellement `,
+                Date: new Date(),
+                description: `vous devez renouveller votre abonnement`,
+                lien:'gerermembres/list',
+                receiver:user,
+                typeNotification:'m'
+              });
+              //console.log(user)
+              
+              notification
+                  .save()
+                  .then(() => {
+                  })
+                  .catch((error) =>
+                    console.log(error)
+                  );
+            }
         })
         if(nbOfPersonne>0)
-        {console.log("jj")
+        {
         User.findOne({role : 'admin'})
             . select({__id:1,firstName:1})
-            .then(user=>{
+            .then(admin=>{
        
         notification = new Notification({
           title:`Renouvellement `,
           Date: new Date(),
           description: `${nbOfPersonne} qui n'ont pas renouveller leur abonnement`,
-          receiver:user,
+          lien:'gerer-membres/list',
+          receiver:admin,
           typeNotification:'a'
         });
-        console.log(user)
+       // console.log(admin)
         
         notification
             .save()
@@ -248,7 +269,7 @@ exports.personNotRenwal  = () => {
             .catch((error) =>
               console.log(error)
             );
-            console.log(nbOfPersonne)
+            //console.log(nbOfPersonne)
            
           })
           .catch((error)=> console.log(error));
@@ -262,12 +283,12 @@ exports.personNotRenwal  = () => {
 exports.nearbyEvents  = () => {
  
    let date = new Date(); 
-   console.log('ner')
+  // console.log('ner')
 
   Action.find({beginDate : {$gt :date}})
   . select({__id:1,numberOfMembers:1,beginDate:1,actionName:1})
   .then((data)=>{
-    console.log(data)
+   // console.log(data)
         
      data.forEach((el)=>{
       //console.log(el)
@@ -275,10 +296,10 @@ exports.nearbyEvents  = () => {
       DemandeParticipation.find({action:el._id})
       .populate()
       .then((reslt)=>{
-        console.log(el.numberOfMembers)
-        console.log(reslt.length)
+       // console.log(el.numberOfMembers)
+        //console.log(reslt.length)
         if(el.numberOfMembers>reslt.length)
-        {console.log("notifier")
+        {//console.log("notifier")
         User.findOne({role : 'admin'})
             . select({__id:1,firstName:1})
             .then(user=>{
@@ -286,6 +307,7 @@ exports.nearbyEvents  = () => {
                       title:"Le nombre de membre est manquant ",
                       Date: new Date(),
                      description: `il y a encore des places vides pour l'evenement ${el.actionName}`,
+                     lien:"gerer-actions/list",
                      receiver:user,
                      typeNotification:'a'
                      });
