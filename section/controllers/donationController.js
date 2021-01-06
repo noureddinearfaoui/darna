@@ -42,7 +42,7 @@ exports.manageDonation = (req, res) => {
           );
         }
         else{
-          res.status(403).json({ message: "Ajout interdit"})
+          res.status(400).json({ message: "Ajout interdit"})
         }
         
          })
