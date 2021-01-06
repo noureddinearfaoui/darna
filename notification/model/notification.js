@@ -13,6 +13,10 @@ const NotificationSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    seenDetails: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
