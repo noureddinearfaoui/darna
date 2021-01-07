@@ -49,7 +49,7 @@ exports.addNotificationActionToAllUser = (req, res, next) => {
              notification = new Notification({
               title:"Nouvelle Action ",
               Date: new Date(),
-              description: `Chèrs membres on vous informe que tarna va lancer une action ${action.actionName} qui va démarrer le ${action.beginDate} pour plus de détails consulter le site`,
+              description: `Chèrs membres on vous informe que Darna va lancer une action ${action.actionName} qui va démarrer le ${action.beginDate} pour plus de détails consulter le site`,
               lien:`accueil/details-action/${action._id}`,
               receiver:user,
               typeNotification:'m'
