@@ -49,7 +49,7 @@ app.use(bodyParser.json());
 app.use("/api/user", userRoutes);
 app.use("/api/action", ActionRouts);
 app.use("/api/demandeParticipation", DemandeParticipationRoutes);
-app.use("/api/Comment", CommentRoutes);
+app.use("/api/comment", CommentRoutes);
 app.use("/api/notification", NotificationRoutes);
 app.use("/api/help", helpRoutes);
 app.use("/api/home", homeRoutes);

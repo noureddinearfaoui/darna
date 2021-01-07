@@ -1,8 +1,8 @@
-const UserController = require ("../../user/controller/userController");
 const User = require("../../user/model/user");
 const Action = require("../../action/model/action");
 const Comment = require("../../comment/model/comment");
-
+const dir = "uploads/comments";
+const manageFiles = require("../../config/manageFiles");
 
 exports.addComment = (req, res, next) => {
   let idUser = req.body.member;
@@ -12,10 +12,14 @@ exports.addComment = (req, res, next) => {
     .then((user) => {
       Action.findById(idAction)
         .then((action) => {
+          let message=req.body.message;
+          if(req.body.typeMessage==="image"){
+            message=manageFiles.createFile(dir,message,Date.now(),"/api/comment/app/images/");
+          }
           const comment = new Comment({
             date: req.body.date,
             typeMessage: req.body.typeMessage,
-            message: req.body.message,
+            message: message,
             nameOfSender: user.firstName +" "+ user.lastName,
             urlImageOfSender: user.urlImage,
             member: user,
@@ -76,3 +80,11 @@ exports.updateCommentsOfMember = (idUser,urlImageOfSender, nameOfSender)=>{
     console.log(err)
   });
 }
+
+exports.getImageByNom = (req, res) => {
+  let urlImage=manageFiles.getFileByNom(dir,req.params.nomImage);
+  if (!urlImage) {
+    return res.status(404).json({ message: "Image n'existe pas!!" });
+  }
+  return res.sendFile(urlImage);
+};

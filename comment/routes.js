@@ -15,5 +15,5 @@ router.get(
   permit("admin", "membre"),
   commentCtrl.getAllCommentsByAction
 );
-
+router.get("/app/images/:nomImage", commentCtrl.getImageByNom);
 module.exports = router;

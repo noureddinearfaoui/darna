@@ -3,7 +3,7 @@ const CommentSchema = mongoose.Schema(
   {
     date: { type: Date, default: new Date() },
     typeMessage: { type: String, required: true, default: "text" },
-    message: { type: String, required: true },
+    message: { type: String },
     member: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
