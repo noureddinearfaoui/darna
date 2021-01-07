@@ -49,11 +49,17 @@ router.get(
   NotifCtrl.getNotificationAdmin
 );
 
-router.put(
+router.get(
   "/updateSeen/:idNotif",
   auth,
   permit("admin", "membre"),
   NotifCtrl.updateSeen
+);
+router.get(
+  "/seenNotification/:id",
+  auth,
+  permit("admin", "membre"),
+  NotifCtrl.updateSeenForAllNotificateUser
 );
 
 router.delete(
