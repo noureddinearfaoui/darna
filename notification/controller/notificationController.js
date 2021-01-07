@@ -76,6 +76,8 @@ exports.addNotificationActionToAllUser = (req, res, next) => {
     .catch((error) => res.status(404).json({ message: "action non trouvé" }));
 };
 
+
+
 exports.getNotification = (req, res) => {
   Notification.findById(req.params.idNotif)
     .then((notification) => {
