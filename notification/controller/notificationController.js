@@ -76,6 +76,8 @@ exports.addNotificationActionToAllUser = (req, res, next) => {
     .catch((error) => res.status(404).json({ message: "action non trouvé" }));
 };
 
+
+
 exports.getNotification = (req, res) => {
   Notification.findById(req.params.idNotif)
     .then((notification) => {
@@ -96,8 +98,9 @@ exports.getNotificationToAUser = (req, res) => {
  let idUser= req.params.id ; 
 
   Notification.find({receiver:idUser})
+  .sort({date:-1})
     .then((notifications) => {
-      
+      console.log(notifications)
       res.status(200).json(notifications);
     })
     .catch((err) => {
@@ -111,6 +114,7 @@ exports.getNotificationAdmin = (req, res) => {
   
  
    Notification.find({typeNotification:'a'})
+   .sort({date:-1})
      .then((notifications) => {
        
        res.status(200).json(notifications);
@@ -126,7 +130,7 @@ exports.getNotificationAdmin = (req, res) => {
 exports.getAllNotifications = (req, res) => {
   //console.log("hi")
   Notification.find()
-    .sort({ date: 1 })
+    .sort({date:-1 })
     .then((notifications) => {
       
       res.status(200).json(notifications);
@@ -203,12 +207,12 @@ exports.deleteNotification = (req, res) => {
     });
 };
 exports.personNotRenwal  = () => {
-  //console.log("personrenw")
+  console.log("personrenw")
   let date = new Date(); 
   let datTemp ;
   let bol ;
   let nbOfPersonne =0;
-  User.find({role : {$ne :'admin'}})
+  User.find({role : {$ne :'admin'},accepted :true,confirm:true})
       . select({__id:1,renewal:1})
       .then(users=>{
        
@@ -223,15 +227,14 @@ exports.personNotRenwal  = () => {
              if(datTemp.getFullYear()==date.getFullYear())
               bol=true;
            })
-           if(bol)
+           if(!bol)
             {nbOfPersonne++;
             
               notification = new Notification({
                 title:`Renouvellement `,
                 Date: new Date(),
-                description: `vous devez contacter l'admin pour  renouveller votre abonnement`,
+                description: `Vous devez contacter l'admin pour  renouveller votre abonnement`,
                 lien:'not',
-                lien:'gerermembres/list',
                 receiver:user,
                 typeNotification:'m'
               });
@@ -281,15 +284,17 @@ exports.personNotRenwal  = () => {
 }
 
 exports.nearbyEvents  = () => {
-  
+  console.log("jjjj")
  
    let date = new Date(); 
-  Action.find({beginDate : {$gt :date}})
-  . select({__id:1,numberOfMembers:1,beginDate:1,actionName:1})
+   let dateaux;
+  Action.find({endDateInscription : {$gte :date},beginDateInscription : {$lte :date}})
+  . select({__id:1,numberOfMembers:1,endDateInscription:1,actionName:1})
   .then((data)=>{        
      data.forEach((el)=>{
-      //console.log(el)
-    
+      dateaux=new Date(el.endDateInscription);
+      if(dateaux.getTime()-date.getTime()<604800000)
+      {console.log(el)
       DemandeParticipation.find({action:el._id})
       .populate()
       .then((reslt)=>{
@@ -299,11 +304,12 @@ exports.nearbyEvents  = () => {
         User.findOne({role : 'admin'})
             . select({__id:1,firstName:1})
             .then(user=>{
+              console.log(user)
                       notification = new Notification({
                       title:"Le nombre de membre est manquant ",
                       Date: new Date(),
-                     description: `il y a encore des places vides pour l'evenement ${el.actionName}`,
-                     lien:"gerer-actions/list",
+                     description: `Il y a encore des places vides pour l'evenement ${el.actionName}`,
+                     lien:`gerer-actions/details-action/${el._id}`,
                      receiver:user,
                      typeNotification:'a'
                      });
@@ -323,6 +329,7 @@ exports.nearbyEvents  = () => {
            }
               
       })
+    }
      })
    //es.status(200).send(data);
 
