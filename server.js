@@ -53,11 +53,9 @@ const io = require("socket.io")(server, {
     origin: "*",
   },
 });
-// On every Client Connection
-//setInterval(()=>{ NotifCtrl.nearbyEvents() }, 86400000);
+// On every Client Connection 86400000   604800000:renwal
+setInterval(()=>{ NotifCtrl.nearbyEvents() }, 86400000);
 setInterval(()=>{ NotifCtrl.personNotRenwal() }, 604800000);
-//setInterval(()=>{ NotifCtrl.addNotificationAfterAddAction("5fbbeedb1762261da0e11990") }, 3000);
-
 io.on("connection", (socket) => {
   console.log("Socket: client connected", socket.id);
   socket.on("action", (message, idAction) => {
@@ -66,10 +64,6 @@ io.on("connection", (socket) => {
   socket.on("action:typing", (user, message, idAction) => {
     socket.broadcast.emit(idAction + ":typing", user, message);
   });
-  //notification
-  /*socket.on("nour", (data) => {
-    console.log("nour envoyer",data)
-  });*/
   socket.on("adminNewEvent", (data) => {
     io.emit("newEvent",data)
   });
