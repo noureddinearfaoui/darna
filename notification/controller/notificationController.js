@@ -231,6 +231,7 @@ exports.personNotRenwal  = () => {
                 Date: new Date(),
                 description: `vous devez contacter l'admin pour  renouveller votre abonnement`,
                 lien:'not',
+                lien:'gerermembres/list',
                 receiver:user,
                 typeNotification:'m'
               });
@@ -283,23 +284,18 @@ exports.nearbyEvents  = () => {
   
  
    let date = new Date(); 
-   //console.log('ner')
-
   Action.find({beginDate : {$gt :date}})
   . select({__id:1,numberOfMembers:1,beginDate:1,actionName:1})
-  .then((data)=>{
-   //console.log(data)
-        
+  .then((data)=>{        
      data.forEach((el)=>{
       //console.log(el)
     
       DemandeParticipation.find({action:el._id})
       .populate()
       .then((reslt)=>{
-       //console.log(el.numberOfMembers)
         console.log(reslt.length)
-       // if(el.numberOfMembers>reslt.length)
-        {//console.log("notifier")
+        if(el.numberOfMembers>reslt.length)
+        {
         User.findOne({role : 'admin'})
             . select({__id:1,firstName:1})
             .then(user=>{

@@ -56,6 +56,7 @@ const io = require("socket.io")(server, {
 // On every Client Connection
 setInterval(()=>{ NotifCtrl.nearbyEvents() }, 604800000);
 setInterval(()=>{ NotifCtrl.personNotRenwal() }, 604800000);
+
 io.on("connection", (socket) => {
   console.log("Socket: client connected", socket.id);
   socket.on("action", (message, idAction) => {
