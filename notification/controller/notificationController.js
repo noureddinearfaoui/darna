@@ -286,7 +286,7 @@ exports.nearbyEvents  = () => {
  
    let date = new Date(); 
    let dateaux;
-  Action.find({endDateInscription : {$gt :date},beginDateInscription : {$lt :date}})
+  Action.find({endDateInscription : {$gte :date},beginDateInscription : {$lte :date}})
   . select({__id:1,numberOfMembers:1,endDateInscription:1,actionName:1})
   .then((data)=>{        
      data.forEach((el)=>{
