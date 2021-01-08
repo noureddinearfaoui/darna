@@ -16,8 +16,8 @@ exports.addMessage=(req,res)=>{
     const message=new Message({
        firstName:req.body.firstName,
        lastName: req.body.lastName,
-        email:req.body.email,
-        message:req.body.message,
+       email:req.body.email,
+       message:req.body.message,
     })
     message.save()
         .then(() => {

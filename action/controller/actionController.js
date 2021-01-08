@@ -1,8 +1,10 @@
 const Action = require("../model/action");
 const User = require("../../user/model/user");
 const DemandeParticipation = require("../../demandeParticipation/model/demandeParticipation");
+const Notification=require("../../notification/model/notification")
 const dir = "uploads/actions";
 const manageFiles = require("../../config/manageFiles");
+const Comment=require("../../comment/model/comment");
 require("dotenv").config();
 
 exports.addAction = (req, res, next) => {
@@ -128,6 +130,25 @@ exports.deleteOneAction = (req, res) => {
           .remove()
           .then(() =>{ 
             manageFiles.deleteFile(dir,idAction);
+            Notification.find({idAction:idAction})
+            .then((notifs)=>{
+              notifs.forEach((el)=>{
+              el.remove();
+              });
+            })
+            .catch((error)=>{
+            console.log(error);
+            });
+            Comment.find({action:idAction})
+            .then((cmts)=>{
+              cmts.forEach((el)=>{
+                manageFiles.deleteFile("uploads/comments",el.message.split("/")[el.message.split("/").length-1]);
+                el.remove();
+              });
+            })
+            .catch((error)=>{
+            console.log(error);
+            });
             res.status(200).json({message:"Action supprimée avec succès"});
           })
           .catch((error) =>
@@ -141,6 +162,7 @@ exports.deleteOneAction = (req, res) => {
   .catch((error) =>
         res.status(500).json({ message: "Erreur serveur" + error })
       );
+
 };
 
 // Find a single action

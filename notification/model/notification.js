@@ -5,12 +5,12 @@ const NotificationSchema = mongoose.Schema(
     date: { type: Date, default: new Date() },
     lien: { type: String, required: true },
     description: { type: String, required: true },
-    lien:{ type: String, required: true },
     typeNotification: { type: String, required: true },
     receiver: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+    idAction:{type: String},
     seen: {
       type: Boolean,
       default: false,

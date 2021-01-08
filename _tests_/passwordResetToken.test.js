@@ -1,8 +1,7 @@
 //npm test jest passwordResetToken.test.js : run one test file
 
-/*const supertest = require("supertest");
+const supertest = require("supertest");
 const app = require("../app");
-const mongoose = require("mongoose");
 
 test("forgot password", async () => {
   const data = {
@@ -15,4 +14,4 @@ test("forgot password", async () => {
     .then(async (response) => {
       expect(response.body.message).toBe("Email envoyé");
     });
-});*/
+});

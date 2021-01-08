@@ -26,20 +26,11 @@ exports.addNotification = (req, res, next) => {
     .catch((error) => res.status(404).json({ message: "Membre non trouvé" }));
 };
 exports.addNotificationActionToAllUser = (req, res, next) => {
-  //console.log(req.params)
   let idAction = req.params.id;
-  //console.log(idAction)
-
   Action.findById(idAction)
     . select({__id:1,beginDate:1,actionName:1})
     .then((action) => {
       
-    //  res.json(action)
-     /* const notification = new Notification({
-        title:"Nouvelle Action ",
-        Date: new Date(),
-        description: `Chèrs membres on vous informe que tarna va lancer une action qui va démarrer prochainement pour plus de détails consulter le site`,
-      });*/
         User.find({role : {$ne :'admin'}})
         . select({__id:1,email:1})
       .then(users=>{
@@ -48,14 +39,13 @@ exports.addNotificationActionToAllUser = (req, res, next) => {
           {
              notification = new Notification({
               title:"Nouvelle Action ",
-              Date: new Date(),
+              date: new Date(),
               description: `Chèrs membres on vous informe que Darna va lancer une action ${action.actionName} qui va démarrer le ${action.beginDate} pour plus de détails consulter le site`,
               lien:`accueil/details-action/${action._id}`,
+              idAction:action._id,
               receiver:user,
               typeNotification:'m'
             });
-            
-            //console.log(notification)
             notification
             .save()
             .then(() => {
@@ -215,15 +205,10 @@ exports.personNotRenwal  = () => {
   User.find({role : {$ne :'admin'},accepted :true,confirm:true})
       . select({__id:1,renewal:1})
       .then(users=>{
-       
-       // console.log(date.getFullYear());
         users.forEach(user=>{
-           //console.log(user.renewal)
            bol =false;
-
            user.renewal.forEach(dateRenewal=>{
              datTemp = new Date(dateRenewal)
-             //console.log(datTemp.getFullYear())
              if(datTemp.getFullYear()==date.getFullYear())
               bol=true;
            })
@@ -232,14 +217,12 @@ exports.personNotRenwal  = () => {
             
               notification = new Notification({
                 title:`Renouvellement `,
-                Date: new Date(),
+                date: new Date(),
                 description: `Vous devez contacter l'admin pour  renouveller votre abonnement`,
                 lien:'not',
                 receiver:user,
                 typeNotification:'m'
               });
-              //console.log(user)
-              
               notification
                   .save()
                   .then(() => {
@@ -257,14 +240,12 @@ exports.personNotRenwal  = () => {
        
         notification = new Notification({
           title:`Renouvellement `,
-          Date: new Date(),
+          date: new Date(),
           description: `${nbOfPersonne} qui n'ont pas renouveller leur  abonnement`,
           lien:'gerer-membres/list',
           receiver:admin,
           typeNotification:'a'
         });
-       // console.log(admin)
-        
         notification
             .save()
             .then(() => {
@@ -272,20 +253,14 @@ exports.personNotRenwal  = () => {
             .catch((error) =>
               console.log(error)
             );
-            //console.log(nbOfPersonne)
-           
           })
           .catch((error)=> console.log(error));
           }
-        
-      
       })
       .catch((error)=> console.log(error));
 }
 
 exports.nearbyEvents  = () => {
-  console.log("jjjj")
- 
    let date = new Date(); 
    let dateaux;
   Action.find({endDateInscription : {$gte :date},beginDateInscription : {$lte :date}})
@@ -307,14 +282,13 @@ exports.nearbyEvents  = () => {
               console.log(user)
                       notification = new Notification({
                       title:"Le nombre de membre est manquant ",
-                      Date: new Date(),
+                      date: new Date(),
                      description: `Il y a encore des places vides pour l'evenement ${el.actionName}`,
                      lien:`gerer-actions/details-action/${el._id}`,
+                     idAction:el._id,
                      receiver:user,
                      typeNotification:'a'
                      });
-        
-        
                          notification
                          .save()
                          .then(() => {
@@ -331,16 +305,5 @@ exports.nearbyEvents  = () => {
       })
     }
      })
-   //es.status(200).send(data);
-
   })
-
-  /*DemandeParticipation.find({action:'5fbbeedb1762261da0e11990'})
-  .populate()
-  .then((data)=>{
-    res.status(200).send(data);
-
-  })*/
-
-
 }

@@ -53,7 +53,7 @@ const io = require("socket.io")(server, {
     origin: "*",
   },
 });
-// On every Client Connection 86400000   604800000:renwal
+// On every Client Connection
 setInterval(()=>{ NotifCtrl.nearbyEvents() }, 86400000);
 setInterval(()=>{ NotifCtrl.personNotRenwal() }, 604800000);
 io.on("connection", (socket) => {
