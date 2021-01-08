@@ -60,7 +60,7 @@ exports.deleteSponsor = (req, res) => {
             .remove()
             .then(() =>{ 
               manageFiles.deleteFile(dir,idSponsor);
-              res.status(200).json({message:"sponsor supprimé avec succès"});
+              res.status(200).json({message:"Sponsor supprimé avec succès"});
             })
             .catch((error) =>
               res.status(500).json({ message: "Erreur serveur" + error })

@@ -24,7 +24,8 @@ test(" test addProject without wrong status", async () => {
         projectStatus: "fauxStatut",
         projectDescription: "test d'ajout d'un projet",
       };
-    await supertest(app).post("/api/project/addProject")
+    await supertest(app)
+    .post("/api/project/addProject")
     .send(data)
     .set("Authorization", "Bearer " + tokenAdmin)
     .expect(400)
@@ -37,7 +38,8 @@ test(" test addProject without wrong status", async () => {
     const data = {
         projectStatus: "future",
       };
-    await supertest(app).post("/api/project/addProject")
+    await supertest(app)
+    .post("/api/project/addProject")
     .send(data)
     .set("Authorization", "Bearer " + tokenAdmin)
     .expect(400)
