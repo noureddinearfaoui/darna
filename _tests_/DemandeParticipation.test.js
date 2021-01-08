@@ -1,11 +1,11 @@
-/*const supertest = require("supertest");
+const supertest = require("supertest");
 const app = require("../app");
 const tokenAdmin =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJkM2MyN2Y0ODAxZjFjNDBmNGI4YjAiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE2MDY2ODQzNzgsImV4cCI6MTYwNjc3MDc3OH0.8EjWXGXU17NUOqzU5V7zpyjDDl3NAYGw_NfnZXAZeTg";
 const tokenMembre =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmM0MjViNmMxN2EwNTM2ZjhmNzJmYmYiLCJyb2xlIjoibWVtYnJlIiwiaWF0IjoxNjA2NjkwNDc3LCJleHAiOjE2MDY3NzY4Nzd9.anRn-OUZHZ4uHvI_jgEzblTrSHr_Rz5KlNwbDIaIqKQ";
 
-/*test("add new request ", async () => {
+test("add new request ", async () => {
   await supertest(app)
     .get(
       "/api/demandeParticipation/addDemande/5fbc2c824958fa2154925495/5fbbeedb1762261da0e11990"
@@ -17,15 +17,15 @@ const tokenMembre =
       expect(response.body.status).toBe("attente");
       expect(response.body.participated).toBe(false);
     });
-});*/
+});
 
-/*test("Echec add new request with wrong idUser", async () => {
+test("Echec add new request with wrong idUser", async () => {
   await supertest(app)
     .get("/api/demandeParticipation/addDemande/123/5fbbeedb1762261da0e11990")
     .set("Authorization", "Bearer " + tokenMembre)
     .expect(404)
     .then((response) => {
-      expect(response.body.message).toBe("user Non trouvé");
+      expect(response.body.message).toBe("Utilisateur non trouvé");
     });
 });
 test("Echec add new request with wrong idAction", async () => {
@@ -34,7 +34,7 @@ test("Echec add new request with wrong idAction", async () => {
     .set("Authorization", "Bearer " + tokenMembre)
     .expect(404)
     .then((response) => {
-      expect(response.body.message).toBe("action Non trouvé");
+      expect(response.body.message).toBe("Action non trouvé");
     });
 });
 
@@ -48,7 +48,7 @@ test("update status of request ", async () => {
     .send(data)
     .expect(201)
     .then((response) => {
-      expect(response.body.message).toBe("Status updated");
+      expect(response.body.message).toBe("Status modifié");
     });
 });
 
@@ -62,7 +62,7 @@ test("Echec update status with wrong objectId form ", async () => {
     .expect(404)
     .send(data)
     .then((response) => {
-      expect(response.body.message).toBe("Demande not found");
+      expect(response.body.message).toBe("Demande non trouvée");
     });
 });
 
@@ -74,7 +74,7 @@ test("Echec update status of request that not exist and empty data", async () =>
     .expect(404)
     .send(data)
     .then((response) => {
-      expect(response.body.message).toBe("Demande not found");
+      expect(response.body.message).toBe("Demande non trouvée");
     });
 });
 
@@ -90,7 +90,7 @@ test("update participated  ", async () => {
     .send(data)
     .expect(201)
     .then((response) => {
-      expect(response.body.message).toBe("Participation updated");
+      expect(response.body.message).toBe("Participation modifiée");
     });
 });
 
@@ -104,7 +104,7 @@ test("Echec update participation with wrong objectId form ", async () => {
     .expect(404)
     .send(data)
     .then((response) => {
-      expect(response.body.message).toBe("Demande not found");
+      expect(response.body.message).toBe("Demande non trouvée");
     });
 });
 
@@ -116,7 +116,7 @@ test("Echec update participation of request that not exist and empty data", asyn
     .expect(404)
     .send(data)
     .then((response) => {
-      expect(response.body.message).toBe("Demande not found");
+      expect(response.body.message).toBe("Demande non trouvée");
     });
 });
 
@@ -138,7 +138,7 @@ test("echec participation requests by member ", async () => {
     .set("Authorization", "Bearer " + tokenAdmin)
     .expect(404)
     .then((response) => {
-      expect(response.body.message).toBe("User not found");
+      expect(response.body.message).toBe("Utilisateur non trouvé");
     });
 });
 
@@ -155,7 +155,7 @@ test("echec get requests by action ", async () => {
     .set("Authorization", "Bearer " + tokenAdmin)
     .expect(404)
     .then((response) => {
-      expect(response.body.message).toBe("Action not found");
+      expect(response.body.message).toBe("Action non trouvée");
     });
 });
 
@@ -201,7 +201,7 @@ test("echec get request by member and action ", async () => {
     .set("Authorization", "Bearer " + tokenAdmin)
     .expect(404)
     .then((response) => {
-      expect(response.body.message).toBe("wrong ObjectId Form");
+      expect(response.body.message).toBe("Forme incorrecte");
     });
 });
-*/
+

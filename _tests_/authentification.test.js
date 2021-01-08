@@ -1,4 +1,4 @@
-/*const supertest = require("supertest");
+const supertest = require("supertest");
 const app = require("../app");
 const mongoose = require("mongoose");
 const User = require("../user/model/user");
@@ -22,12 +22,12 @@ test("successful signup ", async () => {
     });
 });
 
-///// Test d'echec de signup
+// Test d'echec de signup
 test("The body of signup should not be empty", async () => {
   const data = {};
   await supertest(app).post("/api/user/signup").send(data).expect(400);
 });
-///// test de signup avec données incomplètes
+// test de signup avec données incomplètes
 test(" the body should contains all required fields", async () => {
   const data = {
     email: "aaaaa@gmail.com",
@@ -91,4 +91,4 @@ test("Echec SignIn with banned user", async () => {
       expect(response.body.error).toBe("vous êtes banni !");
     });
 });
-*/
+

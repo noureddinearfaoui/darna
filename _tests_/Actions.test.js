@@ -1,4 +1,4 @@
-/*const supertest = require("supertest");
+const supertest = require("supertest");
 const app = require("../app");
 const tokenAdmin =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJkM2MyN2Y0ODAxZjFjNDBmNGI4YjAiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE2MDY2ODQzNzgsImV4cCI6MTYwNjc3MDc3OH0.8EjWXGXU17NUOqzU5V7zpyjDDl3NAYGw_NfnZXAZeTg";
@@ -32,7 +32,7 @@ test("Echec get action details", async () => {
     .set("Authorization", "Bearer " + tokenAdmin)
     .expect(404)
     .then((response) => {
-      expect(response.body.message).toBe("Action not found ");
+      expect(response.body.message).toBe("Action non trouvée");
     });
 });
 
@@ -46,7 +46,7 @@ test("publish action ", async () => {
     .send(data)
     .expect(201)
     .then((response) => {
-      expect(response.body.message).toBe("Action published");
+      expect(response.body.message).toBe("Action publiée");
     });
 });
 
@@ -56,21 +56,21 @@ test("Echec publish action", async () => {
     .set("Authorization", "Bearer " + tokenAdmin)
     .expect(404)
     .then((response) => {
-      expect(response.body.message).toBe("Action not found");
+      expect(response.body.message).toBe("Action non trouvée");
     });
 });
 
-/*test("delete action ", async () => {
+test("delete action ", async () => {
   await supertest(app)
     .delete("/api/action/deleteAction/5fc42e233bda961b3c32857a")
     .set("Authorization", "Bearer " + tokenAdmin)
     .expect(200)
     .then((response) => {
-      expect(response.body.message).toBe("Action deleted successfully!");
+      expect(response.body.message).toBe("Action supprimée avec succès");
     });
-});*/
+});
 
-/*
+
 // test d'echec delete action
 test("echec delete action", async () => {
   await supertest(app)
@@ -78,7 +78,7 @@ test("echec delete action", async () => {
     .set("Authorization", "Bearer " + tokenAdmin)
     .expect(404)
     .then((response) => {
-      expect(response.body.message).toBe("Action not found");
+      expect(response.body.message).toBe("Action non trouvée");
     });
 
-});*/
+});

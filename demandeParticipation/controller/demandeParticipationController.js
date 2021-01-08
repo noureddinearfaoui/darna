@@ -32,19 +32,19 @@ exports.addDemande = (req, res, next) => {
                 res.status(200).json(demande);
             })
             .catch((error) =>
-              res.status(500).json({ message: "error server" + error })
+              res.status(500).json({ message: "Erreur serveur" + error })
             );
           }
              })
             .catch((error) =>
-            res.status(404).json({ message: "demande Non trouvé" })
+            res.status(404).json({ message: "Demande non trouvé" })
           );
         })
         .catch((error) =>
-          res.status(404).json({ message: "action Non trouvé" })
+          res.status(404).json({ message: "Action non trouvé" })
         );
     })
-    .catch((error) => res.status(404).json({ message: "user Non trouvé" }));
+    .catch((error) => res.status(404).json({ message: "Utilisateur non trouvé" }));
 };
 
 //update status
@@ -59,21 +59,21 @@ exports.updateStatus = (req, res) => {
     .then((demande) => {
       if (!demande) {
         return res.status(404).send({
-          message: "Demande not found",
+          message: "Demande non trouvée",
         });
       }
       res.status(201).send({
-        message: "Status updated",
+        message: "Status modifié",
       });
     })
     .catch((err) => {
       if (err.kind === "ObjectId") {
         return res.status(404).send({
-          message: "Demande not found",
+          message: "Demande non trouvée",
         });
       }
       return res.status(500).send({
-        message: "Error update status",
+        message: "Erreur",
       });
     });
 };
@@ -90,21 +90,21 @@ exports.updateParticipation = (req, res) => {
     .then((demande) => {
       if (!demande) {
         return res.status(404).send({
-          message: "Demande not found",
+          message: "Demande non trouvée",
         });
       }
       res.status(201).send({
-        message: "Participation updated",
+        message: "Participation modifiée",
       });
     })
     .catch((err) => {
       if (err.kind === "ObjectId") {
         return res.status(404).send({
-          message: "Demande not found",
+          message: "Demande non trouvée",
         });
       }
       return res.status(500).send({
-        message: "Error update Participation",
+        message: "Erreur",
       });
     });
 };
@@ -119,11 +119,11 @@ exports.getParticipationDemandesByMember = (req, res) => {
     .catch((err) => {
       if (err.kind === "ObjectId") {
         return res.status(404).send({
-          message: "User not found",
+          message: "Utilisateur non trouvé",
         });
       }
       return res.status(500).send({
-        message: "Server error",
+        message: "Erreur",
       });
     });
 };
@@ -138,11 +138,11 @@ exports.getDemandesByAction = (req, res) => {
     .catch((err) => {
       if (err.kind === "ObjectId") {
         return res.status(404).send({
-          message: "Action not found",
+          message: "Action non trouvée",
         });
       }
       return res.status(500).send({
-        message: "Server error",
+        message: "Erreur",
       });
     });
 };
@@ -159,11 +159,11 @@ exports.getDemandesByMemberAndAction = (req, res) => {
     .catch((err) => {
       if (err.kind === "ObjectId") {
         return res.status(404).send({
-          message: "wrong ObjectId Form",
+          message: "Forme incorrecte",
         });
       }
       return res.status(500).send({
-        message: "Server error",
+        message: "Erreur",
       });
     });
 };
@@ -178,11 +178,11 @@ exports.getAcceptedDemandesByAction = (req, res) => {
     .catch((err) => {
       if (err.kind === "ObjectId") {
         return res.status(404).send({
-          message: "wrong ObjectId Form",
+          message: "Forme incorrecte",
         });
       }
       return res.status(500).send({
-        message: "Server error",
+        message: "Erreur",
       });
     });
 };
