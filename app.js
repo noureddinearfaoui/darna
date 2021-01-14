@@ -23,7 +23,7 @@ const messageRoutes=require("./section/messageRoutes")
 var cors = require("cors");
 const NotifCtrl = require("./notification/controller/notificationController");
 //connexion base de donneés
-config.connectMongodb;
+let x=config.connectMongodb;
 const app = express();
 
 app.use(cors());

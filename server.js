@@ -3,13 +3,13 @@ const app = require("./app");
 const NotifCtrl = require("./notification/controller/notificationController");
 
 const normalizePort = (val) => {
-  const port = parseInt(val, 10);
+  const portNormalized = parseInt(val, 10);
 
-  if (isNaN(port)) {
+  if (isNaN(portNormalized)) {
     return val;
   }
-  if (port >= 0) {
-    return port;
+  if (portNormalized >= 0) {
+    return portNormalized;
   }
   return false;
 };

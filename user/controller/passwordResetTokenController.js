@@ -1,6 +1,5 @@
 const User = require("../model/user");
 const bcrypt = require("bcrypt");
-const user = require("../model/user");
 const email = require("../../config/email");
 const crypto = require("crypto");
 const passwordResetToken = require("../model/passwordResetToken");
@@ -74,8 +73,8 @@ exports.resetPassword = async (req, res) => {
     return res.status(404).json({ message: "Utilisateur non trouvé" });
   }
 
-  bcrypt.hash(req.body.newPassword, 10, (err, hash) => {
-    if (err) {
+  bcrypt.hash(req.body.newPassword, 10, (error, hash) => {
+    if (error) {
       return res
         .status(400)
         .json({ message: "Erreur de hashage du mot de passe" });

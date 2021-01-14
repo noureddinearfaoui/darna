@@ -215,7 +215,7 @@ exports.personNotRenwal  = () => {
            if(!bol)
             {nbOfPersonne++;
             
-              notification = new Notification({
+              let notification = new Notification({
                 title:`Renouvellement `,
                 date: new Date(),
                 description: `Vous devez contacter l'admin pour  renouveller votre abonnement`,
@@ -238,7 +238,7 @@ exports.personNotRenwal  = () => {
             . select({__id:1,firstName:1})
             .then(admin=>{
        
-        notification = new Notification({
+        let notification = new Notification({
           title:`Renouvellement `,
           date: new Date(),
           description: `${nbOfPersonne} qui n'ont pas renouveller leur  abonnement`,
@@ -280,7 +280,7 @@ exports.nearbyEvents  = () => {
             . select({__id:1,firstName:1})
             .then(user=>{
               console.log(user)
-                      notification = new Notification({
+                      let notification = new Notification({
                       title:"Le nombre de membre est manquant ",
                       date: new Date(),
                      description: `Il y a encore des places vides pour l'evenement ${el.actionName}`,

@@ -16,7 +16,7 @@ exports.createFile=(dir,base64,id,apiUrl)=>{
     let extension = data.split(";base64,")[0].split("/")[1];
     let fileName = dir + "/" + id + "." + extension;
     fs.writeFileSync(fileName, buff);
-    urlFile =host+apiUrl+id+"." +extension;
+    let urlFile =host+apiUrl+id+"." +extension;
     return urlFile;
 }
 
