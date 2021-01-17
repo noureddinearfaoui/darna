@@ -65,7 +65,7 @@ io.on("connection", (socket) => {
     socket.broadcast.emit(idAction + ":typing", user, message);
   });
   socket.on("adminNewEvent", (data) => {
-    io.emit("newEvent",data)
+    socket.broadcast.emit("newEvent",data)
   });
 });
 
