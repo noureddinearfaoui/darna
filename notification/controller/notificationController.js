@@ -40,7 +40,7 @@ exports.addNotificationActionToAllUser = (req, res, next) => {
              notification = new Notification({
               title:"Nouvelle Action ",
               date: new Date(),
-              description: `Chèrs membres on vous informe que Darna va lancer une action ${action.actionName} qui va démarrer le ${action.beginDate} pour plus de détails consulter le site`,
+              description: `Chers membres on vous informe que Darna va lancer une action <strong>${action.actionName}</strong> qui va démarrer le <strong> ${formatDate(action.beginDate)} </strong>.<br> Pour plus de détails cliquez ici`,
               lien:`accueil/details-action/${action._id}`,
               idAction:action._id,
               receiver:user,
@@ -90,7 +90,6 @@ exports.getNotificationToAUser = (req, res) => {
   Notification.find({receiver:idUser})
   .sort({date:-1})
     .then((notifications) => {
-      console.log(notifications)
       res.status(200).json(notifications);
     })
     .catch((err) => {
@@ -118,7 +117,6 @@ exports.getNotificationAdmin = (req, res) => {
  };
 
 exports.getAllNotifications = (req, res) => {
-  //console.log("hi")
   Notification.find()
     .sort({date:-1 })
     .then((notifications) => {
@@ -218,7 +216,7 @@ exports.personNotRenwal  = () => {
               let notification = new Notification({
                 title:`Renouvellement `,
                 date: new Date(),
-                description: `Vous devez contacter l'admin pour  renouveller votre abonnement`,
+                description: `Vous devez contacter l'admin pour renouveller votre abonnement`,
                 lien:'not',
                 receiver:user,
                 typeNotification:'m'
@@ -239,9 +237,9 @@ exports.personNotRenwal  = () => {
             .then(admin=>{
        
         let notification = new Notification({
-          title:`Renouvellement `,
+          title:`Renouvellement`,
           date: new Date(),
-          description: `${nbOfPersonne} qui n'ont pas renouveller leur  abonnement`,
+          description: `Vous devez renouveller l'abonnement de <strong>${nbOfPersonne} membres<strong>.`,
           lien:'gerer-membres/list',
           receiver:admin,
           typeNotification:'a'
@@ -269,21 +267,19 @@ exports.nearbyEvents  = () => {
      data.forEach((el)=>{
       dateaux=new Date(el.endDateInscription);
       if(dateaux.getTime()-date.getTime()<604800000)
-      {console.log(el)
+      {
       DemandeParticipation.find({action:el._id})
       .populate()
       .then((reslt)=>{
-        console.log(reslt.length)
         if(el.numberOfMembers>reslt.length)
         {
         User.findOne({role : 'admin'})
             . select({__id:1,firstName:1})
             .then(user=>{
-              console.log(user)
                       let notification = new Notification({
-                      title:"Le nombre de membre est manquant ",
+                      title:"Le nombre de participants est manquant",
                       date: new Date(),
-                     description: `Il y a encore des places vides pour l'evenement ${el.actionName}`,
+                     description: `Il y a encore des places vides dans l'action ${el.actionName}`,
                      lien:`gerer-actions/details-action/${el._id}`,
                      idAction:el._id,
                      receiver:user,
@@ -306,4 +302,29 @@ exports.nearbyEvents  = () => {
     }
      })
   })
+}
+function formatDate(date) {
+  var d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = ''+ d.getFullYear(),
+      hour=''+d.getUTCHours(),
+      minute=''+d.getUTCMinutes();
+
+  if (month.length < 2) 
+  {
+    month = '0' + month;
+  }
+  if (day.length < 2) 
+  {
+    day = '0' + day;
+  }
+  if(hour.length<2){
+    hour='0'+hour;
+  }
+  if(minute.length<2){
+    minute='0'+minute;
+  }
+  let newFormat=[day, month,year ].join('-')+" "+hour+":"+minute;
+  return newFormat;
 }
