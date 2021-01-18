@@ -2,6 +2,7 @@ const User = require("../../user/model/user");
 const Notification = require("../../notification/model/notification");
 const Action = require("../../action/model/action");
 const DemandeParticipation = require("../../demandeParticipation/model/demandeParticipation");
+const crypto = require("crypto");
 
 exports.addNotification = (req, res, next) => {
   let idUser = req.body.receiver;
@@ -35,17 +36,19 @@ exports.addNotificationActionToAllUser = (req, res, next) => {
         . select({__id:1,email:1})
       .then(users=>{
         let notification=null;
+        let uniqueEventIdInSocket=crypto.randomBytes(16).toString("hex");
         users.forEach(user=>
           {
-             notification = new Notification({
-              title:"Nouvelle Action ",
-              date: new Date(),
-              description: `Chers membres on vous informe que Darna va lancer une action <strong>${action.actionName}</strong> qui va démarrer le <strong> ${formatDate(action.beginDate)} </strong>.<br> Pour plus de détails cliquez ici`,
-              lien:`accueil/details-action/${action._id}`,
-              idAction:action._id,
-              receiver:user,
-              typeNotification:'m'
-            });
+            notification = new Notification({
+            title:"Nouvelle Action",
+            date: new Date(),
+            description: `Chers membres on vous informe que Darna va lancer une action <strong>${action.actionName}</strong> qui va démarrer le <strong> ${formatDate(action.beginDate)} </strong>.<br> Pour plus de détails cliquez ici`,
+            lien:`accueil/details-action/${action._id}`,
+            idAction:action._id,
+            receiver:user,
+            typeNotification:'m',
+            uniqueEventIdInSocket:uniqueEventIdInSocket
+          });
             notification
             .save()
             .then(() => {
@@ -57,7 +60,7 @@ exports.addNotificationActionToAllUser = (req, res, next) => {
           })
           delete  notification.receiver;
 
-          res.status(200).json(notification);
+          res.status(200).json({uniqueEventIdInSocket:notification.uniqueEventIdInSocket});
 
        })
       .catch((error) => res.status(404).json({ message: "Membre non trouvé" }));

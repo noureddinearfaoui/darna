@@ -1,6 +1,7 @@
 const http = require("http");
 const app = require("./app");
 const NotifCtrl = require("./notification/controller/notificationController");
+const Notification=require('./notification/model/notification');
 
 const normalizePort = (val) => {
   const portNormalized = parseInt(val, 10);
@@ -65,7 +66,15 @@ io.on("connection", (socket) => {
     socket.broadcast.emit(idAction + ":typing", user, message);
   });
   socket.on("adminNewEvent", (data) => {
-    socket.broadcast.emit("newEvent",data)
+    Notification.find({
+      uniqueEventIdInSocket:data
+    }).then((notifications)=>{
+      notifications.forEach((el)=>{
+        socket.broadcast.emit("newEvent"+el.receiver._id,el);
+      });
+    }).catch(err=>{
+      console.log(err);
+    });    
   });
 });
 

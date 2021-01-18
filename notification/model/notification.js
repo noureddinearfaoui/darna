@@ -11,6 +11,7 @@ const NotificationSchema = mongoose.Schema(
       ref: "User",
     },
     idAction:{type: String},
+    uniqueEventIdInSocket:{type: String},
     seen: {
       type: Boolean,
       default: false,
