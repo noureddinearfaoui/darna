@@ -1,0 +1,233 @@
+{
+	"info": {
+		"_postman_id": "63864c77-ed16-4c0e-91ac-328fc121079f",
+		"name": "ActionTest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost/api/action/updateAction",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "id",
+						"value": "5fb8e9b92257660dd038d2ec",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"actionName\":\"updateName\",\r\n    \"description\": \"updateDescription\",\r\n    \"location\":\"updateLocation\",\r\n    \"beginDate\":\"2020-02-01\",\r\n    \"beginDateInscription\":\"2020-02-02\",\r\n    \"endDateInscription\":\"2020-02-01\",\r\n    \"numberOfMembers\":5,\r\n    \"isPublished\": false,\r\n    \"admin\":\"5fb6bc9204d7070017766560\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/api/action/updateAction",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"action",
+						"updateAction"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost/api/action/publishAction",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "id",
+						"value": "5fb8e9b92257660dd038d2ec",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"actionName\":\"updateName\",\r\n    \"description\": \"updateDescription\",\r\n    \"location\":\"updateLocation\",\r\n    \"beginDate\":\"2020-02-01\",\r\n    \"beginDateInscription\":\"2020-02-02\",\r\n    \"endDateInscription\":\"2020-02-01\",\r\n    \"numberOfMembers\":5,\r\n    \"isPublished\": false,\r\n    \"admin\":\"5fb6bc9204d7070017766560\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/api/action/updateAction",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"action",
+						"updateAction"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost/api/action/addAction",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "id",
+						"value": "5fb8e9b92257660dd038d2ec",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"actionName\":\"updateName\",\r\n    \"description\": \"updateDescription\",\r\n    \"location\":\"updateLocation\",\r\n    \"beginDate\":\"2020-02-01\",\r\n    \"beginDateInscription\":\"2020-02-02\",\r\n    \"endDateInscription\":\"2020-02-01\",\r\n    \"numberOfMembers\":5,\r\n    \"isPublished\": false,\r\n    \"admin\":\"5fb6bc9204d7070017766560\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/action/addAction",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"action",
+						"addAction"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost/api/action/deleteAction",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "id",
+						"value": "5fb8e9b92257660dd038d2ec",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"actionName\":\"updateName\",\r\n    \"description\": \"updateDescription\",\r\n    \"location\":\"updateLocation\",\r\n    \"beginDate\":\"2020-02-01\",\r\n    \"beginDateInscription\":\"2020-02-02\",\r\n    \"endDateInscription\":\"2020-02-01\",\r\n    \"numberOfMembers\":5,\r\n    \"isPublished\": false,\r\n    \"admin\":\"5fb6bc9204d7070017766560\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/action/deleteAction/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"action",
+						"deleteAction",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost/api/action/action",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "id",
+						"value": "5fb8e9b92257660dd038d2ec",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"actionName\":\"updateName\",\r\n    \"description\": \"updateDescription\",\r\n    \"location\":\"updateLocation\",\r\n    \"beginDate\":\"2020-02-01\",\r\n    \"beginDateInscription\":\"2020-02-02\",\r\n    \"endDateInscription\":\"2020-02-01\",\r\n    \"numberOfMembers\":5,\r\n    \"isPublished\": false,\r\n    \"admin\":\"5fb6bc9204d7070017766560\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/action/action/5fb8e9b92257660dd038d2ec",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"action",
+						"action",
+						"5fb8e9b92257660dd038d2ec"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost/api/action/action Copy",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "id",
+						"value": "5fb8e9b92257660dd038d2ec",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/action/allActions",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"action",
+						"allActions"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

@@ -7,15 +7,13 @@ module.exports = (...permittedRoles) => {
 
   return (req, res, next) => {
     try {
-    const token = req.headers.authorization.split(" ")[1];
-    const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
-    const userId = decodedToken.userId;
-    console.log(userId);
-    
-      User.findById(userId)
+      const token = req.headers.authorization.split(" ")[1];
+      const decodedToken = jwt.verify(token, process.env.RANDOM_TOKEN_SECRET);
+      const userId = decodedToken.userId;
+
+      User.findById(userId).select({email:1,role:1})
         .then((user) => {
           if (user) {
-
             if (permittedRoles.includes(user.role)) {
               next(); // role is allowed, so continue on the next middleware
             } else {

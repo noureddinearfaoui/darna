@@ -1,10 +1,12 @@
 const supertest = require("supertest");
 const app = require("../app");
-const mongoose = require("mongoose");
-const User = require("../user/model/user");
+const tokenAdmin =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmJkM2MyN2Y0ODAxZjFjNDBmNGI4YjAiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE2MDY2ODQzNzgsImV4cCI6MTYwNjc3MDc3OH0.8EjWXGXU17NUOqzU5V7zpyjDDl3NAYGw_NfnZXAZeTg";
+const tokenMembre =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmM0MjViNmMxN2EwNTM2ZjhmNzJmYmYiLCJyb2xlIjoibWVtYnJlIiwiaWF0IjoxNjA2NjkwNDc3LCJleHAiOjE2MDY3NzY4Nzd9.anRn-OUZHZ4uHvI_jgEzblTrSHr_Rz5KlNwbDIaIqKQ";
 
 // test de la fonction addMember
-/*test("addMember", async () => {
+test("addMember", async () => {
   const data = {
     email: "userToAdd@gmail.com",
     firstName: "addUser",
@@ -18,10 +20,10 @@ const User = require("../user/model/user");
     .send(data)
     .expect(201)
     .then(async (response) => {
-      expect(response.body.message).toBe("member added successfully");
+      expect(response.body.message).toBe("Membre ajouté avec succès");
     });
 });
-*/
+
 
 ///// Test d'echec d'ajout membre
 test("The body of adding member should not be empty", async () => {
@@ -34,7 +36,7 @@ test(" the body should contains all required fields", async () => {
     email: "ttttt@gmail.com",
   };
   await supertest(app).post("/api/user/addMember").send(data).expect(500);
-});
+}); 
 
 // test de la fonction getAcceptedMembers
 test("acceptedMembers ", async () => {
@@ -42,23 +44,22 @@ test("acceptedMembers ", async () => {
     .get("/api/user/AcceptedMembers")
     .expect(200)
     .then((response) => {
-      // Check the response type and length
       expect(Array.isArray(response.body)).toBeTruthy();
     });
 });
+
 // test de la méthode getDemandes
 test("getDemandes ", async () => {
   await supertest(app)
     .get("/api/user/Demandes")
     .expect(200)
     .then((response) => {
-      // Check the response type and length
       expect(Array.isArray(response.body)).toBeTruthy();
     });
 });
 
 // test de la fonction deleteOneMember
-/*test("Delete One Member ", async () => {
+test("Delete One Member ", async () => {
   await supertest(app)
     .delete(
       `/api/user/deleteMember/5fb25347cfcbe21200b04a23
@@ -66,9 +67,9 @@ test("getDemandes ", async () => {
     )
     .expect(200)
     .then((response) => {
-      expect(response.body.message).toBe("member deleted successfully!");
+      expect(response.body.message).toBe("Utilisateur supprimé avec succès");
     });
-}); */
+}); 
 
 // test d'echec delete member
 
@@ -80,12 +81,13 @@ test("Member to delete is not found ", async () => {
     )
     .expect(404)
     .then((response) => {
-      expect(response.body.message).toBe("member not found");
+      expect(response.body.message).toBe("Utilisateur non trouvé");
     });
 });
 
+
 //test de la fonction banniMember
-/*test("banniMember", async () => {
+test("banniMember", async () => {
   const data = {
     banni: "true",
   };
@@ -97,9 +99,10 @@ test("Member to delete is not found ", async () => {
     .expect(201)
     .send(data)
     .then((response) => {
-      expect(response.body.message).toBe("Member banni");
+      expect(response.body.message).toBe("Membre banni");
     });
-});*/
+});
+
 
 // test du cas d'echec de la fonction bannir membre
 test("Echec bannirMember", async () => {
@@ -111,7 +114,7 @@ test("Echec bannirMember", async () => {
     .expect(404)
     .send(data)
     .then((response) => {
-      expect(response.body.message).toBe("Member not found");
+      expect(response.body.message).toBe("Membre non trouvé");
     });
 });
 
@@ -126,11 +129,10 @@ test("Echec getUserDetails ", async () => {
     .get("/api/user/details/12345")
     .expect(404)
     .then((response) => {
-      expect(response.body.message).toBe("Member not found ");
+      expect(response.body.message).toBe("Membre non trouvé");
     });
 });
 
-/*
 
 /// test de la fonction AcceptMember
 test("Accept member ", async () => {
@@ -142,7 +144,7 @@ test("Accept member ", async () => {
     .expect(200)
     .send(data);
 });
-*/
+
 
 // test d'echec de la fonction AccepMember
 test("Echec accept member ", async () => {
@@ -156,12 +158,12 @@ test("Echec accept member ", async () => {
     .then((response) => {
       // Check the response type and length
 
-      expect(response.body.message).toBe("member not found");
+      expect(response.body.message).toBe("Membre non trouvé");
     });
 });
 
 // Test de la fonction de renouvellemnt d'adhesion
-/*
+
 test("addNewAdhesion", async () => {
   const data = {
     nouveauAdhesionDate: new Date(),
@@ -171,13 +173,13 @@ test("addNewAdhesion", async () => {
     .send(data)
     .expect(200)
     .then((response) => {
-      expect(response.body.message).toBe("Success");
+      expect(response.body.message).toBe("Succès");
     });
 });
-*/
+
 
 // test de la fonction update member details
-/*
+
 test('update details of member ', async() => {
   const data={
     tel:"11111111",
@@ -188,7 +190,7 @@ test('update details of member ', async() => {
   .send(data)
   .expect(200)
   
-})*/
+})
 
 //test d'echec update member details
 
@@ -199,41 +201,11 @@ test("Echec update details of member ", async () => {
   };
   await supertest(app)
     .put("/api/user/details/123456")
+    .set("Authorization", "Bearer " + tokenAdmin)
     .send(data)
     .expect(404)
     .then((response) => {
       expect(response.body.message).toBe("Member not found");
     });
 });
-/*
-test("successful signup ", async () => {
-  const data = {
-    email: "tarek.bejaoui@edu.isetcom.tn",
-    firstName: "tarek",
-    lastName: "bejaoui",
-    adress: "08 rue de france cité elhideya jedeida",
-    tel: "55111612",
-    dateOfBirth: "1995-06-21",
-    password: "tarek1995",
-  };
-  await supertest(app)
-    .post("/api/user/signup")
-    .send(data)
-    .expect(201)
-    .then(async (response) => {
-      expect(response.body.message).toBe("Utilisateur créé !");
-    });
-});
-*/
-///// Test d'echec de signup
-test("The body of signup should not be empty", async () => {
-  const data = {};
-  await supertest(app).post("/api/user/signup").send(data).expect(500);
-});
-///// test de signup avec données incomplètes
-test(" the body should contains all required fields", async () => {
-  const data = {
-    email: "aaaaa@gmail.com",
-  };
-  await supertest(app).post("/api/user/signup").send(data).expect(500);
-});
+
