@@ -24,7 +24,7 @@
     "nodemailer": "^6.4.14",
     "nodemon": "^2.0.6",
     "secure-random-password": "^0.2.1",
-    "socket.io": "^2.3.0"
+    "socket.io": "^3.0.5"
   },
   "jest": {
     "testEnvironment": "node",
